@@ -1,0 +1,3 @@
+-- ATLAS-CODE-002 foundation placeholder.
+-- The real SQLite metadata table is introduced when the durable database foundation is approved.
+-- No product tables are created in this migration.

@@ -1,0 +1,14 @@
+packages:
+  - "apps/*"
+  - "packages/*"
+blockExoticSubdeps: false
+onlyBuiltDependencies:
+  - electron
+  - esbuild
+allowBuilds:
+  electron: true
+  electron-winstaller: true
+  esbuild: true
+nodeLinker: hoisted
+overrides:
+  vite: 5.4.19

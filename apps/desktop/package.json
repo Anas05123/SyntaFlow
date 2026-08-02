@@ -1,0 +1,37 @@
+{
+  "name": "@atlas/desktop",
+  "version": "0.1.0",
+  "private": true,
+  "description": "AI Agency OS desktop shell.",
+  "main": ".vite/build/main.js",
+  "scripts": {
+    "dev": "electron-forge start",
+    "build": "pnpm build:vite",
+    "build:vite": "node ../../node_modules/vite/bin/vite.js build --config vite.main.config.js && node ../../node_modules/vite/bin/vite.js build --config vite.preload.config.js && node ../../node_modules/vite/bin/vite.js build --config vite.renderer.config.js",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "eslint .",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@atlas/contracts": "workspace:*",
+    "electron-squirrel-startup": "^1.0.1",
+    "vite": "5.4.19",
+    "zod": "^4.0.14",
+    "zustand": "^5.0.7",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
+  },
+  "devDependencies": {
+    "@electron-forge/cli": "7.8.2",
+    "@electron-forge/maker-deb": "7.8.2",
+    "@electron-forge/maker-rpm": "7.8.2",
+    "@electron-forge/maker-zip": "7.8.2",
+    "@electron-forge/plugin-vite": "7.8.2",
+    "@types/node": "^24.1.0",
+    "@types/react": "^19.1.9",
+    "@types/react-dom": "^19.1.7",
+    "electron": "^37.2.5"
+  }
+}
