@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 0,
+  "schemaVersion": 1,
   "foundationMigrations": ["0001_foundation_metadata"],
-  "description": "Task 002 defines the migration runner skeleton only. No product database schema exists yet."
+  "description": "Task 003 creates only foundation metadata and safe settings tables. No product database schema exists yet."
 }

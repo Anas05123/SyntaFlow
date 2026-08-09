@@ -9,6 +9,7 @@ describe("healthResponseSchema", () => {
       logger: "healthy",
       jobs: "healthy",
       migrations: "healthy",
+      database: "healthy",
     } as const;
 
     expect(

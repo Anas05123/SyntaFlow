@@ -43,7 +43,7 @@ const createMainWindow = async (): Promise<void> => {
 };
 
 void app.whenReady().then(async () => {
-  const runtimeServices = createRuntimeServices(
+  const runtimeServices = await createRuntimeServices(
     path.join(os.homedir(), "Documents", "Project Atlas Data"),
   );
 

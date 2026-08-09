@@ -10,6 +10,7 @@ export const healthResponseSchema = z.object({
     logger: z.enum(["healthy", "degraded", "unavailable"]),
     jobs: z.enum(["healthy", "degraded", "unavailable"]),
     migrations: z.enum(["healthy", "degraded", "unavailable"]),
+    database: z.enum(["healthy", "degraded", "unavailable"]),
   }),
 });
 

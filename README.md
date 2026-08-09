@@ -2,14 +2,14 @@
 
 AI Agency OS is the desktop application built under Project Atlas.
 
-This repository currently contains the approved repository foundation plus
-ATLAS-CODE-002 foundation runtime services. Product features are intentionally not
-implemented yet.
+This repository currently contains the approved repository foundation,
+ATLAS-CODE-002 foundation runtime services and ATLAS-CODE-003 database/settings
+persistence. Product features are intentionally not implemented yet.
 
 ## Development Status
 
-Architecture Freeze passed on 2026-08-03. This repository is in foundation runtime
-setup.
+Architecture Freeze passed on 2026-08-03. This repository is in foundation
+runtime setup.
 
 ## Requirements
 
@@ -38,6 +38,7 @@ pnpm build
 pnpm validate
 pnpm db:status
 pnpm db:migrate
+pnpm db:backup
 ```
 
 ## Security Foundation
@@ -49,23 +50,52 @@ pnpm db:migrate
 - A restrictive Content Security Policy is installed.
 - Health IPC uses a schema-validated secure IPC registration helper.
 - Foundation logs redact common secret fields and values.
-- Settings are typed and do not store credentials.
+- Settings are typed, persisted locally and do not store credentials.
 - No secrets or user data belong in this repository.
 
 ## Runtime Foundation
 
-ATLAS-CODE-002 adds skeleton services for:
+ATLAS-CODE-002 adds services for:
 
 - App data path resolution
-- Safe settings
 - Structured logging
 - Secure IPC registration
 - Background jobs
-- Database migration running
 - Startup health aggregation
 
-SQLite persistence, durable settings storage and product tables are deferred to a
-future approved task.
+ATLAS-CODE-003 adds:
+
+- SQLite-compatible local database persistence through the isolated database
+  adapter.
+- Foundation-only tables: `schema_migrations`, `foundation_metadata` and
+  `app_settings`.
+- Versioned migration metadata.
+- Backup-before-migration hooks.
+- Safe settings persistence for non-sensitive settings.
+- Database status, migration and backup scripts.
+- Integration tests using isolated temporary databases.
+
+No campaigns, businesses, CRM, AI, discovery, website, deployment or plugin
+product schema exists yet.
+
+## Database Scripts
+
+Database scripts use a safe development data directory by default:
+
+```text
+Documents\Project Atlas Development Data\ai-agency-os-development
+```
+
+When `CI=true`, scripts use an isolated temporary directory instead. Override the
+location with `PROJECT_ATLAS_DATA_PATH` when needed.
+
+```powershell
+pnpm db:status
+pnpm db:migrate
+pnpm db:backup
+```
+
+The scripts print JSON output and do not touch production user data.
 
 ## Documentation
 
