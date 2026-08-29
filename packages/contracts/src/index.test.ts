@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { healthResponseSchema } from "./index";
+import {
+  healthResponseSchema,
+  jobsResponseSchema,
+  settingsSchema,
+  settingsUpdateSchema,
+} from "./index";
 
 describe("healthResponseSchema", () => {
   it("accepts a valid health response", () => {
@@ -25,5 +30,29 @@ describe("healthResponseSchema", () => {
       version: "0.1.0",
       services,
     });
+  });
+});
+
+describe("settingsSchema", () => {
+  it("accepts safe persistent settings", () => {
+    expect(
+      settingsSchema.parse({
+        themeMode: "dark",
+        logLevel: "info",
+        ollamaBaseUrl: "http://127.0.0.1:11434",
+        defaultAIPrivacyMode: "local-only",
+        appDataPathDisplay: "Default application data location",
+      }),
+    ).toMatchObject({ themeMode: "dark" });
+  });
+
+  it("rejects unknown update keys", () => {
+    expect(() => settingsUpdateSchema.parse({ apiKey: "secret" })).toThrow();
+  });
+});
+
+describe("jobsResponseSchema", () => {
+  it("accepts an empty background job monitor response", () => {
+    expect(jobsResponseSchema.parse({ jobs: [] })).toEqual({ jobs: [] });
   });
 });

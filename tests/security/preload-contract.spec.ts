@@ -2,9 +2,9 @@ import { describe, expect, it } from "vitest";
 import type { AtlasPreloadApi } from "../../packages/contracts/src";
 
 describe("AtlasPreloadApi", () => {
-  it("contains only the foundation app health surface", () => {
-    const allowedTopLevelKeys: Array<keyof AtlasPreloadApi> = ["app"];
+  it("contains only the approved Task 004 foundation surfaces", () => {
+    const allowedTopLevelKeys: Array<keyof AtlasPreloadApi> = ["app", "settings", "jobs"];
 
-    expect(allowedTopLevelKeys).toEqual(["app"]);
+    expect(allowedTopLevelKeys).toEqual(["app", "settings", "jobs"]);
   });
 });
