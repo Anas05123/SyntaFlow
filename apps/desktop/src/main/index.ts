@@ -65,8 +65,11 @@ const createMainWindow = async (): Promise<void> => {
 };
 
 void app.whenReady().then(async () => {
+  const configuredAppDataPath = process.env.ATLAS_APP_DATA_PATH;
   const runtimeServices = await createRuntimeServices(
-    path.join(os.homedir(), "Documents", "Project Atlas Data"),
+    configuredAppDataPath
+      ? path.resolve(configuredAppDataPath)
+      : path.join(os.homedir(), "Documents", "Project Atlas Data"),
   );
 
   session.defaultSession.setPermissionRequestHandler((_webContents, _permission, callback) => {

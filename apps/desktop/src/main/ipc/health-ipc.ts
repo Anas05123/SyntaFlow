@@ -1,4 +1,4 @@
-import { ipcMain } from "electron";
+import { ipcMain, type IpcMain } from "electron";
 import { z } from "zod";
 import { healthResponseSchema } from "@atlas/contracts";
 import type { RuntimeServices } from "../../core/application-lifecycle/startup-health";
@@ -8,9 +8,9 @@ import { registerSecureIpc } from "./secure-ipc";
 
 const channel = "app:health";
 
-export function registerHealthIpc(services: RuntimeServices): void {
+export function registerHealthIpc(services: RuntimeServices, target: IpcMain = ipcMain): void {
   registerSecureIpc(
-    ipcMain,
+    target,
     {
       channel,
       permission: "app.health.read",

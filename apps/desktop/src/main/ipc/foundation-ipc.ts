@@ -1,4 +1,4 @@
-import { ipcMain } from "electron";
+import { ipcMain, type IpcMain } from "electron";
 import { z } from "zod";
 import {
   jobsResponseSchema,
@@ -9,9 +9,9 @@ import {
 import type { RuntimeServices } from "../../core/application-lifecycle/startup-health";
 import { registerSecureIpc } from "./secure-ipc";
 
-export function registerFoundationIpc(services: RuntimeServices): void {
+export function registerFoundationIpc(services: RuntimeServices, target: IpcMain = ipcMain): void {
   registerSecureIpc(
-    ipcMain,
+    target,
     {
       channel: "settings:read",
       permission: "settings.read",
@@ -30,7 +30,7 @@ export function registerFoundationIpc(services: RuntimeServices): void {
   );
 
   registerSecureIpc(
-    ipcMain,
+    target,
     {
       channel: "settings:update",
       permission: "settings.write",
@@ -49,7 +49,7 @@ export function registerFoundationIpc(services: RuntimeServices): void {
   );
 
   registerSecureIpc(
-    ipcMain,
+    target,
     {
       channel: "jobs:list",
       permission: "jobs.read",

@@ -160,6 +160,7 @@ function CommandCenter(props: {
   const healthyCount = Object.values(props.health.services).filter(
     (status) => status === "healthy",
   ).length;
+  const serviceCount = Object.keys(props.health.services).length;
 
   return (
     <div className="page-grid">
@@ -192,10 +193,16 @@ function CommandCenter(props: {
         value={`${props.jobs.jobs.length} active records`}
         status={props.health.services.jobs}
       />
-      <StatusCard label="Ollama" value="Not configured yet" status="degraded" />
+      <StatusCard
+        label="Migrations"
+        value={props.health.services.migrations}
+        status={props.health.services.migrations}
+      />
       <section className="panel">
         <h2>System Snapshot</h2>
-        <p className="metric">{healthyCount}/6</p>
+        <p className="metric">
+          {healthyCount}/{serviceCount}
+        </p>
         <p className="muted-text">Foundation services reporting healthy.</p>
         <button
           className="primary-action"

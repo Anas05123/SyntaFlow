@@ -4,9 +4,17 @@ import { MemoryLogSink, StructuredLogger } from "../../core/logging/structured-l
 import { AtlasApplicationError } from "../../shared/kernel/application-error";
 import { registerSecureIpc } from "./secure-ipc";
 
-type IpcCallback = (event: { sender: { id: number } }, input: unknown) => Promise<unknown>;
+interface FakeIpcEvent {
+  sender: { id: number; getURL: () => string };
+  senderFrame: { url: string } | null;
+}
 
-function createFakeIpc(): { ipc: never; invoke: (input: unknown) => Promise<unknown> } {
+type IpcCallback = (event: FakeIpcEvent, input: unknown) => Promise<unknown>;
+
+function createFakeIpc(): {
+  ipc: never;
+  invoke: (input: unknown, senderUrl?: string) => Promise<unknown>;
+} {
   let callback: IpcCallback | null = null;
 
   return {
@@ -15,12 +23,18 @@ function createFakeIpc(): { ipc: never; invoke: (input: unknown) => Promise<unkn
         callback = registeredCallback;
       },
     } as never,
-    invoke: (input: unknown) => {
+    invoke: (input: unknown, senderUrl = "file:///project-atlas/index.html") => {
       if (!callback) {
         throw new Error("IPC callback was not registered.");
       }
 
-      return callback({ sender: { id: 1 } }, input);
+      return callback(
+        {
+          sender: { id: 1, getURL: () => senderUrl },
+          senderFrame: { url: senderUrl },
+        },
+        input,
+      );
     },
   };
 }
@@ -110,6 +124,32 @@ describe("registerSecureIpc", () => {
         category: "system",
         retryable: false,
       },
+    });
+    expect(handlerCalled).toBe(false);
+  });
+
+  it("rejects untrusted senders by default", async () => {
+    const fakeIpc = createFakeIpc();
+    const logger = new StructuredLogger();
+    let handlerCalled = false;
+
+    registerSecureIpc(
+      fakeIpc.ipc,
+      {
+        channel: "test:sender-default",
+        permission: "test.read",
+        inputSchema: z.void(),
+        outputSchema: z.object({ ok: z.literal(true) }),
+        handler: () => {
+          handlerCalled = true;
+          return { ok: true };
+        },
+      },
+      logger,
+    );
+
+    await expect(fakeIpc.invoke(undefined, "https://example.com/")).resolves.toMatchObject({
+      error: { code: "ATLAS_SYSTEM_ERROR" },
     });
     expect(handlerCalled).toBe(false);
   });

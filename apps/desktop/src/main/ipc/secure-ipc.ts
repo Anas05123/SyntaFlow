@@ -2,6 +2,7 @@ import type { IpcMain, IpcMainInvokeEvent } from "electron";
 import type { z } from "zod";
 import { StructuredLogger } from "../../core/logging/structured-logger";
 import { toSafeApplicationError } from "../../shared/kernel/application-error";
+import { isTrustedRendererUrl } from "../security/window-security";
 
 export interface SecureIpcContext {
   senderId: number;
@@ -18,6 +19,11 @@ export interface SecureIpcDefinition<TInput, TOutput> {
   audit?: (context: SecureIpcContext, input: TInput) => void;
 }
 
+export function validateIpcSender(event: IpcMainInvokeEvent): boolean {
+  const frameUrl = event.senderFrame?.url;
+  return Boolean(frameUrl && frameUrl === event.sender.getURL() && isTrustedRendererUrl(frameUrl));
+}
+
 export function registerSecureIpc<TInput, TOutput>(
   ipcMain: IpcMain,
   definition: SecureIpcDefinition<TInput, TOutput>,
@@ -30,7 +36,8 @@ export function registerSecureIpc<TInput, TOutput>(
     };
 
     try {
-      if (definition.validateSender && !definition.validateSender(event)) {
+      const senderIsValid = (definition.validateSender ?? validateIpcSender)(event);
+      if (!senderIsValid) {
         throw new Error("IPC sender validation failed.");
       }
 
