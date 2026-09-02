@@ -102,6 +102,12 @@ importers:
         specifier: ^37.2.5
         version: 37.10.3
 
+  packages/ai-engine:
+    dependencies:
+      zod:
+        specifier: ^4.0.14
+        version: 4.4.3
+
   packages/configuration: {}
 
   packages/contracts:
