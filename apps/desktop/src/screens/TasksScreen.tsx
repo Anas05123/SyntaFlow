@@ -81,9 +81,14 @@ export function TasksScreen() {
     return () => ro.disconnect();
   }, []);
 
+  // Section 30: Measured Responsive Density Modes based on available workspace width
+  const densityMode =
+    availableWidth > 1450 ? 'wide' : availableWidth >= 1100 ? 'regular' : 'compact';
+
   const isInspectorOpen = Boolean(overlay.panelTaskId);
-  // Side-by-side mode requires at least 1020px of available workspace width
-  const isSideBySide = isInspectorOpen && availableWidth >= 1020;
+  // Section 3A & 30: Side-by-side mode requires Regular/Wide available workspace width (>= 1100px)
+  // Preserves overlay at 1280px (usable width ~976px in compact mode), side-by-side at 1440px and wide desktop
+  const isSideBySide = isInspectorOpen && availableWidth >= 1100;
 
   useEffect(() => {
     overlay.setIsPanelSideBySide(isSideBySide);
@@ -420,6 +425,7 @@ export function TasksScreen() {
   return (
     <div
       className={`cd-tasks-workspace ${isInspectorOpen ? 'has-inspector' : ''} ${isSideBySide ? 'side-by-side-mode' : 'overlay-mode'}`}
+      data-density={densityMode}
       ref={workspaceRef}
       aria-label="Tasks Workspace"
     >

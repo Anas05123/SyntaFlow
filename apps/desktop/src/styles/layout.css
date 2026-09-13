@@ -3527,11 +3527,14 @@
   display: flex;
   gap: 14px;
   flex: 1;
+  min-width: 0;
+  width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
   padding-bottom: 8px;
   align-items: stretch;
   scroll-behavior: smooth;
+  scroll-snap-type: x proximity;
 }
 
 .cd-tasks-board-wrap::-webkit-scrollbar {
@@ -3543,10 +3546,16 @@
   border-radius: 3px;
 }
 
+.cd-tasks-board-wrap::-webkit-scrollbar-thumb:hover {
+  background: var(--edge);
+}
+
 /* Board Column */
 .cd-board-column {
-  flex: 0 0 300px;
-  width: 300px;
+  flex: 0 0 280px;
+  width: 280px;
+  min-width: 280px;
+  scroll-snap-align: start;
   background: var(--surface);
   border: 1px solid var(--divider);
   border-radius: var(--r-card, 10px);
