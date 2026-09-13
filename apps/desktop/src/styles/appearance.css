@@ -1,0 +1,304 @@
+/* ==========================================================================
+   Appearance controls.
+
+   A dense control column rather than a floating popover: the reference puts these
+   in a panel, and CoreDesk already has Settings as the one place a workspace's
+   behaviour and look are configured. Two places to change the same value is how
+   they drift.
+
+   Every control writes to one persisted record; nothing is applied locally.
+   ========================================================================== */
+
+.ap {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.ap-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ap-group + .ap-group {
+  border-top: 1px solid var(--divider);
+  padding-top: 18px;
+}
+
+.ap-group-head {
+  align-items: center;
+  color: var(--text);
+  display: flex;
+  font-size: var(--fs-label);
+  font-weight: 600;
+  justify-content: space-between;
+  letter-spacing: -0.005em;
+}
+
+.ap-reset {
+  align-items: center;
+  background: none;
+  border: 0;
+  color: var(--metadata);
+  cursor: pointer;
+  display: inline-flex;
+  font-family: var(--font);
+  font-size: var(--fs-meta);
+  gap: 5px;
+  padding: 0;
+  transition: color var(--ease);
+}
+
+.ap-reset:hover {
+  color: var(--text);
+}
+
+.ap-reset:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ---- Segmented control --------------------------------------------------- */
+
+/* Square-ish and joined, not a row of pills: this is a desktop control, and the
+   selected half is marked by surface and ink rather than by a filled accent bar. */
+.ap-seg {
+  background: var(--field-bg);
+  border: 1px solid var(--divider);
+  border-radius: var(--r-control);
+  display: grid;
+  gap: 0;
+  grid-auto-columns: 1fr;
+  grid-auto-flow: column;
+  overflow: hidden;
+}
+
+.ap-seg button {
+  background: transparent;
+  border: 0;
+  border-right: 1px solid var(--divider);
+  color: var(--muted);
+  cursor: pointer;
+  font-family: var(--font);
+  font-size: var(--fs-label);
+  font-weight: 500;
+  height: 32px;
+  transition: background var(--ease), color var(--ease);
+}
+
+.ap-seg button:last-child {
+  border-right: 0;
+}
+
+.ap-seg button:hover {
+  background: var(--row-hover);
+  color: var(--text);
+}
+
+.ap-seg button.is-on {
+  background: var(--raised);
+  color: var(--text);
+  font-weight: 600;
+}
+
+.ap-seg button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+/* ---- Sliders ------------------------------------------------------------- */
+
+.ap-slider {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ap-slider.is-disabled {
+  opacity: 0.4;
+}
+
+.ap-slider-head {
+  align-items: baseline;
+  display: flex;
+  justify-content: space-between;
+}
+
+.ap-slider-head label {
+  color: var(--muted);
+  font-size: var(--fs-meta);
+}
+
+.ap-slider-val {
+  color: var(--metadata);
+  font-size: var(--fs-meta);
+  /* Values sit in a column; they must not jitter as the thumb moves. */
+  font-variant-numeric: tabular-nums;
+}
+
+.ap-slider input[type='range'] {
+  appearance: none;
+  background: var(--edge);
+  border-radius: 2px;
+  cursor: pointer;
+  height: 3px;
+  width: 100%;
+}
+
+.ap-slider input[type='range']:disabled {
+  cursor: not-allowed;
+}
+
+.ap-slider input[type='range']::-webkit-slider-thumb {
+  appearance: none;
+  background: var(--text);
+  border: 0;
+  border-radius: 50%;
+  height: 13px;
+  width: 13px;
+}
+
+.ap-slider input[type='range']:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* ---- Background picker --------------------------------------------------- */
+
+.ap-bg-row {
+  display: flex;
+}
+
+.ap-bg-pick {
+  align-items: center;
+  background: var(--field-bg);
+  border: 1px dashed var(--edge);
+  border-radius: var(--r-control);
+  color: var(--muted);
+  cursor: pointer;
+  display: flex;
+  flex: 1;
+  font-family: var(--font);
+  font-size: var(--fs-label);
+  gap: 10px;
+  padding: 8px 10px;
+  transition: border-color var(--ease), color var(--ease);
+}
+
+.ap-bg-pick:hover {
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+.ap-bg-pick:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.ap-bg-thumb {
+  border: 1px solid var(--divider);
+  border-radius: 4px;
+  height: 28px;
+  object-fit: cover;
+  width: 44px;
+}
+
+.ap-bg-empty {
+  align-items: center;
+  border: 1px solid var(--divider);
+  border-radius: 4px;
+  color: var(--metadata);
+  display: inline-flex;
+  height: 28px;
+  justify-content: center;
+  width: 44px;
+}
+
+/* ---- Accent swatches ----------------------------------------------------- */
+
+.ap-swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ap-swatch {
+  border: 1px solid transparent;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--text) 12%, transparent);
+  cursor: pointer;
+  height: 22px;
+  padding: 0;
+  transition: transform var(--ease), box-shadow var(--ease);
+  width: 22px;
+}
+
+.ap-swatch:hover {
+  transform: scale(1.08);
+}
+
+/* Selected is a ring outside the swatch, not a tick inside it: a tick would be
+   invisible against half the available hues. */
+.ap-swatch.is-on {
+  box-shadow:
+    0 0 0 1px var(--canvas),
+    0 0 0 3px var(--text);
+}
+
+.ap-swatch:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 3px;
+}
+
+/* ---- Typefaces ----------------------------------------------------------- */
+
+.ap-fonts {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.ap-font {
+  align-items: center;
+  background: var(--field-bg);
+  border: 1px solid var(--divider);
+  border-radius: var(--r-control);
+  color: var(--muted);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  font-size: var(--fs-meta);
+  gap: 2px;
+  padding: 8px 4px;
+  transition: border-color var(--ease), color var(--ease);
+}
+
+.ap-font:hover {
+  color: var(--text);
+}
+
+.ap-font.is-on {
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+.ap-font:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.ap-font-sample {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+/* ---- Notes --------------------------------------------------------------- */
+
+.ap-note {
+  color: var(--metadata);
+  font-size: var(--fs-meta);
+  line-height: 1.5;
+  margin: 0;
+}

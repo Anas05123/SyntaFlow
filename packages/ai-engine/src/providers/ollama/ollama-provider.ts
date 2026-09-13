@@ -24,6 +24,8 @@ const tagsResponseSchema = z
         .object({
           model: z.string().optional(),
           name: z.string().optional(),
+          remote_model: z.string().nullish(),
+          remote_host: z.string().nullish(),
         })
         .passthrough(),
     ),
@@ -143,7 +145,9 @@ export class OllamaProvider implements AiProvider {
 
       const modelAvailable = envelope.data.models.some(
         (candidate) =>
-          modelMatches(this.#model, candidate.model) || modelMatches(this.#model, candidate.name),
+          !candidate.remote_model &&
+          !candidate.remote_host &&
+          (modelMatches(this.#model, candidate.model) || modelMatches(this.#model, candidate.name)),
       );
 
       if (!modelAvailable) {
@@ -211,11 +215,10 @@ function normalizeConfig(config: OllamaProviderConfig): NormalizedOllamaProvider
     throw configurationFault();
   }
 
-  const model = config.model.trim();
+  const model = normalizeOllamaModel(config.model);
   const healthTimeoutMs = config.healthTimeoutMs ?? defaultHealthTimeoutMs;
 
   if (
-    !modelNamePattern.test(model) ||
     !Number.isInteger(healthTimeoutMs) ||
     healthTimeoutMs < 1 ||
     healthTimeoutMs > maximumHealthTimeoutMs
@@ -225,12 +228,19 @@ function normalizeConfig(config: OllamaProviderConfig): NormalizedOllamaProvider
 
   return {
     model,
-    baseUrl: normalizeBaseUrl(config.baseUrl ?? DEFAULT_OLLAMA_BASE_URL),
+    baseUrl: normalizeOllamaBaseUrl(config.baseUrl ?? DEFAULT_OLLAMA_BASE_URL),
     healthTimeoutMs,
   };
 }
 
-function normalizeBaseUrl(baseUrl: string): string {
+export function normalizeOllamaModel(value: string): string {
+  const model = value.trim();
+  if (!modelNamePattern.test(model) || /(?:^|[-:])cloud(?:$|:)/i.test(model))
+    throw configurationFault();
+  return model;
+}
+
+export function normalizeOllamaBaseUrl(baseUrl: string): string {
   // Check the original shape before URL parsing can erase paths or empty suffixes.
   if (!/^https?:\/\/(?:127\.0\.0\.1|localhost|\[::1\])(?::[0-9]{1,5})?\/?$/i.test(baseUrl.trim())) {
     throw configurationFault();

@@ -22,15 +22,23 @@ function readSources(directory: string, includeTests = true): string {
 
 describe("AI Engine architecture boundary", () => {
   it("keeps the renderer and preload detached from engine and provider implementations", () => {
-    const rendererSource = readSources(path.join(repositoryRoot, "apps/desktop/src/renderer"));
-    const preloadSource = readSources(path.join(repositoryRoot, "apps/desktop/src/preload"));
-    const desktopSource = readSources(path.join(repositoryRoot, "apps/desktop/src"));
+    const rendererSource = readSources(path.join(repositoryRoot, "apps/desktop/src"));
+    const preloadSource = readSources(path.join(repositoryRoot, "apps/desktop/electron"), false);
+    const desktopSource = rendererSource;
     const presentationSource = rendererSource + "\n" + preloadSource;
 
     expect(presentationSource).not.toMatch(
-      /from\s+["'][^"']*(?:@atlas\/ai-engine|providers[\\/]ai|fake-ai-provider|provider-adapter)/,
+      /from\s+["'][^"']*(?:@coredesk\/ai-engine|providers[\\/]ai|fake-ai-provider|provider-adapter)/,
     );
-    expect(presentationSource).not.toMatch(/@atlas\/ai-engine\/ollama/);
+    expect(presentationSource).not.toMatch(/@coredesk\/ai-engine\/ollama/);
+    expect(presentationSource).not.toMatch(/\b(?:XMLHttpRequest|WebSocket)\s*\(/);
+    const desktopProductionFiles = sourceFiles(
+      path.join(repositoryRoot, "apps/desktop/src"),
+    ).filter((file) => !/\.(?:test|spec)\.ts$/.test(file));
+    const runtimeCallers = desktopProductionFiles.filter((file) =>
+      /\bcreateOllamaRuntime\s*[,;(]/.test(readFileSync(file, "utf8")),
+    );
+    expect(runtimeCallers).toHaveLength(0);
     expect(presentationSource).not.toMatch(/\b(?:fetch|WebSocket)\s*\([^)]*11434/);
     expect(desktopSource).not.toMatch(/["'`]\/?api\/(?:generate|tags)\b/);
   });

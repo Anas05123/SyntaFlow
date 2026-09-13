@@ -15,7 +15,7 @@ afterEach(() => {
 
 describe("database CLI scripts", () => {
   it("runs status, migrate and backup against isolated development data", () => {
-    const dataRoot = mkdtempSync(path.join(os.tmpdir(), "atlas-db-scripts-"));
+    const dataRoot = mkdtempSync(path.join(os.tmpdir(), "coredesk-db-scripts-"));
     temporaryDirectories.push(dataRoot);
 
     const initialStatus = runScript("status.mjs", dataRoot);
@@ -29,14 +29,14 @@ describe("database CLI scripts", () => {
 
     const backup = runScript("backup.mjs", dataRoot);
     expect(backup.status).toBe("ok");
-    expect(backup.backupPath).toContain("atlas-manual-backup");
+    expect(backup.backupPath).toContain("coredesk-manual-backup");
   });
 });
 
 function runScript(scriptName: string, dataRoot: string): Record<string, unknown> {
-  const output = execFileSync("node", [path.join("scripts", "database", scriptName)], {
+  const output = execFileSync("node", [path.join("database", "scripts", scriptName)], {
     cwd: process.cwd(),
-    env: { ...process.env, PROJECT_ATLAS_DATA_PATH: dataRoot },
+    env: { ...process.env, COREDESK_DATA_PATH: dataRoot, PROJECT_ATLAS_DATA_PATH: dataRoot },
     encoding: "utf8",
   });
 

@@ -24,6 +24,13 @@ export class FakeAiProvider implements AiProvider {
       });
     }
 
+    if (request.task === "coredesk-assistant") {
+      return Promise.resolve({
+        kind: "structured",
+        value: { text: "Preview response: " + request.input.instruction.trim() },
+      });
+    }
+
     return Promise.resolve({
       kind: "structured",
       value: {

@@ -1,0 +1,11 @@
+import { readFileSync } from 'node:fs';
+import { chromium } from 'playwright';
+const svg = readFileSync('apps/desktop/.shots/mark-test.svg', 'utf8');
+const b64 = Buffer.from(svg).toString('base64');
+const b = await chromium.launch();
+const p = await b.newPage({ viewport: { width: 640, height: 640 } });
+await p.setContent(`<body style="margin:0;background:#0B0D0F"><img src="data:image/svg+xml;base64,${b64}" width="640"></body>`);
+await p.waitForTimeout(500);
+await p.screenshot({ path: 'apps/desktop/.shots/mark-test.png' });
+await b.close();
+console.log('rendered');

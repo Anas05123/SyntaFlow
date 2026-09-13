@@ -32,5 +32,9 @@ export function createOllamaRuntime(config: OllamaProviderConfig): OllamaRuntime
   });
 }
 
-export { DEFAULT_OLLAMA_BASE_URL } from "./providers/ollama/ollama-provider";
+export {
+  DEFAULT_OLLAMA_BASE_URL,
+  normalizeOllamaBaseUrl,
+  normalizeOllamaModel,
+} from "./providers/ollama/ollama-provider";
 export type { OllamaHealth, OllamaProviderConfig } from "./providers/ollama/ollama-provider";

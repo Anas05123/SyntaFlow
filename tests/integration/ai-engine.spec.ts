@@ -10,7 +10,7 @@ describe("AI Engine foundation integration", () => {
         instruction: "Summarize the approved fixture",
         data: {
           score: 9,
-          business: "Atlas Studio",
+          business: "CoreDesk Studio",
         },
       },
       context: {
@@ -36,12 +36,12 @@ describe("AI Engine foundation integration", () => {
         value: {
           task: "structured-output",
           prompt: {
-            id: "atlas.foundation.structured-output",
+            id: "coredesk.foundation.structured-output",
             version: "1.0.0",
           },
           instruction: "Summarize the approved fixture",
           data: {
-            business: "Atlas Studio",
+            business: "CoreDesk Studio",
             score: 9,
           },
           context: {
@@ -62,7 +62,7 @@ describe("AI Engine foundation integration", () => {
         task: "structured-output",
         routeId: "structured-output.v1",
         prompt: {
-          id: "atlas.foundation.structured-output",
+          id: "coredesk.foundation.structured-output",
           version: "1.0.0",
         },
         provider: {

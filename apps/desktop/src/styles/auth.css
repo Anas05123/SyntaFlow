@@ -1,0 +1,1228 @@
+/* ==========================================================================
+   A01 · CoreDesk Authentication Entry
+   Style Foundation for Desktop Electron Application
+
+   Hero Visual: Exact specification from media_1789145724059.jpg
+   - Dark graphite / near-black canvas (#080A0D)
+   - Restrained CoreDesk cobalt-blue (#2F6FEB) and cyan (#25B7F3) accents
+   - Center brand lockup: 3D ribbon mark + CoreDesk wordmark + YOUR CLIENT WORKSPACE
+   - Concentric expanding water ripples
+   - 6 lifecycle nodes evenly placed around the circular orbit
+   - Glowing active arc with traveling signal and direction arrow
+   ========================================================================== */
+
+/* ---- Application frame --------------------------------------------------- */
+
+.cd-app {
+  background: #080a0d;
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  overflow: hidden;
+  position: relative;
+  font-family: var(--font, 'Inter', -apple-system, BlinkMacSystemFont, sans-serif);
+  color: var(--text, #f4f6f8);
+}
+
+/* ---- Window chrome ------------------------------------------------------- */
+
+.cd-chrome {
+  align-items: center;
+  display: flex;
+  flex: 0 0 auto;
+  gap: 4px;
+  height: 40px;
+  padding-left: 14px;
+  position: relative;
+  z-index: 10;
+  -webkit-app-region: drag;
+  user-select: none;
+  background: rgba(6, 12, 22, 0.4);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.cd-chrome-drag {
+  align-self: stretch;
+  flex: 1 1 auto;
+  -webkit-app-region: drag;
+}
+
+.cd-chrome-id {
+  align-items: center;
+  display: flex;
+  flex: 0 0 auto;
+  gap: 9px;
+  -webkit-app-region: no-drag;
+}
+
+.cd-chrome-label {
+  color: #a8b0ba;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.006em;
+}
+
+.cd-chrome-sub {
+  color: #737d88;
+  font-size: 12px;
+}
+
+.cd-chrome-slot {
+  align-items: center;
+  display: flex;
+  flex: 0 0 auto;
+  gap: 8px;
+  -webkit-app-region: no-drag;
+}
+
+/* ---- Window controls ----------------------------------------------------- */
+
+.cd-controls {
+  align-self: stretch;
+  display: flex;
+  flex: 0 0 auto;
+  -webkit-app-region: no-drag;
+}
+
+.cd-control {
+  align-items: center;
+  background: none;
+  border: 0;
+  color: #a8b0ba;
+  cursor: default;
+  display: inline-flex;
+  height: 100%;
+  justify-content: center;
+  transition: background 140ms ease, color 140ms ease;
+  width: 46px;
+}
+
+.cd-control:hover {
+  background: rgba(255, 255, 255, 0.07);
+  color: #f4f6f8;
+}
+
+.cd-control:active {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.cd-control-close:hover {
+  background: #c2382e;
+  color: #ffffff;
+}
+
+.cd-control-close:active {
+  background: #a92f26;
+}
+
+.cd-control:focus-visible,
+.cd-action:focus-visible,
+.cd-meta-btn:focus-visible,
+.cd-meta-links a:focus-visible {
+  outline: 2px solid #25b7f3;
+  outline-offset: 2px;
+}
+
+/* ---- Hero Entry Main Canvas ---------------------------------------------- */
+
+.cd-entry.cd-entry-hero,
+.cd-entry.cd-entry-split {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  background: transparent;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Atmospheric Blurred Background Layer */
+.cd-hero-backdrop-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+
+/* Subtle centered ambient depth behind the emblem */
+.cd-hero-orb {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.cd-hero-orb-cobalt {
+  width: 580px;
+  height: 520px;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(47, 111, 235, 0.16) 0%, rgba(30, 70, 160, 0.05) 50%, transparent 75%);
+  filter: blur(80px);
+}
+
+.cd-hero-orb-cyan {
+  width: 440px;
+  height: 400px;
+  top: 38%;
+  left: 54%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(37, 183, 243, 0.12) 0%, rgba(20, 120, 180, 0.04) 55%, transparent 75%);
+  filter: blur(75px);
+}
+
+.cd-hero-orb-deep {
+  display: none;
+}
+
+/* Large blurred background watermark graphic */
+.cd-hero-backdrop-mark {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 500px;
+  height: 500px;
+  object-fit: contain;
+  opacity: 0.12;
+  filter: blur(60px);
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+/* Subtle architectural dot grid giving tactile surface structure */
+.cd-hero-backdrop-grid {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+  background-size: 32px 32px;
+  opacity: 0.25;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 45%, black 30%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 45%, black 30%, transparent 80%);
+  pointer-events: none;
+}
+
+/* Smooth vignette softly framing the canvas into #080a0d */
+.cd-hero-backdrop-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 85% 75% at 50% 45%, transparent 45%, #080a0d 95%);
+  pointer-events: none;
+}
+
+/* Centered unit without glow card (floating directly on ambient page) */
+.cd-hero-center-unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+  max-width: 480px;
+  margin: auto 0;
+  position: relative;
+  z-index: 2;
+  padding: 0;
+  background: none;
+  border: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: none;
+}
+
+/* ==========================================================================
+   SPLIT-SCREEN AUTH ARCHITECTURE
+   Left: Design showcase (Sided Grid) | Right: Dedicated Sign-In Section
+   ========================================================================== */
+
+.cd-auth-split {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  position: relative;
+  z-index: 1;
+}
+
+/* ---- Left Pane: Design & Lifecycle Grid ---------------------------------- */
+
+.cd-auth-hero-pane {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 28px 36px 20px;
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: radial-gradient(circle at 35% 35%, rgba(14, 32, 60, 0.35) 0%, transparent 70%);
+}
+
+.cd-auth-hero-top {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.cd-auth-hero-top .cd-hero-overline {
+  margin-bottom: 4px;
+}
+
+.cd-auth-hero-top .cd-hero-headline {
+  text-align: left;
+  font-size: 32px;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+}
+
+.cd-auth-hero-sub {
+  font-size: 13.5px;
+  color: #8fa0b5;
+  margin-top: 8px;
+  max-w: 480px;
+  line-height: 1.5;
+}
+
+.cd-auth-hero-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11.5px;
+  color: #64748b;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: 16px;
+}
+
+.cd-auth-hero-version {
+  font-family: var(--font-mono, monospace);
+  color: #475569;
+}
+
+/* ---- Sided 2x3 Grid Component ------------------------------------------- */
+
+.cd-sided-grid-wrap {
+  margin: auto 0;
+  padding: 24px 0;
+  width: 100%;
+  max-width: 580px;
+}
+
+.cd-sided-grid-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 10.5px;
+  font-family: var(--font-mono, monospace);
+  color: #64748b;
+  margin-bottom: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.cd-sided-meta-left {
+  font-weight: 600;
+}
+
+.cd-sided-meta-right {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #38bdf8;
+  text-transform: none;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.cd-sided-pulse-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #38bdf8;
+  box-shadow: 0 0 8px #38bdf8;
+  animation: cd-sided-pulse 2.2s infinite ease-in-out;
+  flex-shrink: 0;
+}
+
+@keyframes cd-sided-pulse {
+  0%, 100% { opacity: 0.55; transform: scale(0.9); }
+  50% { opacity: 1; transform: scale(1.15); box-shadow: 0 0 12px #80e1ff; }
+}
+
+.cd-sided-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 13px;
+  width: 100%;
+}
+
+.cd-sided-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+  padding: 14px 15px;
+  border-radius: 13px;
+  background: rgba(15, 22, 34, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 180ms cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  user-select: none;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.cd-sided-card:hover {
+  background: rgba(20, 31, 48, 0.88);
+  border-color: rgba(56, 189, 248, 0.35);
+  transform: translateY(-1px);
+}
+
+.cd-sided-card.is-active {
+  background: rgba(16, 33, 56, 0.92);
+  border-color: rgba(56, 189, 248, 0.55);
+  box-shadow: 0 0 24px -6px rgba(56, 189, 248, 0.28);
+}
+
+.cd-sided-badge {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: #141e2d;
+  border: 1px solid #5a7599;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 180ms ease;
+}
+
+.cd-sided-card:hover .cd-sided-badge {
+  border-color: #8fa4bd;
+}
+
+.cd-sided-card.is-active .cd-sided-badge {
+  background: #0e2646;
+  border-color: #38bdf8;
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
+}
+
+.cd-sided-details {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.cd-sided-title-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.cd-sided-num {
+  font-size: 10.5px;
+  font-weight: 700;
+  font-family: var(--font-mono, monospace);
+  color: #64748b;
+}
+
+.cd-sided-card.is-active .cd-sided-num {
+  color: #38bdf8;
+}
+
+.cd-sided-label {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #f1f5f9;
+  letter-spacing: -0.01em;
+}
+
+.cd-sided-status-pill {
+  font-size: 9.5px;
+  font-family: var(--font-mono, monospace);
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: rgba(56, 189, 248, 0.16);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.cd-sided-desc {
+  font-size: 11.5px;
+  color: #8fa0b5;
+  margin-top: 2px;
+}
+
+.cd-sided-card.is-active .cd-sided-desc {
+  color: #cbd5e1;
+}
+
+/* ---- Right Pane: Dedicated Sign-In Section -------------------------------- */
+
+.cd-auth-form-pane {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 44px 54px 36px;
+  background: #0b0e14;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
+}
+
+.cd-auth-form-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+}
+
+.cd-auth-top-brand {
+  font-size: 12px;
+  font-weight: 500;
+  color: #94a3b8;
+}
+
+.cd-auth-service-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.28);
+  color: #34d399;
+  font-size: 11px;
+  font-family: var(--font-mono, monospace);
+}
+
+.cd-auth-service-status .cd-sided-pulse-dot {
+  background: #10b981;
+  box-shadow: 0 0 6px #10b981;
+}
+
+.cd-auth-form-box {
+  width: 100%;
+  max-width: 360px;
+  margin: auto;
+  padding: 20px 0;
+}
+
+.cd-auth-form-heading {
+  margin-bottom: 24px;
+}
+
+.cd-auth-form-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.025em;
+  margin: 0;
+}
+
+.cd-auth-form-sub {
+  font-size: 12.5px;
+  color: #8fa0b5;
+  margin-top: 6px;
+  line-height: 1.45;
+}
+
+.cd-auth-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.cd-auth-field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 14px;
+}
+
+.cd-auth-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.cd-auth-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #cbd5e1;
+  text-align: left;
+}
+
+.cd-auth-link {
+  font-size: 11.5px;
+  color: #38bdf8;
+  text-decoration: none;
+  transition: color 120ms ease;
+}
+
+.cd-auth-link:hover {
+  color: #7dd3fc;
+}
+
+.cd-auth-input {
+  width: 100%;
+  height: 40px;
+  padding: 0 13px;
+  background: #121924;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  font-size: 13px;
+  color: #ffffff;
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 140ms ease, box-shadow 140ms ease;
+  font-family: inherit;
+}
+
+.cd-auth-input:focus {
+  border-color: #38bdf8;
+  box-shadow: 0 0 0 1px #38bdf8;
+}
+
+.cd-auth-btn-row {
+  margin-top: 6px;
+}
+
+.cd-auth-submit-btn {
+  width: 100%;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #ffffff;
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  border: 1px solid #3b82f6;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(37, 99, 235, 0.4);
+  transition: all 140ms ease;
+}
+
+.cd-auth-submit-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  border-color: #60a5fa;
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.5);
+  transform: translateY(-1px);
+}
+
+.cd-auth-divider {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 18px 0;
+}
+
+.cd-auth-divider-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.cd-auth-divider-text {
+  position: relative;
+  padding: 0 10px;
+  background: #0b0e14;
+  font-size: 10.5px;
+  font-family: var(--font-mono, monospace);
+  color: #64748b;
+  letter-spacing: 0.06em;
+}
+
+.cd-auth-sso-btn {
+  width: 100%;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #e2e8f0;
+  background: rgba(18, 25, 38, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  transition: all 140ms ease;
+}
+
+.cd-auth-sso-btn:hover:not(:disabled) {
+  background: rgba(28, 38, 56, 0.95);
+  border-color: rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+}
+
+.cd-auth-switch-row {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 12px;
+  color: #8fa0b5;
+}
+
+.cd-auth-create-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: #38bdf8;
+  cursor: pointer;
+  transition: color 120ms ease;
+  font-family: inherit;
+}
+
+.cd-auth-create-btn:hover {
+  color: #7dd3fc;
+  text-decoration: underline;
+}
+
+/* Inline auth error banner */
+.cd-auth-inline-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  margin-bottom: 12px;
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 6px;
+  color: #fca5a5;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+/* Auth submission spinner */
+.cd-auth-spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: cd-auth-spin 0.6s linear infinite;
+}
+
+@keyframes cd-auth-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.cd-auth-orbit-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: auto 0;
+  padding: 0;
+  width: 100%;
+  flex: 1 1 auto;
+}
+
+.cd-auth-form-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: 16px;
+  font-size: 11.5px;
+  color: #64748b;
+}
+
+.cd-auth-encrypted-badge {
+  font-size: 11px;
+  font-family: var(--font-mono, monospace);
+  color: #475569;
+}
+
+/* Responsive Split Layout */
+@media (max-width: 1024px) {
+  .cd-auth-split {
+    grid-template-columns: 1fr;
+    overflow-y: auto;
+  }
+  .cd-auth-hero-pane {
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 32px 24px;
+  }
+  .cd-auth-form-pane {
+    padding: 32px 24px;
+  }
+}
+
+/* ==========================================================================
+   HERO ORBIT COMPOSITION (Grand spacious emblem)
+   ========================================================================== */
+
+.cd-hero-orbit-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 660px;
+  height: 560px;
+  margin: 0 auto;
+  display: grid;
+  place-items: center;
+  isolation: isolate;
+  user-select: none;
+}
+
+/* Ambient directional environmental light */
+.cd-hero-ambient {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle 280px at 50% 48%, rgba(37, 99, 235, 0.07), transparent 75%);
+  z-index: 0;
+}
+
+.cd-hero-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-height: 560px;
+  z-index: 1;
+  pointer-events: auto;
+  overflow: visible;
+}
+
+/* Base orbit circular path */
+.cd-hero-base-track {
+  stroke: #1e293b;
+  stroke-width: 1.5px;
+}
+
+/* Concentric water ripple waves (scaled up to R=215px) */
+.cd-hero-wave {
+  animation: cd-water-ripple-expand 7.2s cubic-bezier(0.12, 0.4, 0.28, 1) infinite;
+  pointer-events: none;
+}
+
+@keyframes cd-water-ripple-expand {
+  0% {
+    r: 38px;
+    opacity: 0.5;
+    stroke: rgba(56, 189, 248, 0.4);
+    stroke-width: 1.2px;
+  }
+  40% {
+    opacity: 0.28;
+    stroke: rgba(37, 99, 235, 0.3);
+    stroke-width: 1px;
+  }
+  80% {
+    opacity: 0.12;
+    stroke: rgba(30, 58, 138, 0.2);
+    stroke-width: 0.8px;
+  }
+  100% {
+    r: 215px;
+    opacity: 0;
+    stroke: rgba(15, 23, 42, 0.05);
+    stroke-width: 0.4px;
+  }
+}
+
+/* Moving signal precision radar pulse */
+.cd-hero-signal-ping {
+  animation: cd-beacon-ping 2.2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes cd-beacon-ping {
+  0% {
+    r: 4px;
+    opacity: 0.9;
+  }
+  65%, 100% {
+    r: 14px;
+    opacity: 0;
+  }
+}
+
+/* Direction marker chevron - crisp, clean */
+.cd-hero-direction-arrow {
+  opacity: 0.9;
+}
+
+/* Node SVG groups */
+.cd-hero-node-g {
+  transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cd-hero-node-g:hover {
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(1.04);
+}
+
+.cd-node-label,
+.cd-node-sub {
+  font-family: inherit;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   CENTER BRAND MARK
+   ========================================================================== */
+
+.cd-hero-center-mark-wrap {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  user-select: none;
+}
+
+.cd-hero-mark-img {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+  filter: drop-shadow(0 6px 22px rgba(37, 183, 243, 0.32));
+}
+
+/* ==========================================================================
+   TYPOGRAPHY GROUP (Matching reference image)
+   ========================================================================== */
+
+.cd-hero-title-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 14px;
+  user-select: none;
+}
+
+.cd-hero-overline {
+  color: #6d7f94;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.cd-hero-headline {
+  color: #ffffff;
+  font-size: 31px;
+  font-weight: 800;
+  letter-spacing: -0.028em;
+  line-height: 1.15;
+  margin: 0;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.cd-hero-headline-main {
+  color: #ffffff;
+  display: inline-block;
+}
+
+.cd-hero-headline-accent {
+  color: #38a8f8;
+  background: linear-gradient(135deg, #38bdf8 0%, #2563eb 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ==========================================================================
+   ACTION DOCK (Sign In / Create Account)
+   ========================================================================== */
+
+.cd-hero-action-dock {
+  position: static;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 250px;
+  margin-top: 22px;
+  z-index: 10;
+}
+
+.cd-hero-buttons {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 8px;
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  border: none;
+  box-shadow: none;
+}
+
+.cd-hero-buttons .cd-action {
+  height: 42px;
+  width: 100%;
+  padding: 0 20px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 7px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: inherit;
+  letter-spacing: -0.01em;
+  transition: background 150ms ease, border-color 150ms ease, color 150ms ease, transform 150ms ease, box-shadow 150ms ease;
+  white-space: nowrap;
+}
+
+.cd-hero-buttons .cd-action:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.cd-hero-buttons .cd-action-primary {
+  background: #2f6feb;
+  border: 1px solid #2f6feb;
+  color: #ffffff;
+  box-shadow: 0 4px 18px rgba(47, 111, 235, 0.4);
+}
+
+.cd-hero-buttons .cd-action-primary:hover:not(:disabled) {
+  background: #3e7df5;
+  border-color: #3e7df5;
+  box-shadow: 0 6px 24px rgba(47, 111, 235, 0.5);
+}
+
+.cd-hero-buttons .cd-action-secondary {
+  background: rgba(18, 24, 32, 0.88);
+  border: 1px solid #2c3f56;
+  color: #d6e3f0;
+  backdrop-filter: blur(8px);
+}
+
+.cd-hero-buttons .cd-action-secondary:hover:not(:disabled) {
+  background: #1e2938;
+  border-color: #415c7e;
+  color: #ffffff;
+}
+
+.cd-hero-buttons .cd-action:disabled {
+  background: #171c21;
+  border-color: transparent;
+  color: #737d88;
+  cursor: not-allowed;
+}
+
+/* Status line */
+.cd-entry-status {
+  align-items: center;
+  color: #a8b0ba;
+  display: flex;
+  font-size: 12px;
+  gap: 8px;
+  height: 18px;
+  margin: 0;
+}
+
+.cd-status-pulse {
+  animation: cd-pulse 1.4s ease-in-out infinite;
+  background: #25b7f3;
+  border-radius: 50%;
+  height: 6px;
+  width: 6px;
+}
+
+@keyframes cd-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.28; }
+}
+
+/* Blocked state (service unavailable) */
+.cd-blocker {
+  background: #12161a;
+  border: 1px solid rgba(214, 90, 90, 0.4);
+  border-radius: 9px;
+  color: #d65a5a;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+.cd-blocker-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.cd-blocker-title {
+  color: #f4f6f8;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.cd-blocker-sub {
+  color: #a8b0ba;
+  font-size: 12px;
+}
+
+.cd-blocker .cd-action {
+  height: 34px;
+  padding: 0 16px;
+  font-size: 13px;
+  border-radius: 6px;
+  background: #2f6feb;
+  color: #fff;
+  border: 0;
+  cursor: pointer;
+}
+
+/* Returning state */
+.cd-resume {
+  background: rgba(18, 22, 26, 0.9);
+  border: 1px solid #262c33;
+  border-radius: 9px;
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+.cd-resume-id {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cd-resume-owner {
+  color: #f4f6f8;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.cd-resume-workspace {
+  color: #737d88;
+  font-size: 12px;
+}
+
+.cd-resume-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.cd-action-quiet {
+  background: none;
+  border: 1px solid transparent;
+  color: #a8b0ba;
+  padding: 0 12px;
+  height: 34px;
+  font-size: 13px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.cd-action-quiet:hover {
+  color: #f4f6f8;
+}
+
+/* ==========================================================================
+   FOOTER (Centered matching reference image)
+   ========================================================================== */
+
+.cd-foot {
+  align-items: center;
+  color: #737d88;
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  font-size: 11px;
+  gap: 6px;
+  justify-content: center;
+  padding: 12px 20px 16px;
+  position: relative;
+  z-index: 10;
+  background: rgba(6, 12, 22, 0.35);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  user-select: none;
+}
+
+.cd-foot-links {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.cd-foot-links a,
+.cd-foot-btn {
+  color: #5d6d80;
+  font-size: 11.5px;
+  font-weight: 500;
+  text-decoration: none;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  font-family: inherit;
+  transition: color 140ms ease;
+}
+
+.cd-foot-links a:hover,
+.cd-foot-btn:hover {
+  color: #9fb2c8;
+}
+
+.cd-foot-dot {
+  color: #374454;
+  font-size: 10px;
+}
+
+.cd-foot-version {
+  color: #445161;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Reduced Motion Mode */
+@media (prefers-reduced-motion: reduce) {
+  .cd-hero-ripples circle,
+  .cd-hero-signal,
+  .cd-hero-direction-arrow,
+  .cd-status-pulse {
+    animation: none;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-height: 740px) {
+  .cd-hero-orbit-wrap {
+    height: calc(100dvh - 100px);
+    transform: scale(0.92);
+  }
+}
+
+@media (max-width: 900px) {
+  .cd-hero-orbit-wrap {
+    transform: scale(0.82);
+  }
+}

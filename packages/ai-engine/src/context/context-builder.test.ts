@@ -27,7 +27,7 @@ describe("ContextBuilder", () => {
     expect(() =>
       new ContextBuilder().build({
         facts: {
-          name: "Atlas",
+          name: "CoreDesk",
           " name ": "Duplicate",
         },
       }),

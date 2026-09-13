@@ -1,10 +1,15 @@
 import { describe, expect, it } from "vitest";
-import type { AtlasPreloadApi } from "../../packages/contracts/src";
+import type { CoreDeskPreloadApi } from "../../packages/contracts/src";
 
-describe("AtlasPreloadApi", () => {
-  it("contains only the approved Task 004 foundation surfaces", () => {
-    const allowedTopLevelKeys: Array<keyof AtlasPreloadApi> = ["app", "settings", "jobs"];
+describe("CoreDeskPreloadApi", () => {
+  it("contains only the approved foundation and CoreDesk AI surfaces", () => {
+    const allowedTopLevelKeys: Array<keyof CoreDeskPreloadApi> = [
+      "app",
+      "settings",
+      "jobs",
+      "coredeskAi",
+    ];
 
-    expect(allowedTopLevelKeys).toEqual(["app", "settings", "jobs"]);
+    expect(allowedTopLevelKeys).toEqual(["app", "settings", "jobs", "coredeskAi"]);
   });
 });

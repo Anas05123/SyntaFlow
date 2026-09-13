@@ -20,13 +20,13 @@ describe("healthResponseSchema", () => {
     expect(
       healthResponseSchema.parse({
         status: "ok",
-        appName: "AI Agency OS",
+        appName: "CoreDesk",
         version: "0.1.0",
         services,
       }),
     ).toEqual({
       status: "ok",
-      appName: "AI Agency OS",
+      appName: "CoreDesk",
       version: "0.1.0",
       services,
     });
@@ -40,10 +40,15 @@ describe("settingsSchema", () => {
         themeMode: "dark",
         logLevel: "info",
         ollamaBaseUrl: "http://127.0.0.1:11434",
+        ollamaModel: "",
         defaultAIPrivacyMode: "local-only",
         appDataPathDisplay: "Default application data location",
       }),
     ).toMatchObject({ themeMode: "dark" });
+  });
+
+  it("does not fill absent keys in partial settings updates", () => {
+    expect(settingsUpdateSchema.parse({ themeMode: "dark" })).toEqual({ themeMode: "dark" });
   });
 
   it("rejects unknown update keys", () => {

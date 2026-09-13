@@ -1,0 +1,269 @@
+/**
+ * CoreDesk Startup Transition Styles
+ * "The Continuous Thread Reconnects"
+ *
+ * Designed exclusively with CoreDesk tokens:
+ * - Canvas: #0B0D0F
+ * - Cobalt: #2563EB / #2F6FEB
+ * - Cyan: #25B7F3 / #38BDF8
+ * - Text: #F4F6F8
+ * - Muted: #A8B0BA
+ */
+
+.cd-startup-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: var(--canvas, #0b0d0f);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: all;
+  opacity: 1;
+  transition: opacity 280ms cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+  user-select: none;
+}
+
+.cd-startup-layer.is-exiting {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.cd-startup-stage {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 320px;
+  height: 240px;
+}
+
+/* Atmospheric subtle ambient glow behind the mark */
+.cd-startup-ambient {
+  position: absolute;
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(37, 99, 235, 0.12) 0%,
+    rgba(37, 183, 243, 0.05) 45%,
+    transparent 70%
+  );
+  pointer-events: none;
+  opacity: 0;
+  animation: cdStartupAmbient 700ms 150ms forwards ease-out;
+}
+
+/* Concentric water ripple waves (Phase D: ~700ms - 1100ms) */
+.cd-startup-ripples {
+  position: absolute;
+  width: 320px;
+  height: 320px;
+  pointer-events: none;
+}
+
+.cd-startup-ripple {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(37, 183, 243, 0.22);
+  opacity: 0;
+  transform: scale(0.3);
+}
+
+.cd-startup-ripple.ripple-1 {
+  animation: cdStartupRipple 750ms 700ms cubic-bezier(0.1, 0.7, 0.3, 1) forwards;
+}
+
+.cd-startup-ripple.ripple-2 {
+  animation: cdStartupRipple 750ms 840ms cubic-bezier(0.1, 0.7, 0.3, 1) forwards;
+}
+
+/* Brand mark container (Phase A Arrival & Phase B Form: 0 - 550ms) */
+.cd-startup-mark-box {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.05;
+  transform: scale(0.93);
+  animation: cdStartupForm 550ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.cd-startup-mark-img {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 20px rgba(0, 0, 0, 0.5));
+}
+
+/* Restrained traveling signal path (Phase C: ~450ms - 900ms) */
+.cd-startup-signal-svg {
+  position: absolute;
+  inset: -20px;
+  width: 120px;
+  height: 120px;
+  pointer-events: none;
+}
+
+.cd-startup-signal-track {
+  stroke: rgba(255, 255, 255, 0.04);
+  stroke-width: 1.5;
+  fill: none;
+}
+
+.cd-startup-signal-pulse {
+  stroke: url(#cdStartupSignalGrad);
+  stroke-width: 2;
+  stroke-linecap: round;
+  fill: none;
+  stroke-dasharray: 40 180;
+  stroke-dashoffset: 220;
+  opacity: 0;
+  animation: cdStartupSignal 500ms 450ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Restrained text signal: "Reconnecting workspace..." */
+.cd-startup-label {
+  margin-top: 22px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--muted, #a8b0ba);
+  opacity: 0;
+  animation: cdStartupFadeIn 350ms 300ms forwards ease-out;
+}
+
+/* Restrained Recovery Surface */
+.cd-startup-recovery {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 380px;
+  padding: 32px 28px;
+  background: var(--surface, #12161a);
+  border: 1px solid var(--edge, #323a43);
+  border-radius: 8px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+  animation: cdStartupFadeIn 250ms ease-out forwards;
+}
+
+.cd-startup-recovery-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(214, 90, 90, 0.12);
+  color: var(--risk, #d65a5a);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.cd-startup-recovery-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text, #f4f6f8);
+  margin-bottom: 8px;
+}
+
+.cd-startup-recovery-sub {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--muted, #a8b0ba);
+  margin-bottom: 20px;
+}
+
+.cd-startup-recovery-actions {
+  display: flex;
+  gap: 12px;
+}
+
+/* Keyframes */
+@keyframes cdStartupForm {
+  0% {
+    opacity: 0.05;
+    transform: scale(0.93);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes cdStartupAmbient {
+  0% {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes cdStartupSignal {
+  0% {
+    stroke-dashoffset: 220;
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 0.9;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+}
+
+@keyframes cdStartupRipple {
+  0% {
+    transform: scale(0.35);
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.2;
+  }
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+
+@keyframes cdStartupFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Reduced Motion Mode */
+@media (prefers-reduced-motion: reduce) {
+  .cd-startup-mark-box {
+    animation: cdStartupFadeIn 250ms forwards ease-out;
+    transform: none !important;
+  }
+  .cd-startup-ambient,
+  .cd-startup-ripples,
+  .cd-startup-signal-pulse {
+    display: none !important;
+  }
+  .cd-startup-layer {
+    transition: opacity 150ms ease-out;
+  }
+}

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CoreDesk — Precision Workspace · Design Preview</title>
+<meta name="description" content="CoreDesk product UI design preview, built to the page-inventory contracts in the Figma planning file.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="coredesk.css">
+<script>
+  /* Apply the stored theme before first paint so there is no flash. */
+  try {
+    var t = localStorage.getItem("coredesk-theme");
+    if (t) document.documentElement.setAttribute("data-theme", t);
+  } catch (e) {}
+</script>
+</head>
+<body>
+  <div id="app"></div>
+  <noscript>
+    <div style="padding:40px;font-family:Inter,sans-serif;color:#F4F6F8">
+      This design preview needs JavaScript to render the workspace screens.
+    </div>
+  </noscript>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

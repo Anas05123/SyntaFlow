@@ -32,7 +32,7 @@ describe("DefaultAiEngine", () => {
         task: "structured-output",
         routeId: "structured-output.v1",
         prompt: {
-          id: "atlas.foundation.structured-output",
+          id: "coredesk.foundation.structured-output",
           version: "1.0.0",
         },
         provider: {

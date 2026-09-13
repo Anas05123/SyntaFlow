@@ -1,0 +1,13 @@
+{
+  "name": "coredesk-electron-harness",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Local Electron runtime so CoreDesk's renderer is verified as a desktop application, not a web page. It reuses the Electron binary already vendored in this workspace rather than downloading a second copy.",
+  "main": "main.cjs",
+  "scripts": {
+    "start": "node start.mjs"
+  },
+  "dependencies": {
+    "electron": "^44.2.0"
+  }
+}

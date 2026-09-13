@@ -1,4 +1,4 @@
-import type { z } from "zod";
+import { z } from "zod";
 import type { AiEngineContent } from "../domain/contracts";
 import { AiEngineFault } from "../domain/engine-error";
 import type { PromptReference } from "../application/task-router";
@@ -16,7 +16,7 @@ export interface PromptDefinition {
 }
 
 const foundationStructuredPrompt: PromptDefinition = Object.freeze({
-  id: "atlas.foundation.structured-output",
+  id: "coredesk.foundation.structured-output",
   version: "1.0.0",
   systemInstructions:
     "Return one structured result that matches the registered output contract. Do not include provider diagnostics.",
@@ -25,6 +25,24 @@ const foundationStructuredPrompt: PromptDefinition = Object.freeze({
   expectedOutput: Object.freeze({
     kind: "structured",
     schema: aiEngineContentSchema,
+  }),
+});
+
+const coredeskAssistantPrompt: PromptDefinition = Object.freeze({
+  id: "coredesk.ai.assistant",
+  version: "1.0.0",
+  systemInstructions:
+    'You are CoreDesk AI, a professional local assistant. Answer the user clearly and concisely. Be honest about uncertainty and never claim to access files, tools, or the internet. Return only JSON with the shape {"kind":"structured","value":{"text":"your plain-text answer"}}. Do not include provider diagnostics.',
+  template:
+    "Answer input.instruction. Put the complete answer in value.text, using plain text without Markdown formatting.",
+  expectedOutput: Object.freeze({
+    kind: "structured",
+    schema: z
+      .object({
+        kind: z.literal("structured"),
+        value: z.object({ text: z.string().max(32_000) }).strict(),
+      })
+      .strict(),
   }),
 });
 
@@ -61,7 +79,7 @@ export class PromptRegistry {
 }
 
 export function createFoundationPromptRegistry(): PromptRegistry {
-  return new PromptRegistry([foundationStructuredPrompt]);
+  return new PromptRegistry([foundationStructuredPrompt, coredeskAssistantPrompt]);
 }
 
 function promptKey(reference: PromptReference): string {

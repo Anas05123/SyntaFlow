@@ -1,0 +1,14 @@
+harness: stubs installed
+harness: modules staged in C:\Users\Anas\AppData\Local\Temp
+harness: app module evaluated
+harness: boot render produced 25973 chars
+harness: rendering routes
+harness: hashchange handlers on window = 1
+harness: click handlers on document = 1
+harness: complete
+
+routes rendered : 88
+actions fired   : 56
+failures        : 0
+
+All routes and actions rendered clean.

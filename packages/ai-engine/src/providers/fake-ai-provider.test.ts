@@ -12,7 +12,7 @@ function createRequest(): ProviderRequest {
       instruction: "  Summarize the supplied record  ",
       data: {
         score: 8,
-        business: "Atlas Clinic",
+        business: "CoreDesk Clinic",
       },
     },
     context: new ContextBuilder().build({
@@ -27,7 +27,7 @@ function createRequest(): ProviderRequest {
       timeoutMs: 30_000,
     },
     prompt: createFoundationPromptRegistry().get({
-      id: "atlas.foundation.structured-output",
+      id: "coredesk.foundation.structured-output",
       version: "1.0.0",
     }),
   };

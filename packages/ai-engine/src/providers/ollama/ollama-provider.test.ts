@@ -12,7 +12,7 @@ function createRequest(timeoutMs = 1_000): ProviderRequest {
     input: {
       instruction: "Summarize the supplied record",
       data: {
-        business: "Atlas Studio",
+        business: "CoreDesk Studio",
         score: 9,
       },
     },
@@ -28,7 +28,7 @@ function createRequest(timeoutMs = 1_000): ProviderRequest {
       timeoutMs,
     },
     prompt: createFoundationPromptRegistry().get({
-      id: "atlas.foundation.structured-output",
+      id: "coredesk.foundation.structured-output",
       version: "1.0.0",
     }),
   };
@@ -83,7 +83,7 @@ describe("OllamaProvider", () => {
         }),
       ),
     );
-    const provider = new OllamaProvider({ model: "atlas-test" }, { fetch: fetchMock });
+    const provider = new OllamaProvider({ model: "coredesk-test" }, { fetch: fetchMock });
 
     await expect(provider.execute(createRequest())).resolves.toEqual({
       kind: "structured",
@@ -110,12 +110,12 @@ describe("OllamaProvider", () => {
     expect(init.redirect).toBe("error");
     expect(init.signal).toBeInstanceOf(AbortSignal);
     expect(body).toMatchObject({
-      model: "atlas-test",
+      model: "coredesk-test",
       stream: false,
       format: "json",
     });
     expect(body.prompt).toContain("Summarize the supplied record");
-    expect(body.prompt).toContain("Atlas Studio");
+    expect(body.prompt).toContain("CoreDesk Studio");
   });
 
   it("accepts configurable loopback origins and rejects unsafe endpoint shapes", async () => {
@@ -128,7 +128,7 @@ describe("OllamaProvider", () => {
     );
     const provider = new OllamaProvider(
       {
-        model: "atlas-test",
+        model: "coredesk-test",
         baseUrl: "http://localhost:22441/",
       },
       { fetch: fetchMock },
@@ -157,7 +157,7 @@ describe("OllamaProvider", () => {
     ];
 
     for (const baseUrl of unsafeBaseUrls) {
-      expect(() => new OllamaProvider({ model: "atlas-test", baseUrl })).toThrowError(
+      expect(() => new OllamaProvider({ model: "coredesk-test", baseUrl })).toThrowError(
         "The Ollama provider configuration is invalid.",
       );
     }
@@ -167,22 +167,22 @@ describe("OllamaProvider", () => {
     expect(() => new OllamaProvider({ model: "" })).toThrowError(
       "The Ollama provider configuration is invalid.",
     );
-    expect(() => new OllamaProvider({ model: "atlas test" })).toThrowError(
+    expect(() => new OllamaProvider({ model: "coredesk test" })).toThrowError(
       "The Ollama provider configuration is invalid.",
     );
-    expect(() => new OllamaProvider({ model: "atlas-test", healthTimeoutMs: 0 })).toThrowError(
+    expect(() => new OllamaProvider({ model: "coredesk-test", healthTimeoutMs: 0 })).toThrowError(
       "The Ollama provider configuration is invalid.",
     );
   });
 
   it("reports ready and missing-model health without exposing the model list", async () => {
     const readyProvider = new OllamaProvider(
-      { model: "atlas-test" },
+      { model: "coredesk-test" },
       {
         fetch: () =>
           Promise.resolve(
             jsonResponse({
-              models: [{ name: "atlas-test:latest", digest: "private-model-digest" }],
+              models: [{ name: "coredesk-test:latest", digest: "private-model-digest" }],
             }),
           ),
       },
@@ -200,7 +200,7 @@ describe("OllamaProvider", () => {
     expect(ready).toEqual({
       status: "available",
       reason: "ready",
-      model: "atlas-test",
+      model: "coredesk-test",
       modelAvailable: true,
     });
     expect(missing).toEqual({
@@ -212,9 +212,47 @@ describe("OllamaProvider", () => {
     expect(JSON.stringify(ready)).not.toContain("private-model-digest");
   });
 
+  it.each(["minimax-m3:cloud", "gpt-oss:120b-cloud", "custom-cloud:latest"])(
+    "rejects cloud model configuration %s before transport",
+    (model) => {
+      expect(() => new OllamaProvider({ model })).toThrowError(
+        "The Ollama provider configuration is invalid.",
+      );
+    },
+  );
+
+  it.each([
+    { remote_model: "upstream-model" },
+    { remote_host: "https://ollama.com:443" },
+    { remote_model: "upstream-model", remote_host: "https://ollama.com:443" },
+  ])("excludes remote aliases from locally available models", async (remoteMetadata) => {
+    const provider = new OllamaProvider(
+      { model: "local-alias" },
+      {
+        fetch: () =>
+          Promise.resolve(
+            jsonResponse({ models: [{ name: "local-alias:latest", ...remoteMetadata }] }),
+          ),
+      },
+    );
+    expect(await provider.checkHealth()).toEqual({
+      status: "degraded",
+      reason: "model-unavailable",
+      model: "local-alias",
+      modelAvailable: false,
+    });
+  });
+
+  it.each(["http://[::1]:11434/", "https://localhost:22441/", "http://127.0.0.1:11434"])(
+    "accepts explicit loopback origin %s",
+    (baseUrl) => {
+      expect(() => new OllamaProvider({ model: "fixture", baseUrl })).not.toThrow();
+    },
+  );
+
   it("normalizes connectivity failures into a sanitized unavailable health result", async () => {
     const provider = new OllamaProvider(
-      { model: "atlas-test" },
+      { model: "coredesk-test" },
       {
         fetch: () => Promise.reject(new Error("private-connection-diagnostic")),
       },
@@ -225,7 +263,7 @@ describe("OllamaProvider", () => {
     expect(health).toEqual({
       status: "unavailable",
       reason: "connection-failed",
-      model: "atlas-test",
+      model: "coredesk-test",
       modelAvailable: false,
     });
     expect(JSON.stringify(health)).not.toContain("private-connection-diagnostic");
@@ -234,7 +272,7 @@ describe("OllamaProvider", () => {
   it("aborts health checks at the configured bound", async () => {
     const provider = new OllamaProvider(
       {
-        model: "atlas-test",
+        model: "coredesk-test",
         healthTimeoutMs: 5,
       },
       {
@@ -247,7 +285,7 @@ describe("OllamaProvider", () => {
     expect(health).toEqual({
       status: "unavailable",
       reason: "timed-out",
-      model: "atlas-test",
+      model: "coredesk-test",
       modelAvailable: false,
     });
     expect(JSON.stringify(health)).not.toContain("private-health-timeout-diagnostic");
@@ -255,7 +293,7 @@ describe("OllamaProvider", () => {
 
   it("maps request timeouts through the provider adapter to a safe engine fault", async () => {
     const provider = new OllamaProvider(
-      { model: "atlas-test" },
+      { model: "coredesk-test" },
       {
         fetch: abortablePendingFetch("private-request-timeout-diagnostic"),
       },
@@ -274,7 +312,7 @@ describe("OllamaProvider", () => {
 
   it("keeps the request timeout active while consuming the response body", async () => {
     const provider = new OllamaProvider(
-      { model: "atlas-test" },
+      { model: "coredesk-test" },
       {
         fetch: stalledResponseBodyFetch("private-body-timeout-diagnostic"),
       },
@@ -292,13 +330,13 @@ describe("OllamaProvider", () => {
 
   it("maps unavailable and provider HTTP failures without leaking response details", async () => {
     const unavailableProvider = new OllamaProvider(
-      { model: "atlas-test" },
+      { model: "coredesk-test" },
       {
         fetch: () => Promise.reject(new Error("private-network-diagnostic")),
       },
     );
     const failedProvider = new OllamaProvider(
-      { model: "atlas-test" },
+      { model: "coredesk-test" },
       {
         fetch: () => Promise.resolve(new Response("private-provider-response", { status: 500 })),
       },

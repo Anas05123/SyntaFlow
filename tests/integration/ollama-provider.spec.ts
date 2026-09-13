@@ -42,7 +42,7 @@ beforeAll(async () => {
     if (incomingRequest.url === "/api/tags") {
       response.end(
         JSON.stringify({
-          models: [{ name: "atlas-test:latest" }],
+          models: [{ name: "coredesk-test:latest" }],
         }),
       );
       return;
@@ -51,7 +51,7 @@ beforeAll(async () => {
     if (incomingRequest.url === "/api/generate" && incomingRequest.method === "POST") {
       response.end(
         JSON.stringify({
-          model: "atlas-test:latest",
+          model: "coredesk-test:latest",
           response: generatedContent,
           done: true,
         }),
@@ -102,14 +102,14 @@ describe("Ollama provider loopback integration", () => {
       },
     });
     const runtime = createOllamaRuntime({
-      model: "atlas-test",
+      model: "coredesk-test",
       baseUrl,
     });
 
     await expect(runtime.checkHealth()).resolves.toEqual({
       status: "available",
       reason: "ready",
-      model: "atlas-test",
+      model: "coredesk-test",
       modelAvailable: true,
     });
 
@@ -134,7 +134,7 @@ describe("Ollama provider loopback integration", () => {
   it("routes malformed model content through the existing Output Validator", async () => {
     generatedContent = "not-json-model-output";
     const runtime = createOllamaRuntime({
-      model: "atlas-test",
+      model: "coredesk-test",
       baseUrl,
     });
 

@@ -3,7 +3,7 @@ import { createFoundationPromptRegistry } from "../prompts/prompt-registry";
 import { OutputValidator } from "./output-validator";
 
 const prompt = createFoundationPromptRegistry().get({
-  id: "atlas.foundation.structured-output",
+  id: "coredesk.foundation.structured-output",
   version: "1.0.0",
 });
 

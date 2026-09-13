@@ -1,22 +1,9 @@
 node_modules/
-.pnpm-store/
 dist/
-out/
-release/
-.vite/
-coverage/
-playwright-report/
-test-results/
-.env
-.env.*
-!.env.example
+.shots/
+.pnpm-store/
 *.log
-*.sqlite
-*.sqlite-wal
-*.sqlite-shm
-temporary/
-cache/
-application-data/
-Project Atlas Development Data/
 .DS_Store
 Thumbs.db
+.env
+.env.local

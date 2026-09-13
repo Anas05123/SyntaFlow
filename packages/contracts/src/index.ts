@@ -1,8 +1,11 @@
 import { z } from "zod";
+import type { CoreDeskAiGenerateInput, CoreDeskAiResult, CoreDeskAiStatus } from "./ai";
+export * from "./ai";
+export * from "./redact-secrets";
 
 export const healthResponseSchema = z.object({
   status: z.literal("ok"),
-  appName: z.literal("AI Agency OS"),
+  appName: z.literal("CoreDesk"),
   version: z.string().min(1),
   services: z.object({
     appDataPath: z.enum(["healthy", "degraded", "unavailable"]),
@@ -19,7 +22,8 @@ export type HealthResponse = z.infer<typeof healthResponseSchema>;
 export const settingsSchema = z.object({
   themeMode: z.enum(["system", "light", "dark"]),
   logLevel: z.enum(["debug", "info", "warn", "error", "security"]),
-  ollamaBaseUrl: z.string().url(),
+  ollamaBaseUrl: z.string().max(256).url(),
+  ollamaModel: z.string().trim().max(200),
   defaultAIPrivacyMode: z.enum(["local-only", "external-approved"]),
   appDataPathDisplay: z.string().min(1),
 });
@@ -63,7 +67,11 @@ export const jobsResponseSchema = z.object({
 export type JobRecord = z.infer<typeof jobRecordSchema>;
 export type JobsResponse = z.infer<typeof jobsResponseSchema>;
 
-export interface AtlasPreloadApi {
+export interface CoreDeskPreloadApi {
+  coredeskAi: {
+    getStatus(): Promise<CoreDeskAiStatus>;
+    generate(input: CoreDeskAiGenerateInput): Promise<CoreDeskAiResult>;
+  };
   app: {
     health(): Promise<HealthResponse>;
   };

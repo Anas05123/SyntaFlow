@@ -1,16 +1,43 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
-    <meta
-      http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' http://127.0.0.1:* http://localhost:*; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none'"
-    />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AI Agency OS</title>
+    <meta
+      name="description"
+      content="CoreDesk — a focused workspace for independent professionals to run client work, documents, reviews and delivery."
+    />
+    <title>CoreDesk — Precision Workspace</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      /* Apply the stored theme before first paint so there is no flash. */
+      try {
+        var a = localStorage.getItem('coredesk.appearance.v2');
+        if (a) {
+          var p = JSON.parse(a);
+          var mode = p.mode || 'dark';
+          var theme = mode === 'system'
+            ? (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+            : (p.theme || mode);
+          document.documentElement.setAttribute('data-theme', theme);
+          if (p.surface) document.documentElement.setAttribute('data-surface', p.surface);
+          if (p.background && p.background !== 'none') document.documentElement.setAttribute('data-wallpaper', p.background);
+        } else {
+          var t = localStorage.getItem('coredesk.theme');
+          if (t) document.documentElement.setAttribute('data-theme', t);
+        }
+      } catch (e) {}
+    </script>
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/src/renderer/main.tsx"></script>
+    <noscript>CoreDesk needs JavaScript enabled to run.</noscript>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

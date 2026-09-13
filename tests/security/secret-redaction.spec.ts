@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { redactSecrets } from "../../apps/desktop/src/core/logging/redact-secrets";
+import { redactSecrets } from "../../packages/contracts/src";
 
 describe("redactSecrets", () => {
   it("redacts common secret fields", () => {

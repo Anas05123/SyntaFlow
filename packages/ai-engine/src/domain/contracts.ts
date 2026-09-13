@@ -6,7 +6,7 @@ export interface JsonObject {
 
 export type JsonValue = JsonPrimitive | JsonObject | readonly JsonValue[];
 
-export type AiTask = "structured-output";
+export type AiTask = "structured-output" | "coredesk-assistant";
 export type AiPrivacyMode = "local-only" | "external-approved";
 export type AiQualityMode = "fast" | "balanced" | "quality";
 

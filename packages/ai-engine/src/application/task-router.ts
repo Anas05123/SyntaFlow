@@ -20,13 +20,21 @@ const structuredOutputRoute: TaskRoute = Object.freeze({
   task: "structured-output",
   capability: "structured-output",
   prompt: Object.freeze({
-    id: "atlas.foundation.structured-output",
+    id: "coredesk.foundation.structured-output",
     version: "1.0.0",
   }),
 });
 
+const coredeskAssistantRoute: TaskRoute = Object.freeze({
+  id: "coredesk-assistant.v1",
+  task: "coredesk-assistant",
+  capability: "structured-output",
+  prompt: Object.freeze({ id: "coredesk.ai.assistant", version: "1.0.0" }),
+});
+
 export class TaskRouter {
   route(task: string): TaskRoute {
+    if (task === coredeskAssistantRoute.task) return coredeskAssistantRoute;
     if (task === structuredOutputRoute.task) {
       return structuredOutputRoute;
     }

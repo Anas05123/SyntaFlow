@@ -1,0 +1,6 @@
+{
+  "enabledMcpjsonServers": [
+    "nexa-hub"
+  ],
+  "enableAllProjectMcpServers": true
+}
