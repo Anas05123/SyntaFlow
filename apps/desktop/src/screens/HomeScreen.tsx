@@ -20,7 +20,7 @@ import { Button } from '../ui/primitives';
 type PillarFilter = 'all' | 'blockers' | 'focus' | 'clients';
 
 export function HomeScreen() {
-  const { state, dispatch } = useStore();
+  const { state, dispatch, derived } = useStore();
   const overlay = useOverlay();
 
   // Search & Filter State
@@ -105,6 +105,23 @@ export function HomeScreen() {
   const handlePingClient = (blockerTitle: string, clientName: string) => {
     overlay.toast('Follow-Up Triggered', `Reminder queued for ${clientName} on “${blockerTitle}”.`, 'ok');
   };
+
+  // Filtered views
+  const overdueTasks = useMemo(() => {
+    return cockpit.focusQueue.filter((t) => t.isOverdue || t.priority === 'urgent' || t.priority === 'blocker');
+  }, [cockpit.focusQueue]);
+
+  const activeProject = useMemo(() => {
+    return state.projects.find((p) => p.stage === 'active') ?? state.projects[0] ?? null;
+  }, [state.projects]);
+
+  const activeDocument = useMemo(() => {
+    return state.documents.find((d) => d.reviewState === 'waiting' || d.reviewState === 'none') ?? state.documents[0] ?? null;
+  }, [state.documents]);
+
+  const waitingItems = useMemo(() => {
+    return cockpit.blockers.filter((b) => b.waitingOn);
+  }, [cockpit.blockers]);
 
   return (
     <div className="cd-cockpit-container">
@@ -192,28 +209,28 @@ export function HomeScreen() {
               className={`segmented-btn ${activeFilter === 'all' ? 'is-active' : ''}`}
               onClick={() => setActiveFilter('all')}
             >
-              All Pillars
+              All Priorities
             </button>
             <button
               type="button"
               className={`segmented-btn ${activeFilter === 'blockers' ? 'is-active' : ''}`}
               onClick={() => setActiveFilter('blockers')}
             >
-              Blockers ({cockpit.blockers.length})
+              Needs Attention ({cockpit.blockers.length + overdueTasks.length})
             </button>
             <button
               type="button"
               className={`segmented-btn ${activeFilter === 'focus' ? 'is-active' : ''}`}
               onClick={() => setActiveFilter('focus')}
             >
-              Focus ({cockpit.focusQueue.length})
+              Resume ({cockpit.focusQueue.length})
             </button>
             <button
               type="button"
               className={`segmented-btn ${activeFilter === 'clients' ? 'is-active' : ''}`}
               onClick={() => setActiveFilter('clients')}
             >
-              Pulse ({cockpit.clientPulse.length})
+              Waiting ({waitingItems.length})
             </button>
           </div>
 
@@ -237,211 +254,348 @@ export function HomeScreen() {
         </div>
       </div>
 
-      {/* 2. The 3 Operator Pillars */}
-      <div className="cd-cockpit-grid">
-        {/* Pillar 1: External Blockers & Approvals Gate */}
-        {(activeFilter === 'all' || activeFilter === 'blockers') && (
-          <section className="cd-pillar" aria-label="External Blockers & Approvals">
-            <div className="cd-pillar-head">
-              <div className="cd-pillar-badge-title">
-                <Icon name="clock" size={15} />
-                <span className="cd-pillar-title">Client Approvals & Blockers</span>
-              </div>
-              <span className={`cd-pillar-count ${cockpit.blockers.length > 0 ? 'alert' : ''}`}>
-                {cockpit.blockers.length} waiting
-              </span>
-            </div>
-
-            <div className="cd-pillar-body">
-              {cockpit.blockers.length === 0 ? (
-                <div style={{ padding: '24px 16px', textAlign: 'center', color: 'var(--metadata)', fontSize: 13 }}>
-                  <span style={{ fontSize: 24, display: 'block', marginBottom: 8 }}>✓</span>
-                  No external blockers. All client gates are clear.
+      {/* 2. Hierarchical Operating Surface (Section 8) */}
+      {(activeFilter === 'all' || activeFilter === 'blockers' || activeFilter === 'focus' || activeFilter === 'clients') && (
+        <div className="cd-cockpit-grid">
+          {/* Pillar 1: Needs Attention (Left / Primary) */}
+          {(activeFilter === 'all' || activeFilter === 'blockers') && (
+            <section className="cd-pillar cd-pillar-attention" aria-label="Needs Attention">
+              <div className="cd-pillar-head">
+                <div className="cd-pillar-badge-title">
+                  <Icon name="alert" size={15} />
+                  <span className="cd-pillar-title">Needs Attention</span>
                 </div>
-              ) : (
-                cockpit.blockers.map((b) => (
-                  <div key={b.id} className="cd-blocker-item">
-                    <div className="cd-blocker-top">
-                      <span className="cd-blocker-client">{b.clientName}</span>
-                      <span className="cd-blocker-tag">{b.dueLabel}</span>
-                    </div>
+                <span className={`cd-pillar-count ${cockpit.blockers.length + overdueTasks.length > 0 ? 'alert' : ''}`}>
+                  {cockpit.blockers.length + overdueTasks.length} urgent
+                </span>
+              </div>
 
-                    <a href={b.targetHref} className="cd-blocker-title" style={{ textDecoration: 'none' }}>
-                      {b.title}
-                    </a>
+              <div className="cd-pillar-body">
+                {cockpit.blockers.length === 0 && overdueTasks.length === 0 ? (
+                  <div style={{ padding: '24px 16px', textAlign: 'center', color: 'var(--metadata)', fontSize: 13 }}>
+                    <span style={{ fontSize: 24, display: 'block', marginBottom: 8 }}>✓</span>
+                    No urgent blockers. All client gates and milestones are on schedule.
+                  </div>
+                ) : (
+                  <>
+                    {overdueTasks.map((t) => (
+                      <div key={t.id} className="cd-blocker-item" style={{ borderLeftColor: 'var(--risk)' }}>
+                        <div className="cd-blocker-top">
+                          <span className="cd-blocker-client">{t.clientName}</span>
+                          <span className="cd-blocker-tag">{t.dueLabel}</span>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
+                          <span className="cd-blocker-title">{t.title}</span>
+                          {t.directLinkUrl && (
+                            <button
+                              type="button"
+                              className="cd-focus-jump-btn"
+                              onClick={() => navigate(t.directLinkUrl!)}
+                            >
+                              Resolve →
+                            </button>
+                          )}
+                        </div>
+                        <div className="cd-blocker-consequence">
+                          Overdue operational task requiring immediate intervention.
+                        </div>
+                      </div>
+                    ))}
 
-                    <div className="cd-blocker-consequence">
-                      {b.consequence}
-                    </div>
+                    {cockpit.blockers.map((b) => (
+                      <div key={b.id} className="cd-blocker-item">
+                        <div className="cd-blocker-top">
+                          <span className="cd-blocker-client">{b.clientName}</span>
+                          <span className="cd-blocker-tag">{b.dueLabel}</span>
+                        </div>
 
-                    <div className="cd-blocker-foot">
-                      <span className="cd-blocker-person">
-                        <Icon name="user" size={12} />
-                        Waiting on {b.waitingOn} ({b.daysWaiting}d)
+                        <a href={b.targetHref} className="cd-blocker-title" style={{ textDecoration: 'none' }}>
+                          {b.title}
+                        </a>
+
+                        <div className="cd-blocker-consequence">
+                          {b.consequence}
+                        </div>
+
+                        <div className="cd-blocker-foot">
+                          <span className="cd-blocker-person">
+                            <Icon name="user" size={12} />
+                            Waiting on {b.waitingOn} ({b.daysWaiting}d)
+                          </span>
+                          <button
+                            type="button"
+                            className="cd-focus-jump-btn"
+                            onClick={() => handlePingClient(b.title, b.clientName)}
+                            title="Ping client for update"
+                          >
+                            Ping
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </>
+                )}
+              </div>
+            </section>
+          )}
+
+          {/* Pillar 2: Resume (Center / Primary) */}
+          {(activeFilter === 'all' || activeFilter === 'focus') && (
+            <section className="cd-pillar cd-pillar-resume" aria-label="Resume Work">
+              <div className="cd-pillar-head">
+                <div className="cd-pillar-badge-title">
+                  <Icon name="arrowRight" size={15} />
+                  <span className="cd-pillar-title">Resume Active Work</span>
+                </div>
+                <div className="row" style={{ gap: 6, alignItems: 'center' }}>
+                  <span className="cd-pillar-count accent">{cockpit.focusQueue.length} queue</span>
+                  <button
+                    type="button"
+                    className="cd-focus-jump-btn"
+                    onClick={() => setIsAddingTask(!isAddingTask)}
+                    aria-label="Add task"
+                  >
+                    + Task
+                  </button>
+                </div>
+              </div>
+
+              <div className="cd-pillar-body">
+                {/* Active Project Resume Banner */}
+                {activeProject && (
+                  <div className="cd-resume-card-box">
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                        Current Project
                       </span>
                       <button
                         type="button"
                         className="cd-focus-jump-btn"
-                        onClick={() => handlePingClient(b.title, b.clientName)}
-                        title="Ping client for update"
+                        onClick={() => navigate(`#/projects/${activeProject.id}`)}
                       >
-                        Ping
+                        Resume →
                       </button>
                     </div>
+                    <div style={{ fontSize: 13.5, fontWeight: 600, color: 'var(--text)' }}>
+                      {activeProject.name}
+                    </div>
+                    <div style={{ fontSize: 12, color: 'var(--metadata)' }}>
+                      {derived.clientById(activeProject.clientId)?.name ?? 'Client'} · Next: {activeProject.nextMilestone}
+                    </div>
                   </div>
-                ))
-              )}
-            </div>
-          </section>
-        )}
+                )}
 
-        {/* Pillar 2: Today's Focus Production Queue */}
-        {(activeFilter === 'all' || activeFilter === 'focus') && (
-          <section className="cd-pillar" aria-label="Today's Focus Production Queue">
-            <div className="cd-pillar-head">
-              <div className="cd-pillar-badge-title">
-                <Icon name="check" size={15} />
-                <span className="cd-pillar-title">Today’s Focus Queue</span>
-              </div>
-              <div className="row" style={{ gap: 6, alignItems: 'center' }}>
-                <span className="cd-pillar-count accent">{cockpit.focusQueue.length} queue</span>
-                <button
-                  type="button"
-                  className="cd-focus-jump-btn"
-                  onClick={() => setIsAddingTask(!isAddingTask)}
-                  aria-label="Add task"
-                >
-                  + Add
-                </button>
-              </div>
-            </div>
-
-            <div className="cd-pillar-body">
-              {/* Quick Inline Task Input */}
-              {isAddingTask && (
-                <form onSubmit={handleCreateQuickTask} style={{ padding: '8px 10px', background: 'var(--surface-subtle)', borderRadius: 8 }}>
-                  <input
-                    type="text"
-                    value={quickTaskTitle}
-                    onChange={(e) => setQuickTaskTitle(e.target.value)}
-                    placeholder="Enter urgent task & press Enter…"
-                    autoFocus
-                    style={{
-                      width: '100%',
-                      padding: '7px 10px',
-                      borderRadius: 6,
-                      border: '1px solid var(--divider)',
-                      background: 'var(--surface)',
-                      fontSize: 13,
-                      color: 'var(--text)',
-                      outline: 'none',
-                    }}
-                  />
-                </form>
-              )}
-
-              {cockpit.focusQueue.length === 0 ? (
-                <div style={{ padding: '24px 16px', textAlign: 'center', color: 'var(--metadata)', fontSize: 13 }}>
-                  <span style={{ fontSize: 24, display: 'block', marginBottom: 8 }}>☕</span>
-                  Focus queue is empty. Ready for the next project milestone.
-                </div>
-              ) : (
-                cockpit.focusQueue.map((task) => (
-                  <div key={task.id} className="cd-focus-item">
-                    <input
-                      type="checkbox"
-                      className="cd-focus-checkbox"
-                      checked={task.status === 'done'}
-                      onChange={() => handleToggleTask(task.id, task.status)}
-                      aria-label={`Mark ${task.title} as completed`}
-                    />
-
-                    <div className="cd-focus-content">
-                      <span
-                        className="cd-focus-task-title"
-                        style={{
-                          textDecoration: task.status === 'done' ? 'line-through' : 'none',
-                          opacity: task.status === 'done' ? 0.6 : 1,
-                        }}
-                      >
-                        {task.title}
+                {/* Active Document Draft Resume */}
+                {activeDocument && (
+                  <div className="cd-resume-card-box" style={{ background: 'var(--surface)', borderColor: 'var(--divider)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                        Document in Progress
                       </span>
+                      <button
+                        type="button"
+                        className="cd-focus-jump-btn"
+                        onClick={() => navigate(`#/documents/${activeDocument.id}`)}
+                      >
+                        Edit →
+                      </button>
+                    </div>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text)' }}>
+                      {activeDocument.title} (v{activeDocument.workingVersion})
+                    </div>
+                  </div>
+                )}
 
-                      <div className="cd-focus-meta">
-                        <span>{task.clientName}</span>
-                        <span>•</span>
-                        <span>{task.projectName}</span>
-                        <span>•</span>
-                        <span className={`cd-focus-meta-badge ${task.priority}`}>
-                          {task.priority.toUpperCase()}
+                {/* Quick Inline Task Input */}
+                {isAddingTask && (
+                  <form onSubmit={handleCreateQuickTask} style={{ padding: '8px 10px', background: 'var(--surface-subtle)', borderRadius: 8 }}>
+                    <input
+                      type="text"
+                      value={quickTaskTitle}
+                      onChange={(e) => setQuickTaskTitle(e.target.value)}
+                      placeholder="Enter urgent task & press Enter…"
+                      autoFocus
+                      style={{
+                        width: '100%',
+                        padding: '7px 10px',
+                        borderRadius: 6,
+                        border: '1px solid var(--divider)',
+                        background: 'var(--surface)',
+                        fontSize: 13,
+                        color: 'var(--text)',
+                        outline: 'none',
+                      }}
+                    />
+                  </form>
+                )}
+
+                {/* Focus Tasks List */}
+                {cockpit.focusQueue.length === 0 ? (
+                  <div style={{ padding: '24px 16px', textAlign: 'center', color: 'var(--metadata)', fontSize: 13 }}>
+                    <span style={{ fontSize: 24, display: 'block', marginBottom: 8 }}>☕</span>
+                    Focus queue is empty. Ready for the next project milestone.
+                  </div>
+                ) : (
+                  cockpit.focusQueue.map((task) => (
+                    <div key={task.id} className="cd-focus-item">
+                      <input
+                        type="checkbox"
+                        className="cd-focus-checkbox"
+                        checked={task.status === 'done'}
+                        onChange={() => handleToggleTask(task.id, task.status)}
+                        aria-label={`Mark ${task.title} as completed`}
+                      />
+
+                      <div className="cd-focus-content">
+                        <span
+                          className="cd-focus-task-title"
+                          style={{
+                            textDecoration: task.status === 'done' ? 'line-through' : 'none',
+                            opacity: task.status === 'done' ? 0.6 : 1,
+                          }}
+                        >
+                          {task.title}
                         </span>
-                        <span>•</span>
-                        <span>~{task.estimatedMinutes}m</span>
+
+                        <div className="cd-focus-meta">
+                          <span>{task.clientName}</span>
+                          <span>•</span>
+                          <span>{task.projectName}</span>
+                          <span>•</span>
+                          <span className={`cd-focus-meta-badge ${task.priority}`}>
+                            {task.priority.toUpperCase()}
+                          </span>
+                        </div>
+                      </div>
+
+                      {task.directLinkUrl && (
+                        <button
+                          type="button"
+                          className="cd-focus-jump-btn"
+                          onClick={() => navigate(task.directLinkUrl!)}
+                          title="Jump to work context"
+                        >
+                          Open →
+                        </button>
+                      )}
+                    </div>
+                  ))
+                )}
+              </div>
+            </section>
+          )}
+
+          {/* Pillar 3: Waiting (Right / Supporting) */}
+          {(activeFilter === 'all' || activeFilter === 'clients') && (
+            <section className="cd-pillar cd-pillar-waiting" aria-label="Waiting on Others">
+              <div className="cd-pillar-head">
+                <div className="cd-pillar-badge-title">
+                  <Icon name="clock" size={15} />
+                  <span className="cd-pillar-title">Waiting on Others</span>
+                </div>
+                <span className="cd-pillar-count">{waitingItems.length} pending</span>
+              </div>
+
+              <div className="cd-pillar-body">
+                {waitingItems.length === 0 ? (
+                  <div style={{ padding: '24px 16px', textAlign: 'center', color: 'var(--metadata)', fontSize: 13 }}>
+                    <span style={{ fontSize: 24, display: 'block', marginBottom: 8 }}>✓</span>
+                    Nothing currently awaiting client responses or external reviews.
+                  </div>
+                ) : (
+                  waitingItems.map((item) => (
+                    <div key={item.id} className="cd-waiting-item">
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--waiting)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                          {item.kind} Sign-Off
+                        </span>
+                        <span style={{ fontSize: 11, color: 'var(--metadata)' }}>
+                          {item.daysWaiting}d waiting
+                        </span>
+                      </div>
+                      <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text)' }}>
+                        {item.title}
+                      </div>
+                      <div style={{ fontSize: 12, color: 'var(--muted)' }}>
+                        Waiting on {item.waitingOn} ({item.clientName})
+                      </div>
+                      <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 4 }}>
+                        <button
+                          type="button"
+                          className="cd-focus-jump-btn"
+                          onClick={() => handlePingClient(item.title, item.clientName)}
+                        >
+                          Ping Stakeholder
+                        </button>
                       </div>
                     </div>
-
-                    {task.directLinkUrl && (
-                      <button
-                        type="button"
-                        className="cd-focus-jump-btn"
-                        onClick={() => navigate(task.directLinkUrl!)}
-                        title="Jump to work context"
-                      >
-                        Open →
-                      </button>
-                    )}
-                  </div>
-                ))
-              )}
-            </div>
-          </section>
-        )}
-
-        {/* Pillar 3: Client Pulse & Commercial Runway */}
-        {(activeFilter === 'all' || activeFilter === 'clients') && (
-          <section className="cd-pillar" aria-label="Client Pulse & Commercial Pipeline">
-            <div className="cd-pillar-head">
-              <div className="cd-pillar-badge-title">
-                <Icon name="activity" size={15} />
-                <span className="cd-pillar-title">Client Pulse & Runway</span>
+                  ))
+                )}
               </div>
-              <span className="cd-pillar-count">{cockpit.clientPulse.length} clients</span>
-            </div>
+            </section>
+          )}
+        </div>
+      )}
 
-            <div className="cd-pillar-body">
+      {/* 3. Below: Client Pulse & Commercial Runway (Supporting Context) */}
+      <section className="cd-pulse-section mt-16" aria-label="Client Pulse & Commercial Runway">
+        <div className="cd-pillar-head">
+          <div className="cd-pillar-badge-title">
+            <Icon name="activity" size={15} />
+            <span className="cd-pillar-title">Client Pulse & Commercial Runway</span>
+          </div>
+          <span className="cd-pillar-count">{cockpit.clientPulse.length} active relationships</span>
+        </div>
+
+        <div style={{ overflowX: 'auto' }}>
+          <table className="cd-pulse-table">
+            <thead>
+              <tr>
+                <th>Client</th>
+                <th>Relationship Tier</th>
+                <th>Active Workstreams</th>
+                <th>Target Milestone</th>
+                <th>Total Value</th>
+                <th style={{ textAlign: 'right' }}>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
               {cockpit.clientPulse.map((client) => (
-                <a
-                  key={client.id}
-                  href={`#/clients/${client.id}`}
-                  className="cd-pulse-item"
-                >
-                  <div className="cd-pulse-head">
-                    <div className="cd-pulse-client">
+                <tr key={client.id}>
+                  <td>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
                       <div
                         className="cd-pulse-avatar"
                         style={{ background: client.brandColor }}
                       >
                         {client.name.substring(0, 2).toUpperCase()}
                       </div>
-                      <span className="cd-pulse-name">{client.name}</span>
+                      <span style={{ fontWeight: 600, color: 'var(--text)' }}>{client.name}</span>
                     </div>
-                    <span className="cd-pulse-phase-pill">{client.currentPhase}</span>
-                  </div>
-
-                  <div className="cd-pulse-metric-row">
-                    <span>{client.tier} • {client.activeProjectsCount} Active Workstreams</span>
-                    <span className="cd-pulse-metric-val">{client.totalBilledFormatted}</span>
-                  </div>
-
-                  <div className="cd-pulse-milestone">
-                    Target: {client.nextMilestone}
-                  </div>
-                </a>
+                  </td>
+                  <td>
+                    <span className="cd-pulse-phase-pill">{client.tier}</span>
+                  </td>
+                  <td>{client.activeProjectsCount} Active</td>
+                  <td style={{ color: 'var(--muted)' }}>{client.nextMilestone}</td>
+                  <td style={{ fontWeight: 600, fontVariantNumeric: 'tabular-nums' }}>
+                    {client.totalBilledFormatted}
+                  </td>
+                  <td style={{ textAlign: 'right' }}>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => navigate(`#/clients/${client.id}`)}
+                    >
+                      Dossier →
+                    </Button>
+                  </td>
+                </tr>
               ))}
-            </div>
-          </section>
-        )}
-      </div>
+            </tbody>
+          </table>
+        </div>
+      </section>
 
       {/* Onboarding Studio Slide-Over Drawer */}
       <ClientStudioDrawer

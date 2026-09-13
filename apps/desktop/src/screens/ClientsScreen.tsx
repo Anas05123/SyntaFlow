@@ -46,11 +46,22 @@ export function ClientsScreen() {
       });
   }, [state.clients, filter, query]);
 
-  // Selected Client Dossier
+  // Section 9: Derive effective selection strictly constrained to filteredClients
+  // 1. If filtered set is empty -> clear dossier entirely (effectiveSelectedId = null)
+  // 2. If current selection remains in filtered set -> retain selection
+  // 3. If current selection disappears -> select first valid result in filtered set
+  const effectiveSelectedId = useMemo(() => {
+    if (filteredClients.length === 0) return null;
+    const stillInList = filteredClients.some((c) => c.id === selectedClientId);
+    if (stillInList) return selectedClientId;
+    return filteredClients[0].id;
+  }, [filteredClients, selectedClientId]);
+
+  // Selected Client Dossier: guaranteed to belong to filteredClients
   const selectedDossier = useMemo(() => {
-    if (!selectedClientId) return null;
-    return CoreDeskDatabase.getClientDossier(state, selectedClientId);
-  }, [state, selectedClientId]);
+    if (!effectiveSelectedId) return null;
+    return CoreDeskDatabase.getClientDossier(state, effectiveSelectedId);
+  }, [state, effectiveSelectedId]);
 
   const counts = {
     all: state.clients.filter((c) => c.state !== 'archived').length,
@@ -147,7 +158,7 @@ export function ClientsScreen() {
               </div>
             ) : (
               filteredClients.map((client) => {
-                const isSelected = client.id === selectedClientId;
+                const isSelected = client.id === effectiveSelectedId;
                 const activeProjCount = state.projects.filter(
                   (p) => p.clientId === client.id && p.stage !== 'closed' && p.stage !== 'cancelled'
                 ).length;
@@ -199,8 +210,14 @@ export function ClientsScreen() {
         {/* Right: Deep Relationship Dossier */}
         <div className="cd-client-detail-pane">
           {!selectedDossier ? (
-            <div style={{ padding: '60px 20px', textAlign: 'center', color: 'var(--metadata)' }}>
-              Select a client to view their relationship dossier.
+            <div style={{ padding: '80px 20px', textAlign: 'center', color: 'var(--metadata)' }}>
+              <div style={{ fontSize: 28, marginBottom: 10 }}>🔍</div>
+              <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text)', marginBottom: 6 }}>
+                No matching client dossier
+              </div>
+              <div style={{ fontSize: 12.5, maxWidth: 340, margin: '0 auto', lineHeight: 1.5 }}>
+                No clients match your filter or search query. Clear the search input or change the filter tab to view relationship dossiers.
+              </div>
             </div>
           ) : (
             <>

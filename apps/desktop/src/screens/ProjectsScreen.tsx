@@ -9,7 +9,7 @@ import { useStore } from '../state/store';
 import { useOverlay } from '../ui/overlay';
 import { navigate } from '../app/router';
 import { dueLabel, formatShortDate } from '../domain/dates';
-import { Banner, Button, Card, CardBody, CardFoot, CardHead, Chip, PageHead, Progress } from '../ui/primitives';
+import { Banner, Button, Chip, PageHead } from '../ui/primitives';
 import { projectAttention } from '../domain/status';
 
 export function ProjectsScreen() {
@@ -45,68 +45,89 @@ export function ProjectsScreen() {
         />
       </div>
 
-      <div className="grid grid-2">
-        {derived.projectsWithContext.map((p) => {
-          const attention = projectAttention(p.overdueTaskCount, p.openReviewCount);
-          return (
-            <Card key={p.id}>
-              <CardHead
-                title={p.name}
-                desc={`${p.clientName} · ${p.outcome}`}
-                action={
-                  <div className="row" style={{ gap: 6 }}>
-                    {attention ? <Chip state={attention} /> : null}
-                    <Chip state={p.stage} />
-                  </div>
-                }
-              />
-              <CardBody>
-                <div className="defs">
-                  <div className="def">
-                    <span className="def-key">Next milestone</span>
-                    <span className="def-val">{p.nextMilestone} · {formatShortDate(p.nextMilestoneDue)}</span>
-                  </div>
-                  <div className="def">
-                    <span className="def-key">Next action</span>
-                    <span className={`def-val ${p.nextActionTone === 'risk' ? 'mark-risk' : p.nextActionTone === 'waiting' ? 'mark-wait' : ''}`}>
-                      {p.nextAction}
-                    </span>
-                  </div>
-                  <div className="def">
-                    <span className="def-key">Due</span>
-                    <span className="def-val">
-                      {dueLabel(p.due)}
-                      {p.overdueTaskCount > 0 ? <> · <span className="mark-risk">{p.overdueTaskCount} overdue</span></> : null}
-                    </span>
-                  </div>
-                  <div className="def">
-                    <span className="def-key">Reviews</span>
-                    <span className="def-val">
-                      {p.openReviewCount > 0 ? `${p.openReviewCount} awaiting decision` : 'Nothing awaiting a decision'}
-                    </span>
-                  </div>
-                  {p.delivery ? (
-                    <div className="def">
-                      <span className="def-key">Delivery</span>
-                      <span className="def-val"><Chip state={p.delivery.state} /></span>
-                    </div>
-                  ) : null}
-                </div>
-                <div className="mt-16">
-                  <Progress done={p.tasksDone} total={p.tasksTotal} />
-                </div>
-              </CardBody>
-              <CardFoot>
-                <div className="row-between">
-                  <span className="meta">
-                    {p.tasksTotal} task{p.tasksTotal === 1 ? '' : 's'} · {p.milestones.length} milestone{p.milestones.length === 1 ? '' : 's'}
-                  </span>
-                  <Button size="sm" onClick={() => navigate(`#/projects/${p.id}`)}>Open workspace</Button>
-                </div>
-              </CardFoot>
-            </Card>
-          );
-        })}
+      <div className="cd-projects-inventory">
+        <div style={{ overflowX: 'auto' }}>
+          <table className="cd-projects-table">
+            <thead>
+              <tr>
+                <th>Project & Client</th>
+                <th>Stage & Attention</th>
+                <th>Next Milestone</th>
+                <th>Target Due Date</th>
+                <th>Review Status</th>
+                <th style={{ textAlign: 'right' }}>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {derived.projectsWithContext.map((p) => {
+                const attention = projectAttention(p.overdueTaskCount, p.openReviewCount);
+                return (
+                  <tr key={p.id} onClick={() => navigate(`#/projects/${p.id}`)}>
+                    <td>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                        <span style={{ fontWeight: 600, color: 'var(--text)', fontSize: 14 }}>
+                          {p.name}
+                        </span>
+                        <span style={{ fontSize: 12, color: 'var(--metadata)' }}>
+                          {p.clientName} · {p.outcome}
+                        </span>
+                      </div>
+                    </td>
+                    <td>
+                      <div className="row" style={{ gap: 6, alignItems: 'center' }}>
+                        <Chip state={p.stage} />
+                        {attention ? <Chip state={attention} /> : null}
+                      </div>
+                    </td>
+                    <td>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                        <span style={{ color: 'var(--text)', fontSize: 13, fontWeight: 500 }}>
+                          {p.nextMilestone}
+                        </span>
+                        <span style={{ fontSize: 11.5, color: p.nextActionTone === 'risk' ? 'var(--risk)' : p.nextActionTone === 'waiting' ? 'var(--waiting)' : 'var(--metadata)' }}>
+                          {p.nextAction}
+                        </span>
+                      </div>
+                    </td>
+                    <td>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                        <span style={{ color: 'var(--text)' }}>
+                          {dueLabel(p.due)}
+                        </span>
+                        {p.overdueTaskCount > 0 ? (
+                          <span style={{ fontSize: 11, color: 'var(--risk)', fontWeight: 600 }}>
+                            {p.overdueTaskCount} overdue task{p.overdueTaskCount === 1 ? '' : 's'}
+                          </span>
+                        ) : (
+                          <span style={{ fontSize: 11, color: 'var(--metadata)' }}>
+                            {formatShortDate(p.due)}
+                          </span>
+                        )}
+                      </div>
+                    </td>
+                    <td>
+                      <span style={{ fontSize: 12.5, color: p.openReviewCount > 0 ? 'var(--waiting)' : 'var(--metadata)' }}>
+                        {p.openReviewCount > 0 ? `${p.openReviewCount} awaiting review` : 'Up to date'}
+                      </span>
+                    </td>
+                    <td style={{ textAlign: 'right' }}>
+                      <Button
+                        size="sm"
+                        variant="secondary"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(`#/projects/${p.id}`);
+                        }}
+                      >
+                        Open Workspace →
+                      </Button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
       </div>
     </>
   );

@@ -93,12 +93,26 @@ const SECTION_BODY: Record<string, React.ReactNode> = {
   Contact: <p className="doc-p">Direct brand questions to Northlight Studio. Response within one working day.</p>,
 };
 
-const SAVE_CYCLE: SaveState[] = ['saved', 'dirty', 'saving', 'failed'];
+export const INITIAL_SECTION_CONTENT: Record<string, string> = {
+  Positioning:
+    'Harbor & Finch supply specialty ingredients to independent kitchens. The identity has to read as precise and generous at the same time — a supplier you trust with a signature dish, not a commodity line.\n\nThe wordmark carries the weight. Everything else is a support system that lets the wordmark work at any size, in any medium, without supervision.',
+  Wordmark:
+    'The wordmark is set in a modified grotesque with a horizontal stress on the ampersand. Two lockups are approved: horizontal for wide formats, stacked for square formats.\n\n• Horizontal lockup — primary, used wherever width allows\n• Stacked lockup — packaging, social avatars, stamps\n• Mark only — favicons and physical embossing, minimum 8 mm',
+  'Clear space and minimum size':
+    'Clear space equals the height of the lowercase h on all four sides. Nothing enters this field — no rules, no photography edges, no other logos.\n\nMinimum sizes: 24 px digital, 18 mm print for the horizontal lockup.',
+  Colour:
+    'The palette is built from a graphite structure with cobalt as a signature. Cobalt identifies action and state, never decoration.\n\nHarbor Cobalt: #2F6FEB (Primary action, active state)\nGraphite: #14181C (Primary text, structure)\nBone: #F4F6F8 (Reversed surfaces)\nSignal Green: #3FA66B (Approved, complete)\n\nReversed wordmarks require a background luminance below 45% or a solid scrim at 60% opacity.',
+  Typography:
+    'One family, Inter, across every application. Hierarchy comes from size and weight, not from additional typefaces.',
+  Applications:
+    'Packaging, trade stand and stationery applications are shown at working scale. The reversed logo over photography section is still under review.',
+  Contact:
+    'Direct brand questions to Northlight Studio. Response within one working day.',
+};
 
 export function DocumentWorkspaceScreen({ documentId, view }: { documentId: string; view: string | null }) {
   const { state, dispatch, derived } = useStore();
   const overlay = useOverlay();
-  const [save, setSave] = useState<SaveState>('saved');
   const [activeSection, setActiveSection] = useState(0);
   const [exportPct, setExportPct] = useState<number | null>(null);
 
@@ -107,11 +121,45 @@ export function DocumentWorkspaceScreen({ documentId, view }: { documentId: stri
   const doc = derived.documentById(documentId);
   if (!doc) return <NotFound kind="document" onHome={() => navigate('#/home')} />;
 
+  const [savedTexts, setSavedTexts] = useState<Record<string, string>>(() => {
+    const map: Record<string, string> = {};
+    for (const s of doc.sections) {
+      map[s] = INITIAL_SECTION_CONTENT[s] ?? '';
+    }
+    return map;
+  });
+  const [editedTexts, setEditedTexts] = useState<Record<string, string>>(() => ({ ...savedTexts }));
+  const [save, setSave] = useState<SaveState>('saved');
+
   const client = derived.clientById(doc.clientId);
   const project = derived.projectById(doc.projectId);
   const activeReview = derived.activeReviewOfDocument(doc.id);
   const versions = derived.reportsOfDocument(doc.id);
   const latest = doc.versions[0] ?? null;
+
+  const activeSectionName = doc.sections[activeSection] ?? doc.sections[0] ?? '';
+
+  const handleSectionTextChange = (sectionName: string, value: string) => {
+    const next = { ...editedTexts, [sectionName]: value };
+    setEditedTexts(next);
+    const isDirty = doc.sections.some((s) => (s === sectionName ? value : (next[s] ?? '')) !== (savedTexts[s] ?? ''));
+    setSave(isDirty ? 'dirty' : 'saved');
+  };
+
+  const handleSave = () => {
+    setSave('saving');
+    window.setTimeout(() => {
+      setSavedTexts({ ...editedTexts });
+      setSave('saved');
+      overlay.toast('Draft saved', `Saved changes for "${activeSectionName}".`, 'ok');
+    }, 200);
+  };
+
+  const handleRevert = () => {
+    setEditedTexts({ ...savedTexts });
+    setSave('saved');
+    overlay.toast('Changes reverted', 'Draft reverted to last saved state.', 'default');
+  };
 
   const header = (
     <Card className="context-head">
@@ -129,16 +177,13 @@ export function DocumentWorkspaceScreen({ documentId, view }: { documentId: stri
               {doc.submittedVersion ? ` · submitted v${doc.submittedVersion}` : ' · never submitted'}
             </div>
           </div>
-          <div className="row row-wrap">
+          <div className="row row-wrap" style={{ gap: 8 }}>
             <SaveStateIndicator state={save} />
-            <Button
-              size="sm"
-              icon="refresh"
-              onClick={() => setSave(SAVE_CYCLE[(SAVE_CYCLE.indexOf(save) + 1) % SAVE_CYCLE.length])}
-              title="Cycle the save-state contract"
-            >
-              Simulate state
-            </Button>
+            {save === 'dirty' ? (
+              <Button size="sm" variant="primary" icon="check" onClick={handleSave}>
+                Save draft
+              </Button>
+            ) : null}
           </div>
         </div>
       </CardBody>
@@ -165,22 +210,33 @@ export function DocumentWorkspaceScreen({ documentId, view }: { documentId: stri
         {header}
         {tabs}
         <div className="doc-layout">
-          <aside className="doc-outline">
+          <aside className="doc-outline" aria-label="Document sections outline">
             <div className="panel-section-title">Sections</div>
-            {doc.sections.map((s, i) => (
-              <button
-                key={s}
-                type="button"
-                className={`outline-item${activeSection === i ? ' active' : ''}`}
-                onClick={() => setActiveSection(i)}
-              >
-                {s}
-              </button>
-            ))}
+            {doc.sections.map((s, i) => {
+              const isDirty = (editedTexts[s] ?? '') !== (savedTexts[s] ?? '');
+              return (
+                <button
+                  key={s}
+                  type="button"
+                  className={`outline-item${activeSection === i ? ' active' : ''}`}
+                  onClick={() => setActiveSection(i)}
+                  aria-current={activeSection === i ? 'true' : undefined}
+                >
+                  <span style={{ flex: 1 }}>{s}</span>
+                  {isDirty ? (
+                    <span
+                      className="dirty-dot"
+                      title="Unsaved changes"
+                      aria-label="Unsaved changes"
+                    />
+                  ) : null}
+                </button>
+              );
+            })}
             <div className="divider-h" style={{ margin: '16px 0' }} />
             <div className="panel-section-title">Formatting</div>
             <p className="meta" style={{ lineHeight: 1.6, padding: '0 9px' }}>
-              V1 blocks: text, headings, lists, image and a simple table. Nothing else is available by design.
+              V1 blocks: text, headings, lists, image and a simple table. Content edits are saved locally.
             </p>
           </aside>
 
@@ -192,12 +248,94 @@ export function DocumentWorkspaceScreen({ documentId, view }: { documentId: stri
                 Working draft v{doc.workingVersion} · {state.workspace.ownerName} · last saved {relative(doc.modified)}
               </p>
 
-              {doc.sections.map((s) => (
-                <section className="doc-section" key={s}>
-                  <h2 className="doc-h2">{s}</h2>
-                  {SECTION_BODY[s] ?? <p className="doc-p">This section is empty. Write the first paragraph.</p>}
-                </section>
-              ))}
+              {doc.sections.map((s, i) => {
+                const text = editedTexts[s] ?? '';
+                const isEditing = activeSection === i;
+                const isDirty = text !== (savedTexts[s] ?? '');
+
+                if (isEditing) {
+                  return (
+                    <section className="doc-section cd-section-editing-target" key={s} id={`section-${i}`}>
+                      <div className="row-between mb-8">
+                        <h2 className="doc-h2" style={{ margin: 0 }}>{s}</h2>
+                        {isDirty ? (
+                          <Chip state="pending" label="Unsaved edits" />
+                        ) : (
+                          <Chip state="active" label="Saved" />
+                        )}
+                      </div>
+
+                      <div className="cd-section-editor-box">
+                        <textarea
+                          id={`editor-${i}`}
+                          className="textarea cd-section-textarea"
+                          aria-label={`Edit content for section ${s}`}
+                          rows={8}
+                          value={text}
+                          onChange={(e) => handleSectionTextChange(s, e.target.value)}
+                          onKeyDown={(e) => {
+                            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                              e.preventDefault();
+                              handleSave();
+                            }
+                          }}
+                          placeholder="Write section content in plain text..."
+                        />
+
+                        <div className="row-between mt-12 row-wrap" style={{ gap: 8 }}>
+                          <div className="row" style={{ gap: 8 }}>
+                            <Button
+                              variant="primary"
+                              icon="check"
+                              disabled={!isDirty || save === 'saving'}
+                              onClick={handleSave}
+                            >
+                              {save === 'saving' ? 'Saving...' : 'Save section'}
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              disabled={!isDirty || save === 'saving'}
+                              onClick={handleRevert}
+                            >
+                              Revert
+                            </Button>
+                          </div>
+                          <div className="row" style={{ gap: 12 }}>
+                            <span className="meta">
+                              {text.trim() ? text.trim().split(/\s+/).length : 0} words · {text.length} chars
+                            </span>
+                            <span className="meta" style={{ fontStyle: 'italic' }}>Ctrl+S to save</span>
+                          </div>
+                        </div>
+                      </div>
+                    </section>
+                  );
+                }
+
+                return (
+                  <section className="doc-section" key={s} id={`section-${i}`}>
+                    <div className="row-between">
+                      <h2 className="doc-h2">{s}</h2>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        icon="edit"
+                        onClick={() => setActiveSection(i)}
+                        aria-label={`Edit section ${s}`}
+                      >
+                        Edit
+                      </Button>
+                    </div>
+                    {text.trim() ? (
+                      text.split('\n\n').map((para, pIdx) => (
+                        <p className="doc-p" key={pIdx}>{para}</p>
+                      ))
+                    ) : (
+                      <p className="doc-p meta">This section is empty. Click Edit to write.</p>
+                    )}
+                  </section>
+                );
+              })}
             </article>
           </div>
 
