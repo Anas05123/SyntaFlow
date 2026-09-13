@@ -117,7 +117,21 @@ td.num,
   font-variant-numeric: tabular-nums;
 }
 
-:focus-visible {
+/* WCAG 2.4.7 Focus Visible Canonical 2px Ring */
+:focus-visible,
+button:focus-visible,
+.btn:focus-visible,
+.rail-item:focus-visible,
+.rail-brand:focus-visible,
+.rail-owner:focus-visible,
+.menu-item:focus-visible,
+.cd-menu-item:focus-visible,
+.tab-link:focus-visible,
+[role="tab"]:focus-visible,
+.outline-item:focus-visible,
+.cd-projects-table-row:focus-visible,
+.cd-focus-item:focus-visible,
+.cd-cockpit-search-input:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
   border-radius: 4px;

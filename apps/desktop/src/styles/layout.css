@@ -126,6 +126,24 @@
   backdrop-filter: blur(12px);
 }
 
+/* ---- Section 29: Operational Surfaces Material Boundaries (Preserve Opacity) ---- */
+:root[data-wallpaper] .doc-page,
+:root[data-wallpaper] .cd-review-document {
+  background: var(--canvas);
+}
+
+:root[data-wallpaper] .cd-section-editor-box,
+:root[data-wallpaper] .cd-projects-table,
+:root[data-wallpaper] .cd-tasks-board-wrap,
+:root[data-wallpaper] .cd-tasks-list-panel,
+:root[data-wallpaper] .inspector,
+:root[data-wallpaper] .cd-inspector-surface,
+:root[data-wallpaper] .cd-review-inspector,
+:root[data-wallpaper] .board-col {
+  background: var(--surface);
+  backdrop-filter: none;
+}
+
 /* ---- Rail ---------------------------------------------------------------- */
 
 .rail {

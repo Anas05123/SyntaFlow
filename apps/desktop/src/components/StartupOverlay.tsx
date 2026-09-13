@@ -41,19 +41,23 @@ export function StartupOverlay({ ready, error = null, onRetry, onComplete }: Sta
     window.matchMedia &&
     window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // Minimum duration for natural brand transition
+  // Natural brand settling: does not enforce fake artificial delay if already ready
   useEffect(() => {
-    const minTime = prefersReducedMotion ? 350 : 850;
+    if (ready) {
+      setAnimationSettled(true);
+      return;
+    }
+    const maxSettle = prefersReducedMotion ? 120 : 350;
     const timer = setTimeout(() => {
       setAnimationSettled(true);
-    }, minTime);
+    }, maxSettle);
     return () => clearTimeout(timer);
-  }, [prefersReducedMotion]);
+  }, [ready, prefersReducedMotion]);
 
-  // Handoff trigger: when animation has progressed and workspace is ready underneath
+  // Handoff trigger: when workspace is ready, smoothly fade out without delay
   useEffect(() => {
     if (ready && animationSettled && !error && !isExiting) {
-      const exitDuration = prefersReducedMotion ? 180 : 300;
+      const exitDuration = prefersReducedMotion ? 120 : 200;
       const t1 = setTimeout(() => setIsExiting(true), 16);
       const t2 = setTimeout(() => {
         onComplete();
@@ -136,7 +140,9 @@ export function StartupOverlay({ ready, error = null, onRetry, onComplete }: Sta
             )}
           </div>
 
-          <span className="cd-startup-label">Reconnecting workspace</span>
+          <span className="cd-startup-label">
+            {ready ? 'Workspace ready' : 'Reconnecting workspace'}
+          </span>
         </div>
       )}
     </div>

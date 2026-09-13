@@ -504,17 +504,22 @@
 
 .cd-comment-input:focus {
   outline: none;
-  border-color: var(--accent, #2f6feb);
-  box-shadow: 0 0 0 1px var(--accent, #2f6feb);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
+.cd-comment-input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
 }
 
 .cd-comment-input.has-error {
-  border-color: #f85149;
+  border-color: var(--risk);
 }
 
 .cd-comment-error {
   font-size: 11px;
-  color: #f85149;
+  color: var(--risk);
 }
 
 /* Access Notice Pill */

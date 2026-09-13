@@ -74,11 +74,11 @@ export function GuestReviewSurface({
     return (
       <div className="cd-guest-review-surface" style={{ padding: '60px var(--pad-page)', alignItems: 'center' }}>
         <div className="cd-review-document" style={{ maxWidth: 560, textAlign: 'center' }}>
-          <div style={{ color: 'var(--text-muted)', marginBottom: 12 }}>
+          <div style={{ color: 'var(--muted)', marginBottom: 12 }}>
             <Icon name="alert" size={32} />
           </div>
           <h2 style={{ fontSize: 20, margin: '0 0 10px', color: 'var(--text)' }}>Review not found</h2>
-          <p className="cd-doc-p" style={{ color: 'var(--text-muted)' }}>
+          <p className="cd-doc-p" style={{ color: 'var(--muted)' }}>
             This review request does not exist, was withdrawn, or the link is invalid.
           </p>
           {isOwnerPreview && onClosePreview ? (
@@ -96,11 +96,11 @@ export function GuestReviewSurface({
     return (
       <div className="cd-guest-review-surface" style={{ padding: '60px var(--pad-page)', alignItems: 'center' }}>
         <div className="cd-review-document" style={{ maxWidth: 560, textAlign: 'center' }}>
-          <div style={{ color: '#f85149', marginBottom: 12 }}>
+          <div style={{ color: 'var(--risk)', marginBottom: 12 }}>
             <Icon name="shield" size={32} />
           </div>
           <h2 style={{ fontSize: 20, margin: '0 0 10px', color: 'var(--text)' }}>Access Revoked</h2>
-          <p className="cd-doc-p" style={{ color: 'var(--text-muted)' }}>
+          <p className="cd-doc-p" style={{ color: 'var(--muted)' }}>
             Access to this review was revoked by the workspace owner on{' '}
             {grant.revokedOn ? formatDate(grant.revokedOn) : 'record'}. You no longer have permission to view or decide this document.
           </p>
@@ -118,11 +118,11 @@ export function GuestReviewSurface({
     return (
       <div className="cd-guest-review-surface" style={{ padding: '60px var(--pad-page)', alignItems: 'center' }}>
         <div className="cd-review-document" style={{ maxWidth: 560, textAlign: 'center' }}>
-          <div style={{ color: '#e3b341', marginBottom: 12 }}>
+          <div style={{ color: 'var(--waiting)', marginBottom: 12 }}>
             <Icon name="alert" size={32} />
           </div>
           <h2 style={{ fontSize: 20, margin: '0 0 10px', color: 'var(--text)' }}>Review Link Expired</h2>
-          <p className="cd-doc-p" style={{ color: 'var(--text-muted)' }}>
+          <p className="cd-doc-p" style={{ color: 'var(--muted)' }}>
             This review link expired on {grant.expires ? formatDate(grant.expires) : 'the scheduled deadline'}.
             The workspace owner must generate a renewed access grant.
           </p>
@@ -140,11 +140,11 @@ export function GuestReviewSurface({
     return (
       <div className="cd-guest-review-surface" style={{ padding: '60px var(--pad-page)', alignItems: 'center' }}>
         <div className="cd-review-document" style={{ maxWidth: 560, textAlign: 'center' }}>
-          <div style={{ color: 'var(--text-muted)', marginBottom: 12 }}>
+          <div style={{ color: 'var(--muted)', marginBottom: 12 }}>
             <Icon name="lock" size={32} />
           </div>
           <h2 style={{ fontSize: 20, margin: '0 0 10px', color: 'var(--text)' }}>Review Withdrawn</h2>
-          <p className="cd-doc-p" style={{ color: 'var(--text-muted)' }}>
+          <p className="cd-doc-p" style={{ color: 'var(--muted)' }}>
             This review request was withdrawn by the workspace owner. A revised draft may be issued in the future.
           </p>
           {isOwnerPreview && onClosePreview ? (
@@ -328,7 +328,7 @@ export function GuestReviewSurface({
                 </div>
               ) : isApprover ? (
                 <>
-                  <p className="cd-doc-p" style={{ fontSize: 12, margin: '0 0 10px', color: 'var(--text-muted)' }}>
+                  <p className="cd-doc-p" style={{ fontSize: 12, margin: '0 0 10px', color: 'var(--muted)' }}>
                     Approving accepts this version as it stands. Requesting changes requires a comment explaining the revision.
                   </p>
                   <Button
