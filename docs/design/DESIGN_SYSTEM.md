@@ -37,42 +37,74 @@ CoreDesk embodies an **executive graphite operating environment**. It rejects ge
 --cyan-subtle:     rgba(6, 182, 212, 0.12); /* Subtle cyan pill background */
 ```
 
-### 2.3 Semantic Status & Attention Tones
+### 2.3 Semantic Status & Attention Tones (WCAG 1.4.3 Compliant)
 ```css
---risk:            #EF4444;   /* Blocker / Overdue / Error (Red) */
---risk-subtle:     rgba(239, 68, 68, 0.12);
---waiting:         #F59E0B;   /* Waiting on Client / External Gate (Amber) */
---waiting-subtle:  rgba(245, 158, 11, 0.12);
---ok:              #10B981;   /* Approved / Done / Met Milestone (Emerald) */
---ok-subtle:       rgba(16, 185, 129, 0.12);
---metadata:        #94A3B8;   /* Secondary labels, dates, subtitles */
---muted:           #64748B;   /* Disabled states, subtle timestamps */
+--risk:            #D65A5A;   /* Blocker / Overdue / Error (Red) */
+--risk-tint:       rgba(214, 90, 90, 0.12);
+--waiting:         #D49A3A;   /* Waiting on Client / External Gate (Amber) */
+--waiting-tint:    rgba(212, 154, 58, 0.12);
+--active:          #3FA66B;   /* Approved / Done / Met Milestone (Emerald) */
+--active-tint:     rgba(63, 166, 107, 0.12);
+
+/* WCAG 1.4.3 Verified Contrast Ratios across canvas (#0e1114), surface (#14181c), raised (#1b2026), and sidebar (#101418) */
+--text:            #F4F6F8;   /* 15.2:1 contrast */
+--muted:           #B6BEC8;   /* 9.3:1 contrast on canvas (light: #424b56, 9.4:1) */
+--metadata:        #8C96A3;   /* 5.7:1 contrast on canvas (light: #525c68, 6.7:1) */
 ```
 
 ---
 
-## 3. Typography Hierarchy
+## 3. Typography Hierarchy (Normalized 7-Step Scale)
 
 Primary font stack: `Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`.
 
-| Token / Class | Font Size | Weight | Line Height | Usage |
+| Token / Step | Font Size | Weight | Line Height | Usage |
 |---|---|---|---|---|
-| `--fs-hero` | `28px` | `700` | `1.2` | Major welcome headings, auth titles |
-| `--fs-page-title` | `20px` | `650` | `1.25` | Workspace screen headers (`Tasks`, `Clients`) |
-| `--fs-section` | `15px` | `600` | `1.35` | Pillar headers, panel titles, group titles |
-| `--fs-body` | `13px` | `450` | `1.45` | Standard body text, descriptions, table cells |
-| `--fs-metadata` | `11.5px` | `500` | `1.4` | Badges, tags, due dates, breadcrumbs |
-| `--fs-micro` | `10px` | `600` | `1.2` | Status pill text, uppercase section badges |
+| `--fs-display` | `30px` | `700` | `1.2` | Major document hero titles, auth titles |
+| `--fs-page-title` | `24px` | `650` | `1.25` | Workspace screen headers (`Home`, `Tasks`, `Clients`) |
+| `--fs-title` | `20px` | `600` | `1.3` | Object titles, modal headers, card group titles |
+| `--fs-section` | `16px` | `600` | `1.35` | Pillar headers, panel section titles |
+| `--fs-body` | `14px` | `450` | `1.5` | Standard body text, descriptions, table cells |
+| `--fs-meta` | `12.5px` | `500` | `1.4` | Badges, tags, due dates, breadcrumbs, secondary info |
+| `--fs-eyebrow` | `11px` | `650` | `1.2` | Uppercase section badges, status pills |
 
 ---
 
-## 4. Radii & Spacing Scales
+## 4. Control Sizing Scale (WCAG 2.5.8 Compliant)
+
+| Role | Target Height | Padding | Icon Size | Min Target (WCAG 2.5.8) |
+|---|---|---|---|---|
+| **Primary Controls (`.btn-primary`, `.btn-secondary`)** | `40px` | `0 16px` | `16px` | $\ge 24\times 24\text{px}$ (Exceeds) |
+| **Compact Controls (`.btn-sm`)** | `36px` | `0 12px` | `14px` | $\ge 24\times 24\text{px}$ (Exceeds) |
+| **Icon-Only Buttons (`.btn-icon`)** | `32–36px` | `0` | `16px` | $\ge 24\times 24\text{px}$ (Exceeds) |
+| **Checkboxes & Radios (`.check`, `.tick`)** | `18px box` | `3px pseudo` | — | Expanded to $\ge 24\times 24\text{px}$ via pseudo-elements |
+
+---
+
+## 5. Focus System & Interactive States (WCAG 2.4.7)
+
+Every keyboard-interactive element exposes a visible, high-contrast focus indicator:
+```css
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+```
+- **Global Rail Active State**: Filled background (`var(--raised)`) + 3px cobalt left marker.
+- **Tabs Active State**: Solid cobalt bottom indicator rule.
+- **Local Outline**: Filled selected row (`var(--row-selected)`).
+- **Table Rows**: Subtle selected background tint (`color-mix(in srgb, var(--accent) 9%, transparent)`).
+
+---
+
+## 6. Radii & Spacing Scales
 
 ### Radii Scale
 ```css
---r-control:       6px;       /* Buttons, inputs, small tags */
---r-card:          8px;       /* Task cards, column items, list rows */
---r-panel:         10px;      /* Modals, drawers, popovers */
+--r-control:       4px;       /* Buttons, inputs, tags */
+--r-card:          6px;       /* Task cards, column items, list rows */
+--r-panel:         8px;       /* Modals, drawers, popovers */
 --r-full:          9999px;    /* Circular pills and avatars */
 ```
 
@@ -81,31 +113,31 @@ Primary font stack: `Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Robot
 - `8px`: Standard control padding; gap between chips.
 - `12px`: Gap between grouped list items.
 - `16px`: Standard card interior padding; column gutters.
-- `24px`: Major screen container margins.
+- `24px`: Major screen container margins (`--pad-page`).
 
 ---
 
-## 5. Control Materials & Glass Effects
+## 7. Control Materials & Glass Effects
 
 CoreDesk selectively applies frosted glass to floating navigation and header surfaces:
-- **Top Command Bar**: `backdrop-filter: blur(16px); background: rgba(18, 21, 24, 0.75);`
-- **Slide-Over Drawers**: `background: rgba(18, 21, 24, 0.95); backdrop-filter: blur(20px);`
-- **Wallpaper Backgrounds**: When custom wallpapers are active, cards blend using `color-mix(in srgb, var(--surface) 88%, transparent)` with `backdrop-filter: blur(12px)`.
+- **Top Command Bar**: `backdrop-filter: blur(24px) saturate(180%); background: color-mix(in srgb, var(--surface) 82%, transparent);`
+- **Slide-Over Drawers**: `background: var(--surface);`
+- **Wallpaper Backgrounds**: When custom wallpapers are active, operational surfaces (tables, forms, editors, inspectors) remain solid/opaque (`backdrop-filter: none;`) to prevent legibility collapse.
 
 ---
 
-## 6. Button Variants
+## 8. Button Variants
 
 1. **Primary Button (`.btn-primary`)**:
-   - `background: var(--accent); color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.12);`
+   - `height: 40px; background: var(--accent); color: #ffffff; border: 1px solid var(--accent);`
    - Active hover: `var(--accent-hover)`.
-2. **Secondary Button (`.btn-secondary`)**:
-   - `background: var(--surface-subtle); color: var(--text); border: 1px solid var(--edge);`
-3. **Ghost / Icon Button (`.btn-ghost`, `.btn-icon`)**:
-   - `background: transparent; color: var(--metadata);`
-   - Hover: `background: var(--surface-subtle); color: var(--text);`
+2. **Secondary / Standard Button (`.btn`)**:
+   - `height: 40px; background: var(--raised); color: var(--text); border: 1px solid var(--divider);`
+3. **Ghost Button (`.btn-ghost`)**:
+   - `background: transparent; color: var(--muted); border: 1px solid transparent;`
+   - Hover: `background: var(--row-hover); color: var(--text);`
 4. **Danger Button (`.btn-danger`)**:
-   - `background: var(--risk-subtle); color: var(--risk); border: 1px solid var(--risk);`
+   - `background: var(--risk-tint); color: var(--risk); border: 1px solid var(--risk);`
 
 ---
 
