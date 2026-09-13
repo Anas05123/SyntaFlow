@@ -440,11 +440,11 @@
   border-radius: 0 2px 2px 0;
   content: '';
   height: 18px;
-  left: -12px;
+  left: 0;
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  width: 2px;
+  width: 3px;
 }
 
 .rail-item-label {
@@ -2058,8 +2058,10 @@
   display: flex;
   font-family: var(--font);
   font-size: 13.5px;
+  font-weight: 500;
   gap: 10px;
-  min-height: 34px;
+  height: 36px;
+  min-height: 36px;
   padding: 0 10px;
   text-align: left;
   transition: background var(--ease), color var(--ease);
@@ -2086,7 +2088,17 @@
 }
 
 .cd-menu-item .icon {
-  flex: 0 0 auto;
+  align-items: center;
+  color: var(--muted);
+  display: inline-flex;
+  flex: 0 0 16px;
+  height: 16px;
+  justify-content: center;
+  width: 16px;
+}
+
+.cd-menu-item:hover .icon {
+  color: var(--text);
 }
 
 .cd-menu-identity {
@@ -2151,7 +2163,7 @@
 
 .cd-menu-divider {
   border-top: 1px solid var(--divider);
-  margin: 4px 0;
+  margin: 6px 0;
 }
 
 .cd-menu-foot {
@@ -2964,7 +2976,21 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
   transition: all var(--ease);
+}
+
+/* Hit target expansion for WCAG 2.5.8 (Target Size Minimum >= 24x24px) */
+.cd-focus-checkbox::before {
+  content: '';
+  height: 28px;
+  left: 50%;
+  min-height: var(--hit-target-min, 24px);
+  min-width: var(--hit-target-min, 24px);
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 28px;
 }
 
 .cd-focus-checkbox:checked {
@@ -3687,7 +3713,21 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
   transition: all var(--ease);
+}
+
+/* Hit target expansion for WCAG 2.5.8 (Target Size Minimum >= 24x24px) */
+.cd-board-card-checkbox::before {
+  content: '';
+  height: 28px;
+  left: 50%;
+  min-height: var(--hit-target-min, 24px);
+  min-width: var(--hit-target-min, 24px);
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 28px;
 }
 
 .cd-board-card-checkbox:checked {

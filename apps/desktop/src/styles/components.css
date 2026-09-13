@@ -14,6 +14,7 @@
   font-weight: 600;
   gap: 7px;
   height: var(--h-control);
+  min-height: var(--h-control);
   justify-content: center;
   padding: 0 14px;
   transition: background var(--ease), border-color var(--ease), color var(--ease);
@@ -27,12 +28,15 @@
 
 .btn-lg {
   height: var(--h-control-lg);
+  min-height: var(--h-control-lg);
   padding: 0 18px;
 }
 
-.btn-sm {
+.btn-sm,
+.btn-compact {
   font-size: var(--fs-label);
   height: var(--h-control-sm);
+  min-height: var(--h-control-sm);
   padding: 0 11px;
 }
 
@@ -46,10 +50,19 @@
   color: var(--on-accent);
   font-size: 13.5px;
   font-weight: 600;
-  height: 36px;
+  height: var(--h-control);
+  min-height: var(--h-control);
   letter-spacing: -0.012em;
   padding: 0 15px;
   transition: transform 0.1s ease, filter 0.12s ease, box-shadow 0.12s ease;
+}
+
+.btn-primary.btn-sm,
+.btn-primary.btn-compact,
+.btn-apple.btn-sm,
+.btn-apple.btn-compact {
+  height: var(--h-control-sm);
+  min-height: var(--h-control-sm);
 }
 
 .btn-primary:hover:not(:disabled),
@@ -74,9 +87,16 @@
   color: var(--text);
   font-size: 13.5px;
   font-weight: 600;
-  height: 36px;
+  height: var(--h-control);
+  min-height: var(--h-control);
   padding: 0 14px;
   transition: transform 0.1s ease, background var(--ease), border-color var(--ease);
+}
+
+.btn-secondary.btn-sm,
+.btn-secondary.btn-compact {
+  height: var(--h-control-sm);
+  min-height: var(--h-control-sm);
 }
 
 .btn-secondary:hover:not(:disabled) {
@@ -124,10 +144,19 @@
   border-radius: var(--r-control);
   color: var(--muted);
   display: inline-flex;
-  height: 32px;
+  height: var(--h-control-icon, 32px);
+  min-height: var(--hit-target-min, 24px);
+  min-width: var(--hit-target-min, 24px);
   justify-content: center;
+  position: relative;
   transition: background var(--ease), color var(--ease), border-color var(--ease);
-  width: 32px;
+  width: var(--h-control-icon, 32px);
+}
+
+.icon-btn.frequent,
+.icon-btn-lg {
+  height: var(--h-control-icon-lg, 36px);
+  width: var(--h-control-icon-lg, 36px);
 }
 
 .icon-btn:hover {
@@ -249,13 +278,28 @@
   border: 1px solid var(--divider);
   border-radius: var(--r-control);
   color: var(--text);
+  font-size: var(--fs-body);
   min-height: var(--h-control);
   padding: 0 11px;
   transition: border-color var(--ease), background var(--ease);
   width: 100%;
 }
 
+.input,
+.select {
+  height: var(--h-control);
+}
+
+.input-sm,
+.select-sm {
+  font-size: var(--fs-label);
+  height: var(--h-control-sm);
+  min-height: var(--h-control-sm);
+  padding: 0 9px;
+}
+
 .textarea {
+  height: auto;
   line-height: 1.6;
   min-height: 120px;
   padding: 10px 11px;
@@ -290,7 +334,7 @@
   appearance: none;
   background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%),
     linear-gradient(135deg, var(--muted) 50%, transparent 50%);
-  background-position: calc(100% - 15px) 17px, calc(100% - 10px) 17px;
+  background-position: calc(100% - 15px) calc(50% - 2px), calc(100% - 10px) calc(50% - 2px);
   background-repeat: no-repeat;
   background-size: 5px 5px, 5px 5px;
   padding-right: 30px;
@@ -298,16 +342,33 @@
 
 .check {
   align-items: flex-start;
+  cursor: pointer;
   display: flex;
   gap: 9px;
+  user-select: none;
 }
 
 .check input {
   accent-color: var(--accent);
+  cursor: pointer;
   flex: 0 0 auto;
   height: 16px;
   margin: 3px 0 0;
+  position: relative;
   width: 16px;
+}
+
+/* Hit target expansion for WCAG 2.5.8 (Target Size Minimum >= 24x24px) */
+.check input::before {
+  content: '';
+  height: 28px;
+  left: 50%;
+  min-height: var(--hit-target-min, 24px);
+  min-width: var(--hit-target-min, 24px);
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 28px;
 }
 
 .check-text {
@@ -612,12 +673,27 @@ table.data tbody tr:last-child td {
   align-items: center;
   border: 1.5px solid var(--edge);
   border-radius: 5px;
+  cursor: pointer;
   display: inline-flex;
   flex: 0 0 auto;
   height: 18px;
   justify-content: center;
+  position: relative;
   transition: background var(--ease), border-color var(--ease);
   width: 18px;
+}
+
+/* Hit target expansion for WCAG 2.5.8 (Target Size Minimum >= 24x24px) */
+.tick::before {
+  content: '';
+  height: 28px;
+  left: 50%;
+  min-height: var(--hit-target-min, 24px);
+  min-width: var(--hit-target-min, 24px);
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 28px;
 }
 
 .tick:hover {

@@ -28,10 +28,10 @@
   --divider: #262c33;
   --edge: #323a43;
 
-  /* Ink */
+  /* Ink — WCAG 1.4.3 compliant contrast across canvas, surface, raised, and inspector */
   --text: #f4f6f8;
-  --muted: #a8b0ba;
-  --metadata: #737d88;
+  --muted: #b6bec8;
+  --metadata: #8c96a3;
 
   /* Signature */
   --accent: #2f6feb;
@@ -83,9 +83,10 @@
   --divider: #dde2e7;
   --edge: #c8cfd6;
 
+  /* Ink — WCAG 1.4.3 compliant contrast across canvas, surface, raised, and inspector */
   --text: #14181c;
-  --muted: #5a646e;
-  --metadata: #7d868f;
+  --muted: #424b56;
+  --metadata: #525c68;
 
   --accent: #2560d8;
   --accent-hover: #1d51bd;
@@ -118,19 +119,34 @@
 :root {
   --font: Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
 
-  /* Type scale from the frame */
+  /* Canonical Typography Scale (Section 6) */
   --fs-display: 30px;
   --lh-display: 36px;
+  --fs-page-title: 24px;
+  --lh-page-title: 28px;
+  --fs-object-title: 20px;
+  --lh-object-title: 24px;
   --fs-title: 20px;
   --lh-title: 24px;
   --fs-section: 16px;
-  --lh-section: 19px;
+  --lh-section: 20px;
+  --fs-section-title: 16px;
+  --lh-section-title: 20px;
   --fs-body: 14px;
-  --lh-body: 17px;
+  --lh-body: 20px;
+  --fs-body-small: 13px;
+  --lh-body-small: 17px;
   --fs-label: 13px;
   --lh-label: 16px;
-  --fs-meta: 12px;
-  --lh-meta: 15px;
+  --fs-metadata: 12.5px;
+  --lh-metadata: 16px;
+  --fs-meta: 12.5px;
+  --lh-meta: 16px;
+  --fs-caption: 12px;
+  --lh-caption: 15px;
+  --fs-eyebrow: 11px;
+  --lh-eyebrow: 14px;
+  --ls-eyebrow: 0.06em;
 
   /* Geometry: soft rounded modern desktop hierarchy */
   --r-panel: 12px;
@@ -142,10 +158,15 @@
   --r-badge: 6px;
   --r-pill: 9999px;
 
-  --h-control: 38px;
-  --h-control-lg: 42px;
-  --h-control-sm: 30px;
+  /* Control size system (Section 5) */
+  --h-control: 40px;
+  --h-control-lg: 44px;
+  --h-control-compact: 36px;
+  --h-control-sm: 36px;
+  --h-control-icon: 32px;
+  --h-control-icon-lg: 36px;
   --h-nav-item: 40px;
+  --hit-target-min: 24px;
 
   --rail-w: 228px;
   --rail-w-collapsed: 68px;

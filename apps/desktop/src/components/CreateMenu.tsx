@@ -150,7 +150,7 @@ export function CreateMenu({ onClose }: { onClose: () => void }) {
   }
 
   return (
-    <div className="cd-menu-group" style={{ minWidth: 200 }}>
+    <div className="cd-menu-group" style={{ minWidth: 220 }}>
       <div className="cd-menu-group-label">Create</div>
       {actions.map((a) => (
         <button type="button" role="menuitem" key={a.id} className="cd-menu-item" onClick={a.run}>

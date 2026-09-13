@@ -37,19 +37,10 @@ export function AccountMenu({ onClose }: { onClose: () => void }) {
     navigate('#/auth');
   };
 
-  const profileItems: MenuItem[] = [
+  const accountItems: MenuItem[] = [
     { id: 'profile', label: 'Professional Profile', icon: 'building', href: '#/settings/defaults' },
     { id: 'workspace', label: 'Workspace Settings', icon: 'settings', href: '#/settings/account' },
-  ];
-
-  const systemItems: MenuItem[] = [
-    { id: 'engine', label: 'Local AI / Engine', icon: 'sparkle', href: '#/settings/account' },
-    { id: 'integrations', label: 'Integrations', icon: 'share', href: '#/settings/account' },
-  ];
-
-  const appItems: MenuItem[] = [
-    { id: 'updates', label: 'Check for Updates', icon: 'refresh', onSelect: () => alert('CoreDesk is up to date (v1.0.0 Local Engine)') },
-    { id: 'about', label: 'About CoreDesk', icon: 'info', onSelect: () => alert('CoreDesk — Precision Client Work Workspace\nv1.0.0 Offline-First') },
+    { id: 'preferences', label: 'Preferences & System', icon: 'settings', href: '#/settings' },
   ];
 
   return (
@@ -78,41 +69,7 @@ export function AccountMenu({ onClose }: { onClose: () => void }) {
       <div className="cd-menu-divider" />
 
       <div className="cd-menu-group">
-        {profileItems.map((item) => (
-          <button
-            type="button"
-            role="menuitem"
-            key={item.id}
-            className="cd-menu-item"
-            onClick={() => (item.href ? go(item.href) : item.onSelect?.())}
-          >
-            <Icon name={item.icon} size={15} />
-            <span>{item.label}</span>
-          </button>
-        ))}
-      </div>
-
-      <div className="cd-menu-divider" />
-
-      <div className="cd-menu-group">
-        {systemItems.map((item) => (
-          <button
-            type="button"
-            role="menuitem"
-            key={item.id}
-            className="cd-menu-item"
-            onClick={() => (item.href ? go(item.href) : item.onSelect?.())}
-          >
-            <Icon name={item.icon} size={15} />
-            <span>{item.label}</span>
-          </button>
-        ))}
-      </div>
-
-      <div className="cd-menu-divider" />
-
-      <div className="cd-menu-group">
-        {appItems.map((item) => (
+        {accountItems.map((item) => (
           <button
             type="button"
             role="menuitem"
