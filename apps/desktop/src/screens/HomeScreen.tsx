@@ -28,6 +28,7 @@ export function HomeScreen() {
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [activeFilter, setActiveFilter] = useState<PillarFilter>('all');
   const [isClientDrawerOpen, setIsClientDrawerOpen] = useState(false);
+  const newClientBtnRef = useRef<HTMLButtonElement>(null);
 
   // Quick Task Inline Add
   const [quickTaskTitle, setQuickTaskTitle] = useState('');
@@ -217,6 +218,7 @@ export function HomeScreen() {
           </div>
 
           <Button
+            ref={newClientBtnRef}
             variant="primary"
             icon="plus"
             className="btn-apple"
@@ -445,6 +447,7 @@ export function HomeScreen() {
       <ClientStudioDrawer
         isOpen={isClientDrawerOpen}
         onClose={() => setIsClientDrawerOpen(false)}
+        triggerRef={newClientBtnRef}
       />
     </div>
   );

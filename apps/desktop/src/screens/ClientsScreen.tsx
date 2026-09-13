@@ -6,7 +6,7 @@
  * key stakeholder contacts, and pending deliverables.
  */
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef } from 'react';
 import { useStore } from '../state/store';
 import { navigate } from '../app/router';
 import { CoreDeskDatabase } from '../state/db';
@@ -28,6 +28,7 @@ export function ClientsScreen() {
     return firstActive ? firstActive.id : state.clients[0]?.id ?? '';
   });
   const [isStudioDrawerOpen, setIsStudioDrawerOpen] = useState(false);
+  const newClientBtnRef = useRef<HTMLButtonElement>(null);
 
   // Filter clients
   const filteredClients = useMemo(() => {
@@ -70,6 +71,7 @@ export function ClientsScreen() {
 
         <div className="cd-section-controls-right">
           <Button
+            ref={newClientBtnRef}
             variant="primary"
             icon="plus"
             className="btn-apple"
@@ -431,6 +433,7 @@ export function ClientsScreen() {
         isOpen={isStudioDrawerOpen}
         onClose={() => setIsStudioDrawerOpen(false)}
         onClientCreated={(newId) => setSelectedClientId(newId)}
+        triggerRef={newClientBtnRef}
       />
     </div>
   );

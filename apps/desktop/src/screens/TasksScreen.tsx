@@ -86,15 +86,17 @@ export function TasksScreen() {
   const isSideBySide = isInspectorOpen && availableWidth >= 1020;
 
   useEffect(() => {
+    overlay.setIsPanelSideBySide(isSideBySide);
     if (isSideBySide) {
       document.body.classList.add('tasks-side-by-side');
     } else {
       document.body.classList.remove('tasks-side-by-side');
     }
     return () => {
+      overlay.setIsPanelSideBySide(false);
       document.body.classList.remove('tasks-side-by-side');
     };
-  }, [isSideBySide]);
+  }, [isSideBySide, overlay]);
 
   // Persist View Mode
   useEffect(() => {

@@ -290,7 +290,7 @@ export default function App() {
       )}
 
       <OverlayProvider
-        renderPanel={(taskId) => <TaskPanel taskId={taskId} />}
+        renderPanel={(taskId, isSideBySide) => <TaskPanel taskId={taskId} isSideBySide={isSideBySide} />}
         renderModal={(kind, id) => <ModalHost kind={kind} id={id} />}
         renderSearch={() => <SearchPalette />}
       >

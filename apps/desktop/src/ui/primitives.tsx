@@ -39,6 +39,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   icon?: IconName;
   iconRight?: IconName;
   children?: ReactNode;
+  ref?: React.Ref<HTMLButtonElement>;
 }
 
 export function Button({

@@ -8,7 +8,7 @@
 
 import { useState } from 'react';
 import { useStore, nextId } from '../state/store';
-import { useOverlay } from '../ui/overlay';
+import { useOverlay, OverlaySurface } from '../ui/overlay';
 import { navigate } from '../app/router';
 import { Icon } from '../ui/Icon';
 import { Button, TextInput, Select, TextArea } from '../ui/primitives';
@@ -18,6 +18,7 @@ interface ClientStudioDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   onClientCreated?: (clientId: string) => void;
+  triggerRef?: React.RefObject<HTMLElement | null> | HTMLElement | null;
 }
 
 const BRAND_COLORS = [
@@ -31,7 +32,7 @@ const BRAND_COLORS = [
   '#4b5563', // Graphite
 ];
 
-export function ClientStudioDrawer({ isOpen, onClose, onClientCreated }: ClientStudioDrawerProps) {
+export function ClientStudioDrawer({ isOpen, onClose, onClientCreated, triggerRef }: ClientStudioDrawerProps) {
   const { dispatch } = useStore();
   const overlay = useOverlay();
 
@@ -121,7 +122,17 @@ export function ClientStudioDrawer({ isOpen, onClose, onClientCreated }: ClientS
   };
 
   return (
-    <div className="cd-drawer-backdrop" onClick={onClose}>
+    <OverlaySurface
+      mode="drawer"
+      isOpen={isOpen}
+      onClose={onClose}
+      returnFocusRef={triggerRef}
+      ariaLabel="Client Onboarding Studio"
+      dimBackground={false}
+      className="cd-drawer-backdrop"
+      trapFocus={true}
+      routeOwner="clients"
+    >
       <aside className="cd-studio-drawer" onClick={(e) => e.stopPropagation()} aria-label="Client Onboarding Studio">
         {/* Drawer Header */}
         <div className="cd-studio-head">
@@ -401,6 +412,6 @@ export function ClientStudioDrawer({ isOpen, onClose, onClientCreated }: ClientS
           </Button>
         </div>
       </aside>
-    </div>
+    </OverlaySurface>
   );
 }

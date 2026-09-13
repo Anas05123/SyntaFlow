@@ -36,7 +36,7 @@ const PRIORITY_OPTIONS: { value: TaskPriority; label: string }[] = [
   { value: 'low', label: 'Low' },
 ];
 
-export function TaskPanel({ taskId }: { taskId: string }) {
+export function TaskPanel({ taskId, isSideBySide = false }: { taskId: string; isSideBySide?: boolean }) {
   const { state, dispatch, derived } = useStore();
   const overlay = useOverlay();
 
@@ -59,7 +59,12 @@ export function TaskPanel({ taskId }: { taskId: string }) {
 
   if (!task) {
     return (
-      <aside className="task-inspector" role="dialog" aria-modal="true" aria-label="Task detail">
+      <aside
+        className="task-inspector"
+        role={isSideBySide ? 'region' : 'dialog'}
+        aria-modal={isSideBySide ? 'false' : 'true'}
+        aria-label="Task detail"
+      >
         <div className="panel-head">
           <div className="panel-title">Task not found</div>
           <IconButton icon="close" label="Close" onClick={overlay.closePanel} />
@@ -169,7 +174,12 @@ export function TaskPanel({ taskId }: { taskId: string }) {
   const completedChecklistCount = task.checklist.filter((c) => c.done).length;
 
   return (
-    <aside className="task-inspector" role="dialog" aria-modal="true" aria-label="Task detail inspector">
+    <aside
+      className="task-inspector"
+      role={isSideBySide ? 'region' : 'dialog'}
+      aria-modal={isSideBySide ? 'false' : 'true'}
+      aria-label="Task detail inspector"
+    >
       {/* 1. Header */}
       <div className="panel-head">
         <div style={{ flex: 1, minWidth: 0 }}>
