@@ -8,7 +8,8 @@ This directory contains the official CoreDesk visual brand marks, application ic
 
 | File | Purpose | Dimensions / Format |
 |---|---|---|
-| `coredesk-icon.png` | Primary application icon mark (app switcher, taskbar, tray) | High-resolution PNG mark |
+| `coredesk-icon.png` | Primary application icon mark (app switcher, taskbar, tray) | High-resolution PNG mark (1254x1254) |
+| `coredesk-icon.ico` | Windows desktop application & taskbar icon | Multi-resolution ICO (16, 24, 32, 48, 64, 128, 256) |
 | `coredesk-logo-full.png` | Full horizontal logomark with CoreDesk wordmark | High-resolution PNG logo |
 
 ---

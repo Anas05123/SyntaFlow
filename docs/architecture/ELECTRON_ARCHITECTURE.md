@@ -52,6 +52,7 @@ const win = new BrowserWindow({
   show: false,                // Created hidden until ready-to-show
   backgroundColor: '#0B0D0F', // Eliminates white flash before first paint
   title: 'CoreDesk',
+  icon: APP_ICON_PATH,        // Multi-resolution ICO (Windows) or high-res PNG
   frame: false,               // Frameless desktop chrome
   autoHideMenuBar: true,
   resizable: true,
@@ -68,6 +69,11 @@ const win = new BrowserWindow({
   },
 });
 ```
+
+### 2.1 Application Identity & Taskbar Integration
+- **AUMID (`app.setAppUserModelId`)**: Configured as `'com.coredesk.app'` on Windows to ensure taskbar buttons, shortcuts, and jump lists group under the CoreDesk brand rather than inheriting the generic runtime `electron.exe`.
+- **Application Icon (`icon: APP_ICON_PATH`)**: Points to `apps/desktop/electron/icon.ico` (multi-resolution Windows ICO containing 16x16, 24x24, 32x32, 48x48, 64x64, 128x128, and 256x256 pixel layers) with automatic fallback to high-resolution PNG (`icon.png`).
+- **Runtime Binding**: In addition to the `BrowserWindow` constructor option, `win.setIcon(APP_ICON_PATH)` is invoked during window initialization to guarantee the Windows shell updates the taskbar icon immediately.
 
 ---
 

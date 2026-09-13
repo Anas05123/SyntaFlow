@@ -203,6 +203,7 @@ child.on('exit', (code) => {
   console.log('── runtime ──');
   console.log(`electron   ${report.versions.electron}  (chromium ${report.versions.chrome}, node ${report.versions.node})`);
   console.log(`mode       ${report.mode}`);
+  console.log(`icon       ${report.icon || 'default'}`);
   console.log(`display    ${report.display.count} display(s), scale ${report.display.scaleFactor}, work area ${report.display.workArea.join('x')}`);
   console.log(`screens    ${report.outDir}`);
   console.log('');

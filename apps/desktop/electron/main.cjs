@@ -11,7 +11,7 @@
  *   built  — load dist/index.html from disk, the shipped artifact
  */
 
-const { app, BrowserWindow, shell, screen, ipcMain, Menu } = require('electron');
+const { app, BrowserWindow, shell, screen, ipcMain, Menu, nativeImage } = require('electron');
 const path = require('node:path');
 const fs = require('node:fs');
 const { pathToFileURL } = require('node:url');
@@ -20,9 +20,29 @@ const { WindowStateManager, DEFAULT_BOUNDS } = require('./window-state.cjs');
 const { AuthService } = require('./auth/auth-service.cjs');
 
 app.setName('CoreDesk');
+if (process.platform === 'win32') {
+  app.setAppUserModelId('com.coredesk.app');
+}
 try {
   app.setPath('userData', path.join(app.getPath('appData'), 'CoreDesk'));
 } catch (_e) {}
+
+/** Resolve the canonical CoreDesk application icon (ICO on Windows, high-res PNG fallback) */
+const APP_ICON_PATH = (() => {
+  const icoCandidate = path.join(__dirname, 'icon.ico');
+  const pngCandidate = path.join(__dirname, 'icon.png');
+  if (process.platform === 'win32' && fs.existsSync(icoCandidate)) {
+    return icoCandidate;
+  }
+  if (fs.existsSync(pngCandidate)) {
+    return pngCandidate;
+  }
+  const publicCandidate = path.join(__dirname, '..', 'public', 'coredesk-icon.png');
+  if (fs.existsSync(publicCandidate)) {
+    return publicCandidate;
+  }
+  return path.join(__dirname, '..', 'src', 'assets', 'coredesk-mark.png');
+})();
 
 /* ---- Desktop window contract -------------------------------------------- */
 
@@ -154,6 +174,7 @@ function createWindow() {
     show: false, // Hidden until ready-to-show to prevent white flash / layout jumps
     backgroundColor: CANVAS,
     title: 'CoreDesk',
+    icon: APP_ICON_PATH,
     frame: false, // Frameless custom desktop chrome
     autoHideMenuBar: true,
     resizable: true,
@@ -169,6 +190,21 @@ function createWindow() {
       zoomFactor: 1,
     },
   });
+
+  if (APP_ICON_PATH && fs.existsSync(APP_ICON_PATH)) {
+    try {
+      const nImg = nativeImage.createFromPath(APP_ICON_PATH);
+      if (!nImg.isEmpty()) {
+        win.setIcon(nImg);
+      } else {
+        win.setIcon(APP_ICON_PATH);
+      }
+    } catch (_e) {
+      try {
+        win.setIcon(APP_ICON_PATH);
+      } catch (_e2) {}
+    }
+  }
 
   win.setMenuBarVisibility(false);
   try {
@@ -394,6 +430,7 @@ async function run() {
     mode,
     results,
     outDir,
+    icon: APP_ICON_PATH,
     window: { requested: [width, height] },
     display: {
       count: displays.length,
