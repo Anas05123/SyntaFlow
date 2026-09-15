@@ -13,6 +13,18 @@ import { FreelancersPage } from './pages/solutions/FreelancersPage';
 import { AgenciesPage } from './pages/solutions/AgenciesPage';
 import { ConsultantsPage } from './pages/solutions/ConsultantsPage';
 import { StudiosPage } from './pages/solutions/StudiosPage';
+import { SecurityPage } from './pages/trust/SecurityPage';
+import { PrivacyPage } from './pages/trust/PrivacyPage';
+import { DataHandlingPage } from './pages/trust/DataHandlingPage';
+import { FAQPage } from './pages/resources/FAQPage';
+import { ChangelogPage } from './pages/resources/ChangelogPage';
+import { AboutPage } from './pages/company/AboutPage';
+import { RoadmapPage } from './pages/company/RoadmapPage';
+import { ContactPage } from './pages/company/ContactPage';
+import { TermsPage } from './pages/legal/TermsPage';
+import { PrivacyPolicyPage } from './pages/legal/PrivacyPolicyPage';
+import { CookiePolicyPage } from './pages/legal/CookiePolicyPage';
+import { AcceptableUsePage } from './pages/legal/AcceptableUsePage';
 
 export const App: React.FC = () => {
   const [currentPath] = usePath();
@@ -23,7 +35,7 @@ export const App: React.FC = () => {
       case '':
         return <HomePage />;
 
-      /* Product Routes */
+      /* Product */
       case '/product':
         return <ProductOverviewPage />;
       case '/product/client-ops':
@@ -35,7 +47,7 @@ export const App: React.FC = () => {
       case '/product/delivery-approvals':
         return <DeliveryApprovalsPage />;
 
-      /* Solutions Routes */
+      /* Solutions */
       case '/solutions/freelancers':
         return <FreelancersPage />;
       case '/solutions/agencies':
@@ -44,6 +56,38 @@ export const App: React.FC = () => {
         return <ConsultantsPage />;
       case '/solutions/studios':
         return <StudiosPage />;
+
+      /* Trust & Security */
+      case '/security':
+        return <SecurityPage />;
+      case '/privacy':
+        return <PrivacyPage />;
+      case '/data-handling':
+        return <DataHandlingPage />;
+
+      /* Resources */
+      case '/faq':
+        return <FAQPage />;
+      case '/changelog':
+        return <ChangelogPage />;
+
+      /* Company */
+      case '/about':
+        return <AboutPage />;
+      case '/roadmap':
+        return <RoadmapPage />;
+      case '/contact':
+        return <ContactPage />;
+
+      /* Legal */
+      case '/terms':
+        return <TermsPage />;
+      case '/privacy-policy':
+        return <PrivacyPolicyPage />;
+      case '/cookies':
+        return <CookiePolicyPage />;
+      case '/acceptable-use':
+        return <AcceptableUsePage />;
 
       default:
         return <HomePage />;
