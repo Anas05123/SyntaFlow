@@ -1,8 +1,7 @@
-﻿import React from 'react';
+import React from 'react';
 import { SEOHead } from '../components/seo/SEOHead';
 import { HeroSection } from '../components/marketing/HeroSection';
-import { ProblemSection } from '../components/marketing/ProblemSection';
-import { CoreIdeaSection } from '../components/marketing/CoreIdeaSection';
+import { InteractiveBentoSection } from '../components/marketing/InteractiveBentoSection';
 import { ProductWorkflowSection } from '../components/marketing/ProductWorkflowSection';
 import { HumanControlSection } from '../components/marketing/HumanControlSection';
 import { SecuritySummarySection } from '../components/marketing/SecuritySummarySection';
@@ -16,8 +15,7 @@ export const HomePage: React.FC = () => {
         description="Syntaflow is a desktop-first client engagement environment that keeps one continuous, connected record of every client relationship — from first contact to final delivery."
       />
       <HeroSection />
-      <ProblemSection />
-      <CoreIdeaSection />
+      <InteractiveBentoSection />
       <ProductWorkflowSection />
       <HumanControlSection />
       <SecuritySummarySection />

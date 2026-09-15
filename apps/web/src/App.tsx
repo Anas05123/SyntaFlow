@@ -2,6 +2,7 @@ import React from 'react';
 import { usePath } from './router/routerContext';
 import { SiteHeader } from './components/navigation/SiteHeader';
 import { SiteFooter } from './components/navigation/SiteFooter';
+import { AtmosphericBackground } from './components/ui/AtmosphericBackground';
 import { HomePage } from './pages/HomePage';
 import { ProductOverviewPage } from './pages/ProductOverviewPage';
 import { ProductClientOpsPage } from './pages/ProductClientOpsPage';
@@ -100,9 +101,10 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', position: 'relative' }}>
+      <AtmosphericBackground />
       <SiteHeader />
-      <main id="content" style={{ flex: 1 }}>
+      <main id="content" style={{ flex: 1, position: 'relative', zIndex: 1 }}>
         {renderContent()}
       </main>
       <SiteFooter />
