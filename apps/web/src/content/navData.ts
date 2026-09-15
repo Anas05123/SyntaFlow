@@ -1,4 +1,4 @@
-﻿export type CapabilityStatus = 'AVAILABLE NOW' | 'IN DEVELOPMENT' | 'PLANNED DIRECTION';
+export type CapabilityStatus = 'AVAILABLE NOW' | 'IN DEVELOPMENT' | 'PLANNED DIRECTION';
 
 export interface NavItem {
   label: string;
@@ -123,6 +123,7 @@ export const COMPANY_NAV: NavItem[] = [
 export const FOOTER_NAV = {
   product: [
     { label: 'Overview', href: '/product' },
+    { label: 'Pricing & Economics', href: '/pricing' },
     { label: 'Client Operations', href: '/product/client-operations' },
     { label: 'Projects & Tasks', href: '/product/projects-tasks' },
     { label: 'Documents & Reviews', href: '/product/documents-reviews' },

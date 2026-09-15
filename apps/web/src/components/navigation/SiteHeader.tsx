@@ -171,6 +171,21 @@ export const SiteHeader: React.FC = () => {
               />
             </div>
 
+            {/* Pricing Direct Link */}
+            <Link
+              href="/pricing"
+              style={{
+                padding: '0.5rem 0.875rem',
+                fontSize: '0.9375rem',
+                fontWeight: 500,
+                color: path === '/pricing' ? 'var(--color-text-primary)' : 'var(--color-text-secondary)',
+                borderRadius: 'var(--radius-md)',
+                transition: 'color var(--duration-fast)',
+              }}
+            >
+              Pricing
+            </Link>
+
             {/* Security Direct Link */}
             <Link
               href="/security"

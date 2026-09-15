@@ -24,6 +24,7 @@ import { RoadmapPage } from './pages/RoadmapPage';
 import { ContactPage } from './pages/ContactPage';
 import { LegalPage } from './pages/LegalPage';
 import { DownloadPage } from './pages/DownloadPage';
+import { PricingPage } from './pages/PricingPage';
 
 export const App: React.FC = () => {
   const path = usePath();
@@ -90,6 +91,10 @@ export const App: React.FC = () => {
         return <LegalPage docId="cookies" />;
       case '/acceptable-use':
         return <LegalPage docId="acceptable-use" />;
+
+      // Pricing & Economics
+      case '/pricing':
+        return <PricingPage />;
 
       // Distribution
       case '/download':

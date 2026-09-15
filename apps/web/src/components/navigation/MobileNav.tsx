@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from '../../router/Router';
 import { Button } from '../ui/Button';
 import { StatusBadge } from '../ui/StatusBadge';
@@ -161,6 +161,20 @@ export const MobileNav: React.FC<MobileNavProps> = ({ isOpen, onClose }) => {
         </div>
 
         {/* Direct Links */}
+        <Link
+          href="/pricing"
+          onClick={onClose}
+          style={{
+            padding: 'var(--space-4) 0',
+            fontSize: '1.125rem',
+            fontWeight: 600,
+            color: 'var(--color-text-primary)',
+            borderBottom: '1px solid var(--color-border-subtle)',
+          }}
+        >
+          Pricing & Economics
+        </Link>
+
         <Link
           href="/security"
           onClick={onClose}

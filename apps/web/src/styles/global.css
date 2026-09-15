@@ -34,18 +34,23 @@
 
 .font-mono {
   font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
 }
 
-.text-gradient {
-  background: linear-gradient(135deg, #F8FAFC 30%, #94A3B8 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+/* Crisp, confident typographic styles - Anti-AI-Hype */
+.text-strong {
+  color: #FFFFFF;
 }
 
-.text-gradient-cyan {
-  background: linear-gradient(135deg, #2563EB 0%, #00D4FF 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+.text-muted {
+  color: var(--color-text-secondary);
+}
+
+.text-meta {
+  font-family: var(--font-mono);
+  font-size: var(--fs-meta);
+  color: var(--color-text-tertiary);
+  font-variant-numeric: tabular-nums;
 }
 
 .sf-card {
@@ -98,63 +103,25 @@
   }
 }
 
-/* Atmospheric Dot Matrix Mesh */
-.sf-dot-grid {
-  background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
-  background-size: 28px 28px;
-  background-position: center center;
+/* Subtle Technical Grid Overlay */
+.sf-subtle-grid {
+  background-image: linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 32px 32px;
 }
 
-/* Glassmorphic Panel */
-.sf-glass-panel {
-  background: var(--material-glass);
-  backdrop-filter: blur(20px) saturate(1.2);
-  -webkit-backdrop-filter: blur(20px) saturate(1.2);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-xl);
-  box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.08);
-}
-
-/* Luminous Halo Spotlight */
-.sf-halo-spotlight {
-  position: absolute;
-  top: -120px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 900px;
-  height: 500px;
-  background: radial-gradient(ellipse at 50% 30%, rgba(37, 99, 235, 0.25), rgba(0, 212, 255, 0.12) 45%, transparent 72%);
-  filter: blur(48px);
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* Live Pulse Animation */
-@keyframes sfPulseGlow {
-  0%, 100% {
-    opacity: 0.8;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.15);
-    box-shadow: 0 0 12px var(--color-cyan);
-  }
-}
-
-.sf-pulse-dot {
+/* Status Indicator Dot */
+.sf-status-dot {
   display: inline-block;
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background-color: var(--color-cyan);
-  box-shadow: 0 0 8px var(--color-cyan-glow);
-  animation: sfPulseGlow 2.5s ease-in-out infinite;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .sf-pulse-dot {
-    animation: none;
-  }
+.sf-status-dot-active {
+  background-color: var(--color-status-active);
 }
 
+.sf-status-dot-waiting {
+  background-color: var(--color-status-waiting);
+}
