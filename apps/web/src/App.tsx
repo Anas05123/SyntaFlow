@@ -16,6 +16,13 @@ import { SolutionsStudiosPage } from './pages/SolutionsStudiosPage';
 import { SecurityPage } from './pages/SecurityPage';
 import { PrivacyPage } from './pages/PrivacyPage';
 import { DataHandlingPage } from './pages/DataHandlingPage';
+import { FAQPage } from './pages/FAQPage';
+import { ChangelogPage } from './pages/ChangelogPage';
+import { AboutPage } from './pages/AboutPage';
+import { RoadmapPage } from './pages/RoadmapPage';
+import { ContactPage } from './pages/ContactPage';
+import { LegalPage } from './pages/LegalPage';
+import { DownloadPage } from './pages/DownloadPage';
 
 export const App: React.FC = () => {
   const path = usePath();
@@ -57,6 +64,35 @@ export const App: React.FC = () => {
         return <PrivacyPage />;
       case '/data-handling':
         return <DataHandlingPage />;
+
+      // Resources routes
+      case '/faq':
+        return <FAQPage />;
+      case '/changelog':
+        return <ChangelogPage />;
+
+      // Company routes
+      case '/about':
+        return <AboutPage />;
+      case '/roadmap':
+        return <RoadmapPage />;
+      case '/contact':
+        return <ContactPage />;
+
+      // Legal routes
+      case '/terms':
+        return <LegalPage docId="terms" />;
+      case '/legal/privacy':
+      case '/privacy-policy':
+        return <LegalPage docId="privacy" />;
+      case '/cookies':
+        return <LegalPage docId="cookies" />;
+      case '/acceptable-use':
+        return <LegalPage docId="acceptable-use" />;
+
+      // Distribution
+      case '/download':
+        return <DownloadPage />;
 
       default:
         return <HomePage />;
