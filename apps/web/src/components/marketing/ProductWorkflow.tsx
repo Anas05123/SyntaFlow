@@ -152,6 +152,7 @@ export const ProductWorkflow: React.FC = () => {
               <button
                 key={s.id}
                 type="button"
+                data-stage-id={s.id}
                 onClick={() => setActiveStageIndex(idx)}
                 style={{
                   display: 'flex',
@@ -187,7 +188,7 @@ export const ProductWorkflow: React.FC = () => {
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
             gap: 'var(--space-32)',
             alignItems: 'stretch',
           }}

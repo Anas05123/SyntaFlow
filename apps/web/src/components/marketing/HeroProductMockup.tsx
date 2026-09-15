@@ -118,9 +118,9 @@ export const HeroProductMockup: React.FC = () => {
       </div>
 
       {/* Mockup Active Content Area */}
-      <div style={{ minHeight: '340px', padding: '24px', backgroundColor: 'var(--canvas)' }}>
+      <div style={{ minHeight: '340px', padding: 'clamp(16px, 3vw, 24px)', backgroundColor: 'var(--canvas)' }}>
         {activeTab === 'review' && (
-          <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.8fr) minmax(0, 1.2fr)', gap: '20px' }}>
+          <div className="mockup-review-grid">
             {/* Left: Document Reading Canvas */}
             <div
               style={{
@@ -222,7 +222,7 @@ export const HeroProductMockup: React.FC = () => {
 
         {activeTab === 'tasks' && (
           <div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
+            <div className="mockup-tasks-grid">
               {/* To Do Column */}
               <div style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--edge)', borderRadius: 'var(--radius-sm)', padding: '16px' }}>
                 <div style={{ fontSize: '12px', fontFamily: 'var(--font-mono)', color: 'var(--text-metadata)', marginBottom: '12px', display: 'flex', justifyContent: 'space-between' }}>
@@ -281,6 +281,27 @@ export const HeroProductMockup: React.FC = () => {
           </div>
         )}
       </div>
+
+      <style>{`
+        .mockup-review-grid {
+          display: grid;
+          grid-template-columns: minmax(0, 1.8fr) minmax(0, 1.2fr);
+          gap: 20px;
+        }
+        .mockup-tasks-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 16px;
+        }
+        @media (max-width: 768px) {
+          .mockup-review-grid {
+            grid-template-columns: 1fr !important;
+          }
+          .mockup-tasks-grid {
+            grid-template-columns: 1fr !important;
+          }
+        }
+      `}</style>
     </div>
   );
 };
