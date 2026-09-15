@@ -13,6 +13,9 @@ import { SolutionsFreelancersPage } from './pages/SolutionsFreelancersPage';
 import { SolutionsAgenciesPage } from './pages/SolutionsAgenciesPage';
 import { SolutionsConsultantsPage } from './pages/SolutionsConsultantsPage';
 import { SolutionsStudiosPage } from './pages/SolutionsStudiosPage';
+import { SecurityPage } from './pages/SecurityPage';
+import { PrivacyPage } from './pages/PrivacyPage';
+import { DataHandlingPage } from './pages/DataHandlingPage';
 
 export const App: React.FC = () => {
   const path = usePath();
@@ -46,6 +49,14 @@ export const App: React.FC = () => {
         return <SolutionsConsultantsPage />;
       case '/solutions/studios':
         return <SolutionsStudiosPage />;
+
+      // Security & Trust routes
+      case '/security':
+        return <SecurityPage />;
+      case '/privacy':
+        return <PrivacyPage />;
+      case '/data-handling':
+        return <DataHandlingPage />;
 
       default:
         return <HomePage />;
