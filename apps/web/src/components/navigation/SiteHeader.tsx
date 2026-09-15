@@ -1,5 +1,6 @@
-﻿import React, { useState, useEffect, useRef } from 'react';
-import { Link, usePath } from '../../router/Router';
+import React, { useState, useEffect, useRef } from 'react';
+import { Link } from '../../router/Router';
+import { usePath } from '../../router/routerContext';
 import { SyntaflowLogo } from '../brand/SyntaflowLogo';
 import { Button } from '../ui/Button';
 import { MegaMenu } from './MegaMenu';
@@ -11,7 +12,15 @@ export const SiteHeader: React.FC = () => {
   const [activeMenu, setActiveMenu] = useState<'product' | 'solutions' | 'company' | 'resources' | null>(null);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [prevPath, setPrevPath] = useState(path);
   const navContainerRef = useRef<HTMLDivElement>(null);
+
+  // Close menus on path change directly during render
+  if (prevPath !== path) {
+    setPrevPath(path);
+    setActiveMenu(null);
+    setMobileNavOpen(false);
+  }
 
   useEffect(() => {
     const handleScroll = () => {
@@ -31,12 +40,6 @@ export const SiteHeader: React.FC = () => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
-
-  // Close menus on path change
-  useEffect(() => {
-    setActiveMenu(null);
-    setMobileNavOpen(false);
-  }, [path]);
 
   const toggleMenu = (menu: 'product' | 'solutions' | 'company' | 'resources') => {
     setActiveMenu((prev) => (prev === menu ? null : menu));

@@ -1,23 +1,5 @@
-﻿import React, { createContext, useContext, useEffect, useState, useMemo, useCallback } from 'react';
-
-interface RouterContextType {
-  path: string;
-  navigate: (to: string) => void;
-}
-
-const RouterContext = createContext<RouterContextType>({
-  path: '/',
-  navigate: () => {},
-});
-
-export function getCleanPath(): string {
-  if (typeof window === 'undefined') return '/';
-  // Support hash routes for static fallback (e.g., #/security)
-  if (window.location.hash.startsWith('#/')) {
-    return window.location.hash.slice(1).split('?')[0];
-  }
-  return window.location.pathname || '/';
-}
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
+import { RouterContext, getCleanPath, useRouter } from './routerContext';
 
 export function RouterProvider({ children }: { children: React.ReactNode }) {
   const [path, setPath] = useState<string>(getCleanPath);
@@ -61,14 +43,6 @@ export function RouterProvider({ children }: { children: React.ReactNode }) {
   const value = useMemo(() => ({ path, navigate }), [path, navigate]);
 
   return <RouterContext.Provider value={value}>{children}</RouterContext.Provider>;
-}
-
-export function useRouter() {
-  return useContext(RouterContext);
-}
-
-export function usePath(): string {
-  return useContext(RouterContext).path;
 }
 
 export function Link({

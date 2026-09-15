@@ -1,5 +1,5 @@
-﻿import React, { useEffect } from 'react';
-import { usePath } from '../../router/Router';
+import React, { useEffect } from 'react';
+import { usePath } from '../../router/routerContext';
 
 export interface SEOHeadProps {
   title: string;

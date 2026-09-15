@@ -1,10 +1,11 @@
-﻿import React from 'react';
+import React from 'react';
 import { SEOHead } from '../components/seo/SEOHead';
 import { PageHero } from '../components/marketing/PageHero';
 import { Container } from '../components/ui/Container';
 import { Card } from '../components/ui/Card';
 import { LEGAL_DOCS } from '../content/legalData';
-import { usePath, Link } from '../router/Router';
+import { Link } from '../router/Router';
+import { usePath } from '../router/routerContext';
 
 interface LegalPageProps {
   docId?: 'terms' | 'privacy' | 'cookies' | 'acceptable-use';
@@ -100,7 +101,7 @@ export const LegalPage: React.FC<LegalPageProps> = ({ docId }) => {
 
           {/* Legal Document Sections */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
-            {doc.sections.map((sec, i) => (
+            {doc.sections.map((sec: { heading: string; content: string }, i: number) => (
               <Card key={i} padding="lg">
                 <h3
                   style={{

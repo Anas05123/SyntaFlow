@@ -1,5 +1,5 @@
-﻿import React from 'react';
-import { usePath } from './router/Router';
+import React from 'react';
+import { usePath } from './router/routerContext';
 import { SiteHeader } from './components/navigation/SiteHeader';
 import { SiteFooter } from './components/navigation/SiteFooter';
 import { HomePage } from './pages/HomePage';
