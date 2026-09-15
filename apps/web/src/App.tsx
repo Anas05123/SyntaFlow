@@ -3,20 +3,25 @@ import './styles/global.css';
 import { usePath } from './utils/router';
 import { SiteHeader } from './components/navigation/SiteHeader';
 import { SiteFooter } from './components/navigation/SiteFooter';
+import { HomePage } from './pages/HomePage';
 
 export const App: React.FC = () => {
   const [currentPath] = usePath();
+
+  const renderRoute = () => {
+    switch (currentPath) {
+      case '/':
+      case '':
+      default:
+        return <HomePage />;
+    }
+  };
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: 'var(--canvas)' }}>
       <SiteHeader currentPath={currentPath} />
       <main style={{ flex: 1 }}>
-        <div className="container" style={{ padding: 'var(--space-48) var(--space-24)' }}>
-          <h1 className="heading-1">Foundation Active</h1>
-          <p className="body-large" style={{ marginTop: 'var(--space-16)' }}>
-            Current Path: <code style={{ fontFamily: 'var(--font-mono)', color: 'var(--cyan)' }}>{currentPath}</code>
-          </p>
-        </div>
+        {renderRoute()}
       </main>
       <SiteFooter />
     </div>
