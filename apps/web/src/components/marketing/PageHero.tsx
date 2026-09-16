@@ -1,7 +1,10 @@
 import React from 'react';
 import { StatusBadge, type CapabilityStatus } from '../brand/StatusBadge';
+import { Breadcrumbs } from '../ui/Breadcrumbs';
+import type { BreadcrumbItem } from '../../seo/seoConfig';
 
 interface PageHeroProps {
+  breadcrumbs?: BreadcrumbItem[];
   eyebrow?: string;
   title: string;
   description: string;
@@ -10,6 +13,7 @@ interface PageHeroProps {
 }
 
 export const PageHero: React.FC<PageHeroProps> = ({
+  breadcrumbs,
   eyebrow,
   title,
   description,
@@ -19,7 +23,7 @@ export const PageHero: React.FC<PageHeroProps> = ({
   return (
     <section
       style={{
-        paddingTop: 'var(--space-64)',
+        paddingTop: 'var(--space-48)',
         paddingBottom: 'var(--space-48)',
         borderBottom: '1px solid var(--edge)',
         backgroundColor: 'var(--canvas)',
@@ -27,6 +31,8 @@ export const PageHero: React.FC<PageHeroProps> = ({
     >
       <div className="container">
         <div style={{ maxWidth: '820px' }}>
+          {breadcrumbs && <Breadcrumbs items={breadcrumbs} style={{ padding: '0 0 var(--space-12) 0' }} />}
+
           <div
             style={{
               display: 'flex',

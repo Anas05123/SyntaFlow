@@ -4,6 +4,7 @@ import { PageHero } from '../../components/marketing/PageHero';
 import { Card } from '../../components/ui/Card';
 import { StatusBadge } from '../../components/brand/StatusBadge';
 import { CTASection } from '../../components/marketing/CTASection';
+import { getRouteMetadata } from '../../seo/seoConfig';
 
 const RELEASES = [
   {
@@ -57,15 +58,14 @@ const RELEASES = [
 ];
 
 export const ChangelogPage: React.FC = () => {
+  const meta = getRouteMetadata('/changelog');
+
   return (
     <div>
-      <SEOHead
-        title="Changelog & Release Notes — Syntaflow"
-        description="Chronological record of verified desktop engine milestones, architectural upgrades, and feature releases for Syntaflow."
-        path="/changelog"
-      />
+      <SEOHead path="/changelog" />
 
       <PageHero
+        breadcrumbs={meta.breadcrumbs}
         eyebrow="Resources // Changelog"
         title="Engineering log & releases."
         description="Track the evolution of the Syntaflow desktop operating environment. Every entry represents verified functionality running in our production build."
@@ -111,7 +111,7 @@ export const ChangelogPage: React.FC = () => {
         title="Experience the latest desktop release."
         description="Download the Syntaflow preview for Windows."
         primaryLabel="Explore Desktop Preview"
-        primaryHref="#/product"
+        primaryHref="/download"
       />
     </div>
   );

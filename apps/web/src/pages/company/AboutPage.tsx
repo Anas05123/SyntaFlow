@@ -3,17 +3,17 @@ import { SEOHead } from '../../components/ui/SEOHead';
 import { PageHero } from '../../components/marketing/PageHero';
 import { Card } from '../../components/ui/Card';
 import { CTASection } from '../../components/marketing/CTASection';
+import { getRouteMetadata } from '../../seo/seoConfig';
 
 export const AboutPage: React.FC = () => {
+  const meta = getRouteMetadata('/about');
+
   return (
     <div>
-      <SEOHead
-        title="About Syntaflow — Intelligence in Flow"
-        description="Our mission: reduce the distance between intention and execution. Learn the story, principles, and team behind Syntaflow."
-        path="/about"
-      />
+      <SEOHead path="/about" />
 
       <PageHero
+        breadcrumbs={meta.breadcrumbs}
         eyebrow="Company // About Us"
         title="Reduce the distance between intention and execution."
         description="Syntaflow was founded on a simple observation: modern software has made client work more fragmented, not less. We are building technology that connects context with outcome."
@@ -44,29 +44,32 @@ export const AboutPage: React.FC = () => {
             <p className="body-large" style={{ marginBottom: 'var(--space-16)' }}>
               Our name comes from two foundational concepts:
             </p>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 'var(--space-20)', margin: 'var(--space-24) 0' }}>
-              <Card variant="subtle" style={{ padding: 'var(--space-24)' }}>
-                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '13px', color: 'var(--cyan)', fontWeight: 700, marginBottom: '8px' }}>
-                  SYNTA // SYNTHESIS
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-20)', margin: 'var(--space-24) 0' }}>
+              <Card variant="default" style={{ padding: 'var(--space-20)' }}>
+                <div style={{ fontSize: '13.5px', fontWeight: 600, color: 'var(--cobalt)', marginBottom: 'var(--space-8)' }}>
+                  SYNTHESIS
                 </div>
-                <p style={{ fontSize: '14px', color: 'var(--text-muted)', lineHeight: 1.6 }}>
-                  Bringing client context, agreed terms, execution tasks, and document versions into one unified living record.
+                <p style={{ fontSize: '13.5px', color: 'var(--text-muted)', lineHeight: 1.5, margin: 0 }}>
+                  Connecting fragmented client artifacts into one coherent, unified operational record.
                 </p>
               </Card>
-              <Card variant="subtle" style={{ padding: 'var(--space-24)' }}>
-                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '13px', color: 'var(--cobalt)', fontWeight: 700, marginBottom: '8px' }}>
-                  FLOW // MOVEMENT
+              <Card variant="default" style={{ padding: 'var(--space-20)' }}>
+                <div style={{ fontSize: '13.5px', fontWeight: 600, color: 'var(--cobalt)', marginBottom: 'var(--space-8)' }}>
+                  FLOW
                 </div>
-                <p style={{ fontSize: '14px', color: 'var(--text-muted)', lineHeight: 1.6 }}>
-                  Continuous, uninterrupted progression from initial client contact through signed deliverable handover.
+                <p style={{ fontSize: '13.5px', color: 'var(--text-muted)', lineHeight: 1.5, margin: 0 }}>
+                  The psychological state of uninterrupted focus when software does not get in your way.
                 </p>
               </Card>
             </div>
+            <p className="body-large">
+              When synthesis and flow exist simultaneously, work ceases to feel like bureaucratic tracking and returns to the joy of professional craft.
+            </p>
           </div>
 
           {/* Narrative Chapter 3 */}
-          <div>
-            <div className="eyebrow">Our Purpose</div>
+          <div style={{ marginBottom: 'var(--space-48)' }}>
+            <div className="eyebrow">The Conviction</div>
             <h2 className="heading-2" style={{ marginBottom: 'var(--space-16)' }}>
               Increase human agency through intelligent software.
             </h2>
@@ -84,7 +87,7 @@ export const AboutPage: React.FC = () => {
         title="Never lose the thread again."
         description="Experience client operations built for focus and craft."
         primaryLabel="Explore Product"
-        primaryHref="#/product"
+        primaryHref="/product"
       />
     </div>
   );

@@ -1,4 +1,7 @@
 User-agent: *
 Allow: /
+Disallow: /login
+Disallow: /account
+Disallow: /auth/
 
 Sitemap: https://syntaflow.tech/sitemap.xml

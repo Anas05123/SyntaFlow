@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Page Not Found | Syntaflow</title>
+  <meta name="description" content="The requested page could not be found." />
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="icon" type="image/png" href="/brand/logo-icon.png" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background-color: #0b0d0f;
+      color: #f1f5f9;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 24px;
+      text-align: center;
+    }
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      background-color: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.25);
+      color: #f87171;
+      font-size: 11px;
+      font-family: monospace;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      margin-bottom: 20px;
+    }
+    h1 {
+      font-size: clamp(32px, 5vw, 48px);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: 16px;
+    }
+    p {
+      color: #94a3b8;
+      font-size: 16px;
+      line-height: 1.6;
+      max-width: 520px;
+      margin-bottom: 32px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 12px;
+      max-width: 560px;
+      width: 100%;
+      margin-bottom: 32px;
+      text-align: left;
+    }
+    .card {
+      padding: 16px;
+      border-radius: 8px;
+      background-color: #12151a;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.15s ease;
+    }
+    .card:hover {
+      border-color: #06b6d4;
+      background-color: #1a1e24;
+    }
+    .card-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #f1f5f9;
+      margin-bottom: 4px;
+    }
+    .card-desc {
+      font-size: 12px;
+      color: #94a3b8;
+    }
+    .btn-home {
+      display: inline-block;
+      padding: 10px 24px;
+      background-color: #0284c7;
+      color: #ffffff;
+      text-decoration: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      transition: background 0.15s ease;
+    }
+    .btn-home:hover {
+      background-color: #0369a1;
+    }
+  </style>
+</head>
+<body>
+  <div class="badge">404 // RESOURCE NOT FOUND</div>
+  <h1>Page Not Found</h1>
+  <p>The page you requested does not exist, has moved to a new permanent location, or the link may have been mistyped.</p>
+  <div class="grid">
+    <a href="/" class="card">
+      <div class="card-title">Home →</div>
+      <div class="card-desc">Connected workspace</div>
+    </a>
+    <a href="/product" class="card">
+      <div class="card-title">Product →</div>
+      <div class="card-desc">Operating suites</div>
+    </a>
+    <a href="/integrations" class="card">
+      <div class="card-title">Integrations →</div>
+      <div class="card-desc">Connected tools</div>
+    </a>
+    <a href="/docs" class="card">
+      <div class="card-title">Docs →</div>
+      <div class="card-desc">Guides & reference</div>
+    </a>
+  </div>
+  <a href="/" class="btn-home">Back to Home</a>
+</body>
+</html>

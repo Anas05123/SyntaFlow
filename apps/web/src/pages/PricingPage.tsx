@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { SEOHead } from '../components/ui/SEOHead';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
@@ -7,11 +7,7 @@ import { PRICING_PLANS, PRICING_FAQS } from '../content/pricing';
 export const PricingPage: React.FC = () => {
   return (
     <div style={{ paddingBottom: 'var(--space-64)' }}>
-      <SEOHead
-        title="Pricing — Syntaflow"
-        description="Transparent pricing for Syntaflow. Free during desktop preview with unconstrained local features. Explore upcoming Pro and Studio tiers."
-        path="/pricing"
-      />
+      <SEOHead path="/pricing" />
 
       {/* Header */}
       <section className="section" style={{ paddingTop: 'var(--space-48)', paddingBottom: 'var(--space-24)', textAlign: 'center' }}>

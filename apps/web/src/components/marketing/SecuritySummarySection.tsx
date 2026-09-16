@@ -61,7 +61,7 @@ export const SecuritySummarySection: React.FC = () => {
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-          <Button href="#/security" variant="secondary">
+          <Button href="/security" variant="secondary">
             Read Security Architecture & Data Handling →
           </Button>
         </div>

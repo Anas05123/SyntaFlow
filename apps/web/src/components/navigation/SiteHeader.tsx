@@ -1,6 +1,7 @@
-﻿import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrandMark } from '../brand/BrandMark';
 import { Button } from '../ui/Button';
+import { Link } from '../ui/Link';
 
 interface SiteHeaderProps {
   currentPath: string;
@@ -9,13 +10,25 @@ interface SiteHeaderProps {
 export const SiteHeader: React.FC<SiteHeaderProps> = ({ currentPath }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  // Close mobile nav on Escape key press (WCAG 2.1)
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setMobileOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [mobileOpen]);
+
   const navLinks = [
-    { label: 'Product', href: '#/product', active: currentPath.startsWith('/product') },
-    { label: 'Integrations', href: '#/integrations', active: currentPath.startsWith('/integrations') },
-    { label: 'Security', href: '#/security', active: currentPath.startsWith('/security') },
-    { label: 'Pricing', href: '#/pricing', active: currentPath.startsWith('/pricing') },
-    { label: 'Docs', href: '#/docs', active: currentPath.startsWith('/docs') },
-    { label: 'FAQ', href: '#/faq', active: currentPath.startsWith('/faq') },
+    { label: 'Product', href: '/product', active: currentPath.startsWith('/product') },
+    { label: 'Integrations', href: '/integrations', active: currentPath.startsWith('/integrations') },
+    { label: 'Security', href: '/security', active: currentPath.startsWith('/security') },
+    { label: 'Pricing', href: '/pricing', active: currentPath.startsWith('/pricing') },
+    { label: 'Docs', href: '/docs', active: currentPath.startsWith('/docs') },
+    { label: 'FAQ', href: '/faq', active: currentPath.startsWith('/faq') },
   ];
 
   return (
@@ -42,12 +55,13 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ currentPath }) => {
       >
         {/* Left: Brand Mark */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '32px' }}>
-          <a href="#/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }} aria-label="Syntaflow Home">
+          <Link href="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }} aria-label="Syntaflow Home">
             <BrandMark variant="full" size="md" />
-          </a>
+          </Link>
 
           {/* Desktop Navigation Links */}
           <nav
+            aria-label="Main Navigation"
             style={{
               display: 'none',
               alignItems: 'center',
@@ -56,7 +70,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ currentPath }) => {
             className="desktop-nav"
           >
             {navLinks.map((item) => (
-              <a
+              <Link
                 key={item.label}
                 href={item.href}
                 style={{
@@ -68,7 +82,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ currentPath }) => {
                 }}
               >
                 {item.label}
-              </a>
+              </Link>
             ))}
           </nav>
         </div>
@@ -76,8 +90,8 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ currentPath }) => {
         {/* Right Actions */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
           <div style={{ display: 'none', alignItems: 'center', gap: '16px' }} className="desktop-actions">
-            <a
-              href="#/login"
+            <Link
+              href="/login"
               style={{
                 fontSize: '13.5px',
                 fontWeight: 500,
@@ -86,9 +100,9 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ currentPath }) => {
               }}
             >
               Log in
-            </a>
-            <a
-              href="#/download"
+            </Link>
+            <Link
+              href="/download"
               style={{
                 fontSize: '13.5px',
                 fontWeight: 500,
@@ -97,8 +111,8 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ currentPath }) => {
               }}
             >
               Download
-            </a>
-            <Button variant="primary" href="#/download" style={{ padding: '8px 16px', fontSize: '13px' }}>
+            </Link>
+            <Button variant="primary" href="/download" style={{ padding: '8px 16px', fontSize: '13px' }}>
               Get Syntaflow
             </Button>
           </div>
@@ -107,7 +121,9 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ currentPath }) => {
           <button
             type="button"
             onClick={() => setMobileOpen(!mobileOpen)}
-            aria-label="Toggle navigation menu"
+            aria-expanded={mobileOpen}
+            aria-controls="mobile-navigation"
+            aria-label={mobileOpen ? 'Close navigation menu' : 'Open navigation menu'}
             style={{
               display: 'flex',
               flexDirection: 'column',
@@ -133,6 +149,9 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ currentPath }) => {
       {/* Mobile Menu Slide-down */}
       {mobileOpen && (
         <div
+          id="mobile-navigation"
+          role="navigation"
+          aria-label="Mobile Navigation"
           style={{
             position: 'absolute',
             top: 'var(--header-height)',
@@ -148,7 +167,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ currentPath }) => {
           }}
         >
           {navLinks.map((item) => (
-            <a
+            <Link
               key={item.label}
               href={item.href}
               onClick={() => setMobileOpen(false)}
@@ -162,13 +181,13 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ currentPath }) => {
               }}
             >
               {item.label}
-            </a>
+            </Link>
           ))}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '8px' }}>
-            <Button variant="secondary" href="#/login" onClick={() => setMobileOpen(false)} style={{ width: '100%', textAlign: 'center' }}>
+            <Button variant="secondary" href="/login" onClick={() => setMobileOpen(false)} style={{ width: '100%', textAlign: 'center' }}>
               Log in
             </Button>
-            <Button variant="primary" href="#/download" onClick={() => setMobileOpen(false)} style={{ width: '100%', textAlign: 'center' }}>
+            <Button variant="primary" href="/download" onClick={() => setMobileOpen(false)} style={{ width: '100%', textAlign: 'center' }}>
               Get Syntaflow
             </Button>
           </div>

@@ -9,7 +9,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 
-import { BRAND_LOGO_FULL_SRC, BRAND_MARK_SRC, isMarkLoaded } from './brandAssets';
+import { BRAND_LOGO_FULL_SRC, BRAND_MARK_SRC, BRAND_MARK_WBG_SRC, isMarkLoaded } from './brandAssets';
 
 export interface BrandMarkProps {
   /** Rendered size in px. */
@@ -18,11 +18,23 @@ export interface BrandMarkProps {
   plate?: boolean;
   className?: string;
   alt?: string;
+  /** Custom image source override. */
+  src?: string;
+  /** 'default' uses LogoIcon.png, 'wbg' uses LogoIcon_WBG.png. */
+  variant?: 'default' | 'wbg';
 }
 
-export function BrandMark({ size = 30, plate = false, className, alt = 'Syntaflow' }: BrandMarkProps) {
+export function BrandMark({
+  size = 30,
+  plate = false,
+  className,
+  alt = 'Syntaflow',
+  src,
+  variant = 'default',
+}: BrandMarkProps) {
   const ref = useRef<HTMLImageElement | null>(null);
   const [failed, setFailed] = useState(false);
+  const markSrc = src || (variant === 'wbg' ? BRAND_MARK_WBG_SRC : BRAND_MARK_SRC);
 
   /* Report a mark that did not load, once. */
   useEffect(() => {
@@ -33,15 +45,15 @@ export function BrandMark({ size = 30, plate = false, className, alt = 'Syntaflo
         setFailed(true);
         if (import.meta.env?.DEV) {
           console.error(
-            `[Syntaflow] brand mark failed to load from "${BRAND_MARK_SRC}". ` +
-              'Check that src/assets/syntaflow-icon.png exists and is copied into the build.'
+            `[Syntaflow] brand mark failed to load from "${markSrc}". ` +
+              'Check that the asset exists and is copied into the build.'
           );
         }
       }
     };
     img.addEventListener('error', check);
     return () => img.removeEventListener('error', check);
-  }, []);
+  }, [markSrc]);
 
   return (
     <span
@@ -51,7 +63,7 @@ export function BrandMark({ size = 30, plate = false, className, alt = 'Syntaflo
       style={{ ['--mark-size' as string]: `${size}px` }}
     >
       <span className="brand-mark-glow" aria-hidden="true" />
-      <img ref={ref} src={BRAND_MARK_SRC} alt={alt} draggable={false} decoding="async" />
+      <img ref={ref} src={markSrc} alt={alt} draggable={false} decoding="async" />
     </span>
   );
 }

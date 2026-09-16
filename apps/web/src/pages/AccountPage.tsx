@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { SEOHead } from '../components/ui/SEOHead';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
@@ -6,11 +6,7 @@ import { Button } from '../components/ui/Button';
 export const AccountPage: React.FC = () => {
   return (
     <div style={{ paddingBottom: 'var(--space-64)' }}>
-      <SEOHead
-        title="My Account — Syntaflow"
-        description="Manage your Syntaflow profile, active plan, connected services, and active desktop sessions."
-        path="/account"
-      />
+      <SEOHead path="/account" />
 
       <section className="section" style={{ paddingTop: 'var(--space-48)', paddingBottom: 'var(--space-24)', borderBottom: '1px solid var(--border)' }}>
         <div className="container" style={{ maxWidth: '880px' }}>
@@ -23,10 +19,6 @@ export const AccountPage: React.FC = () => {
           <h1 className="heading-1" style={{ fontSize: 'clamp(28px, 4vw, 40px)', color: 'var(--text)', marginBottom: 'var(--space-8)' }}>
             Account & Sessions
           </h1>
-
-          <p style={{ fontSize: '16px', color: 'var(--text-muted)', margin: 0 }}>
-            Manage your Syntaflow user identity, current subscription tier, and connected desktop workstations.
-          </p>
         </div>
       </section>
 
@@ -41,11 +33,11 @@ export const AccountPage: React.FC = () => {
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 'var(--space-16)', fontSize: '13.5px' }}>
                 <div>
                   <span style={{ color: 'var(--text-muted)', display: 'block', fontSize: '12px', marginBottom: '4px' }}>Name</span>
-                  <span style={{ color: 'var(--text)', fontWeight: 500 }}>Anas Ayari</span>
+                  <span style={{ color: 'var(--text)', fontWeight: 500 }}>Syntaflow Operator</span>
                 </div>
                 <div>
                   <span style={{ color: 'var(--text-muted)', display: 'block', fontSize: '12px', marginBottom: '4px' }}>Email</span>
-                  <span style={{ color: 'var(--text)', fontWeight: 500 }}>ayarianas79@gmail.com</span>
+                  <span style={{ color: 'var(--text)', fontWeight: 500 }}>operator@syntaflow.tech</span>
                 </div>
                 <div>
                   <span style={{ color: 'var(--text-muted)', display: 'block', fontSize: '12px', marginBottom: '4px' }}>Primary Studio</span>
@@ -86,7 +78,7 @@ export const AccountPage: React.FC = () => {
                     <div style={{ fontSize: '14px', fontWeight: 500, color: 'var(--text)' }}>Primary Workstation (Windows 11 x64)</div>
                     <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Syntaflow Desktop v0.1.0-preview.4 · Last active: Today</div>
                   </div>
-                  <Button variant="secondary" href="#/download" style={{ fontSize: '12px', padding: '6px 12px' }}>
+                  <Button variant="secondary" href="/download" style={{ fontSize: '12px', padding: '6px 12px' }}>
                     Download Installer
                   </Button>
                 </div>

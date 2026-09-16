@@ -1,6 +1,7 @@
 import React from 'react';
 import { PRIMARY_NAV } from '../../content/navData';
 import { Button } from '../ui/Button';
+import { Link } from '../ui/Link';
 
 interface MobileNavProps {
   isOpen: boolean;
@@ -48,9 +49,9 @@ export const MobileNav: React.FC<MobileNavProps> = ({ isOpen, onClose }) => {
             {group.items ? (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)', paddingLeft: '8px' }}>
                 {group.items.map((item) => (
-                  <a
+                  <Link
                     key={item.href}
-                    href={`#${item.href}`}
+                    href={item.href}
                     onClick={onClose}
                     style={{
                       display: 'flex',
@@ -77,12 +78,12 @@ export const MobileNav: React.FC<MobileNavProps> = ({ isOpen, onClose }) => {
                         {item.tag}
                       </span>
                     )}
-                  </a>
+                  </Link>
                 ))}
               </div>
             ) : (
-              <a
-                href={`#${group.href}`}
+              <Link
+                href={group.href || '/'}
                 onClick={onClose}
                 style={{
                   padding: '8px 0 8px 8px',
@@ -92,13 +93,13 @@ export const MobileNav: React.FC<MobileNavProps> = ({ isOpen, onClose }) => {
                 }}
               >
                 {group.label}
-              </a>
+              </Link>
             )}
           </div>
         ))}
 
         <div style={{ paddingTop: 'var(--space-16)', borderTop: '1px solid var(--edge)' }}>
-          <Button href="#/product" variant="primary" style={{ width: '100%' }} onClick={onClose}>
+          <Button href="/download" variant="primary" style={{ width: '100%' }} onClick={onClose}>
             Download Preview
           </Button>
         </div>

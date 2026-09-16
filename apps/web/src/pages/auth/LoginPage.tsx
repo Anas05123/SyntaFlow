@@ -3,6 +3,7 @@ import { SEOHead } from '../../components/ui/SEOHead';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { BrandMark } from '../../components/brand/BrandMark';
+import { Link } from '../../components/ui/Link';
 
 export const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -36,11 +37,7 @@ export const LoginPage: React.FC = () => {
         overflow: 'hidden',
       }}
     >
-      <SEOHead
-        title="Log In — Syntaflow Account & Desktop Workspace"
-        description="Sign in to your Syntaflow account or authenticate your desktop preview workspace."
-        path="/login"
-      />
+      <SEOHead path="/login" />
 
       {/* Ambient Lighting Backdrop */}
       <div
@@ -275,10 +272,11 @@ export const LoginPage: React.FC = () => {
               ) : (
                 <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                   <div>
-                    <label style={{ display: 'block', fontSize: '12.5px', color: 'var(--text)', marginBottom: '6px', fontWeight: 500 }}>
+                    <label htmlFor="login-email" style={{ display: 'block', fontSize: '12.5px', color: 'var(--text)', marginBottom: '6px', fontWeight: 500 }}>
                       Work Email
                     </label>
                     <input
+                      id="login-email"
                       type="email"
                       placeholder="name@company.com"
                       value={email}
@@ -301,7 +299,7 @@ export const LoginPage: React.FC = () => {
 
                   <div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
-                      <label style={{ fontSize: '12.5px', color: 'var(--text)', fontWeight: 500 }}>
+                      <label htmlFor="login-password" style={{ fontSize: '12.5px', color: 'var(--text)', fontWeight: 500 }}>
                         Password
                       </label>
                       <span style={{ fontSize: '12px', color: 'var(--cyan)', cursor: 'pointer' }}>
@@ -309,6 +307,7 @@ export const LoginPage: React.FC = () => {
                       </span>
                     </div>
                     <input
+                      id="login-password"
                       type="password"
                       placeholder="••••••••••••"
                       value={password}
@@ -352,17 +351,17 @@ export const LoginPage: React.FC = () => {
                 }}
               >
                 Launching from the desktop app?{' '}
-                <a href="#/auth/desktop" style={{ color: 'var(--cyan)', textDecoration: 'underline', fontWeight: 500 }}>
+                <Link href="/auth/desktop" style={{ color: 'var(--cyan)', textDecoration: 'underline', fontWeight: 500 }}>
                   Authorize Local Bridge &rarr;
-                </a>
+                </Link>
               </div>
 
               <div style={{ marginTop: 'var(--space-16)', textAlign: 'center', fontSize: '11.5px', color: 'var(--text-metadata)', lineHeight: 1.5 }}>
                 Protected by local cryptographic vaults.
                 <br />
                 By signing in, you agree to our{' '}
-                <a href="#/terms" style={{ color: 'var(--text-muted)', textDecoration: 'underline' }}>Terms</a> and{' '}
-                <a href="#/privacy" style={{ color: 'var(--text-muted)', textDecoration: 'underline' }}>Privacy Policy</a>.
+                <Link href="/terms" style={{ color: 'var(--text-muted)', textDecoration: 'underline' }}>Terms</Link> and{' '}
+                <Link href="/privacy" style={{ color: 'var(--text-muted)', textDecoration: 'underline' }}>Privacy Policy</Link>.
               </div>
             </Card>
           </div>

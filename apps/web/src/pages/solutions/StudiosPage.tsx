@@ -3,36 +3,36 @@ import { SEOHead } from '../../components/ui/SEOHead';
 import { PageHero } from '../../components/marketing/PageHero';
 import { Card } from '../../components/ui/Card';
 import { CTASection } from '../../components/marketing/CTASection';
+import { getRouteMetadata } from '../../seo/seoConfig';
 
 const STUDIO_BENEFITS = [
   {
-    title: 'Brand & Technical Blueprints',
-    description: 'Deploy pre-packaged scoping templates for Brand Identity Systems, Design Systems & Web Platforms, and Production Sprints.',
+    title: 'Executive Visual Artifacts',
+    description: 'Present deliverable milestones with design fidelity. Attach rich media, typography previews, and interaction specifications directly to DocVersions.',
   },
   {
-    title: 'Studio Showcase Attachments',
-    description: 'Attach studio case studies, visual hero assets, and design metrics directly to review transmissions, framing deliverable quality with executive prestige.',
+    title: 'Dual-Density Kanban & Tables',
+    description: 'Switch between an aesthetic visual kanban and a dense, keyboard-driven production table during complex sprint phases.',
   },
   {
-    title: 'Immutable Version Snapshots',
-    description: 'Eliminate confusion over &ldquo;Final_v2_FINAL.pdf&rdquo;. Every transmission is bound to an immutable DocVersion with exact byte-level verification.',
+    title: 'Client Review Snapshots',
+    description: 'Transmit clean, branded review links to clients without requiring them to install software. Collect timestamped sign-offs on frozen version states.',
   },
   {
     title: 'Gated Handover Packaging',
-    description: 'Lock delivery bundles until all prerequisite client approvals are recorded, protecting studio IP from premature uncompensated release.',
+    description: 'Ensure deliverables, assets, and design system tokens are only transferred once milestone invoices and approvals are recorded.',
   },
 ];
 
 export const StudiosPage: React.FC = () => {
+  const meta = getRouteMetadata('/solutions/studios');
+
   return (
     <div>
-      <SEOHead
-        title="Syntaflow for Studios & Production Practices"
-        description="Design studios and technical practices. Blueprints, showcase attachments, immutable version snapshots, and gated production handovers."
-        path="/solutions/studios"
-      />
+      <SEOHead path="/solutions/studios" />
 
       <PageHero
+        breadcrumbs={meta.breadcrumbs}
         eyebrow="Solutions // Studios & Production"
         title="Engineered for practices where domain craft matters."
         description="High-end studios don&apos;t compromise on design craft. Syntaflow provides an executive desktop workspace that treats client deliverables with the respect they deserve."
@@ -66,7 +66,7 @@ export const StudiosPage: React.FC = () => {
         title="Elevate your studio&apos;s client delivery."
         description="Run production handovers that reflect your standards of design and technical excellence."
         primaryLabel="Explore Delivery & Approvals"
-        primaryHref="#/product/delivery-approvals"
+        primaryHref="/product/delivery-approvals"
       />
     </div>
   );

@@ -10,7 +10,7 @@ interface BrandMarkProps {
 export const BrandMark: React.FC<BrandMarkProps> = ({
   variant = 'full',
   size = 'md',
-  src = '/brand/LogoIcon_WBG.png',
+  src = '/brand/syntaflow-mark.webp',
   className = '',
 }) => {
   const heights = {
@@ -28,7 +28,9 @@ export const BrandMark: React.FC<BrandMarkProps> = ({
         alt="Syntaflow Mark"
         height={currentHeight}
         width={currentHeight}
-        style={{ height: `${currentHeight}px`, width: 'auto', objectFit: 'contain' }}
+        decoding="async"
+        fetchPriority="high"
+        style={{ height: `${currentHeight}px`, width: `${currentHeight}px`, objectFit: 'contain' }}
         className={className}
       />
     );
@@ -38,10 +40,12 @@ export const BrandMark: React.FC<BrandMarkProps> = ({
     <div style={{ display: 'inline-flex', alignItems: 'center', gap: '10px' }} className={className}>
       <img
         src={src}
-        alt="Syntaflow Logo"
+        alt="Syntaflow Mark"
         height={currentHeight}
         width={currentHeight}
-        style={{ height: `${currentHeight}px`, width: 'auto', objectFit: 'contain' }}
+        decoding="async"
+        fetchPriority="high"
+        style={{ height: `${currentHeight}px`, width: `${currentHeight}px`, objectFit: 'contain' }}
       />
       <span
         style={{

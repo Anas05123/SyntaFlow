@@ -4,6 +4,7 @@ import { PageHero } from '../../components/marketing/PageHero';
 import { Card } from '../../components/ui/Card';
 import { StatusBadge } from '../../components/brand/StatusBadge';
 import { CTASection } from '../../components/marketing/CTASection';
+import { getRouteMetadata } from '../../seo/seoConfig';
 
 interface RoadmapItem {
   title: string;
@@ -66,15 +67,14 @@ const ROADMAP_ITEMS: RoadmapItem[] = [
 ];
 
 export const RoadmapPage: React.FC = () => {
+  const meta = getRouteMetadata('/roadmap');
+
   return (
     <div>
-      <SEOHead
-        title="Roadmap & Future Direction — Syntaflow"
-        description="Planned engineering directions for Syntaflow: Local AI TaskRouter, Cloud Review Portals, Developer Blueprints, and Cross-Platform Desktop Builds."
-        path="/roadmap"
-      />
+      <SEOHead path="/roadmap" />
 
       <PageHero
+        breadcrumbs={meta.breadcrumbs}
         eyebrow="Company // What’s Next"
         title="Engineering roadmap & planned direction."
         description="We refuse to market unreleased features as current reality. Below is our honest engineering roadmap, clearly distinguishing in-progress systems from future architectural directions."
@@ -142,9 +142,9 @@ export const RoadmapPage: React.FC = () => {
         title="Shape the future of client operations."
         description="Share your feedback, feature requests, and workflow pain points directly with our team."
         primaryLabel="Send Feedback"
-        primaryHref="#/contact"
+        primaryHref="/contact"
         secondaryLabel="Read Product Overview"
-        secondaryHref="#/product"
+        secondaryHref="/product"
       />
     </div>
   );

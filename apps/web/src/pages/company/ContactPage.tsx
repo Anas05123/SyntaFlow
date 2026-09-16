@@ -3,23 +3,85 @@ import { SEOHead } from '../../components/ui/SEOHead';
 import { PageHero } from '../../components/marketing/PageHero';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
+import { getRouteMetadata } from '../../seo/seoConfig';
+
+interface Channel {
+  name: string;
+  email?: string;
+  url?: string;
+  purpose: string;
+  sla: string;
+}
+
+const OFFICIAL_CHANNELS: Channel[] = [
+  {
+    name: 'General Inquiries & Partnerships',
+    email: 'contact@syntaflow.tech',
+    purpose: 'General questions, commercial partnerships, and media inquiries.',
+    sla: '1-2 business days',
+  },
+  {
+    name: 'Privacy & Data Governance',
+    email: 'privacy@syntaflow.tech',
+    purpose: 'Inquiries regarding our Privacy Policy, data access requests, or Google API OAuth compliance.',
+    sla: 'Within 48 business hours',
+  },
+  {
+    name: 'Security & Vulnerability Disclosures',
+    email: 'security@syntaflow.tech',
+    purpose: 'Responsible security vulnerability reports and cryptographic inquiries.',
+    sla: 'Within 24-48 business hours',
+  },
+  {
+    name: 'Product Support & Assistance',
+    email: 'support@syntaflow.tech',
+    purpose: 'Desktop application setup, migration assistance, and technical troubleshooting.',
+    sla: '1-2 business days',
+  },
+  {
+    name: 'GitHub Issues & Community',
+    url: 'https://github.com/syntaflow/syntaflow',
+    purpose: 'Public bug tracking, developer discussions, and feature feedback.',
+    sla: 'Community / Asynchronous',
+  },
+];
 
 export const ContactPage: React.FC = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     company: '',
-    reason: 'general',
+    topic: 'contact@syntaflow.tech',
     message: '',
   });
 
   const [submitted, setSubmitted] = useState(false);
+  const [copied, setCopied] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const meta = getRouteMetadata('/contact');
+
+  const getTopicSubject = () => {
+    switch (formData.topic) {
+      case 'privacy@syntaflow.tech':
+        return 'Privacy & Data Governance Inquiry';
+      case 'security@syntaflow.tech':
+        return 'Security Vulnerability / Disclosure';
+      case 'support@syntaflow.tech':
+        return 'Desktop Support Inquiry';
+      default:
+        return 'General Syntaflow Inquiry';
+    }
+  };
+
+  const getComposedBody = () => {
+    return `Name: ${formData.name || 'Not provided'}\nEmail: ${formData.email || 'Not provided'}\nOrganization: ${formData.company || 'Individual'}\n\nMessage:\n${formData.message}`;
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) {
-      setError('Please fill in your name, email address, and message.');
+      setError('Please provide your name, email address, and message.');
       return;
     }
     if (!formData.email.includes('@') || !formData.email.includes('.')) {
@@ -28,57 +90,86 @@ export const ContactPage: React.FC = () => {
     }
     setError(null);
     setSubmitted(true);
+
+    // Launch real mailto client with pre-filled content
+    const subject = encodeURIComponent(getTopicSubject() + ` - from ${formData.name}`);
+    const body = encodeURIComponent(getComposedBody());
+    const mailtoUrl = `mailto:${formData.topic}?subject=${subject}&body=${body}`;
+    window.location.href = mailtoUrl;
+  };
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(getComposedBody());
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2500);
   };
 
   return (
-    <div>
-      <SEOHead
-        title="Contact Us — Syntaflow"
-        description="Get in touch with the Syntaflow team for inquiries, desktop preview feedback, and security disclosures."
-        path="/contact"
-      />
+    <div style={{ paddingBottom: 'var(--space-64)' }}>
+      <SEOHead path="/contact" />
 
       <PageHero
-        eyebrow="Company // Contact"
-        title="Get in touch with our team."
-        description="Have a question about the desktop preview, want to report a security issue, or want to share feedback on our architecture? Reach out directly."
+        breadcrumbs={meta.breadcrumbs}
+        eyebrow="Company // Contact Channels"
+        title="Direct communication. No support tickets."
+        description="We believe in transparent, direct communication. Reach our team directly through our public, verified channels below."
       />
 
-      <section className="section">
-        <div className="container" style={{ maxWidth: '840px' }}>
+      <section className="section" style={{ paddingTop: 'var(--space-36)' }}>
+        <div className="container" style={{ maxWidth: '1040px' }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 'var(--space-32)' }}>
-            {/* Form Column */}
+            
+            {/* Form / Direct Dispatch Column */}
             <Card variant="default" style={{ padding: 'var(--space-32)' }}>
+              <div style={{ marginBottom: 'var(--space-20)' }}>
+                <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--cyan)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  COMPOSE INQUIRY
+                </span>
+                <h2 style={{ fontSize: '20px', fontWeight: 600, color: 'var(--text)', marginTop: '4px' }}>
+                  Send a Direct Message
+                </h2>
+                <p style={{ fontSize: '13.5px', color: 'var(--text-muted)', lineHeight: 1.5, marginTop: '4px' }}>
+                  Draft your inquiry below to launch your default email client with verified routing headers.
+                </p>
+              </div>
+
               {submitted ? (
-                <div style={{ textAlign: 'center', padding: 'var(--space-32) 0' }}>
+                <div style={{ padding: 'var(--space-20) 0' }}>
                   <div
                     style={{
-                      width: '40px',
-                      height: '40px',
+                      width: '44px',
+                      height: '44px',
                       borderRadius: '50%',
-                      backgroundColor: 'var(--active-subtle)',
-                      color: 'var(--active)',
+                      backgroundColor: 'rgba(16, 185, 129, 0.12)',
+                      color: '#10B981',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      margin: '0 auto var(--space-16) auto',
-                      fontSize: '20px',
+                      marginBottom: 'var(--space-16)',
+                      fontSize: '22px',
                     }}
                   >
                     ✓
                   </div>
-                  <h3 style={{ fontSize: '18px', fontWeight: 600, color: 'var(--text)', marginBottom: 'var(--space-8)' }}>
-                    Message Prepared
+                  <h3 style={{ fontSize: '18px', fontWeight: 600, color: 'var(--text)', marginBottom: '8px' }}>
+                    Email Draft Prepared
                   </h3>
-                  <p style={{ fontSize: '14px', color: 'var(--text-muted)', lineHeight: 1.6, marginBottom: 'var(--space-20)' }}>
-                    Thank you for reaching out. In this static preview build, please forward your message directly to{' '}
-                    <a href="mailto:contact@syntaflow.tech" style={{ color: 'var(--cyan)' }}>
-                      contact@syntaflow.tech
-                    </a>.
+                  <p style={{ fontSize: '14px', color: 'var(--text-muted)', lineHeight: 1.6, marginBottom: 'var(--space-16)' }}>
+                    Your system email client was triggered to send to <strong style={{ color: 'var(--cyan)' }}>{formData.topic}</strong>. If your email client did not open automatically, you can copy the draft below:
                   </p>
-                  <Button variant="secondary" onClick={() => setSubmitted(false)} size="sm">
-                    Submit Another Inquiry
-                  </Button>
+
+                  <div style={{ padding: '14px', backgroundColor: 'var(--surface-sunken)', borderRadius: '6px', border: '1px solid var(--border)', fontSize: '13px', fontFamily: 'var(--font-mono)', color: 'var(--text)', whiteSpace: 'pre-wrap', marginBottom: 'var(--space-16)' }}>
+                    {getComposedBody()}
+                  </div>
+
+                  <div style={{ display: 'flex', gap: '10px' }}>
+                    <Button variant="primary" onClick={copyToClipboard} size="sm">
+                      {copied ? 'Copied to Clipboard!' : 'Copy Message Body'}
+                    </Button>
+                    <Button variant="secondary" onClick={() => setSubmitted(false)} size="sm">
+                      Edit Draft
+                    </Button>
+                  </div>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-16)' }}>
@@ -121,7 +212,7 @@ export const ContactPage: React.FC = () => {
 
                   <div>
                     <label htmlFor="email" style={{ display: 'block', fontSize: '13px', fontWeight: 550, color: 'var(--text)', marginBottom: '6px' }}>
-                      Email Address <span style={{ color: 'var(--risk)' }}>*</span>
+                      Your Email Address <span style={{ color: 'var(--risk)' }}>*</span>
                     </label>
                     <input
                       id="email"
@@ -164,13 +255,13 @@ export const ContactPage: React.FC = () => {
                   </div>
 
                   <div>
-                    <label htmlFor="reason" style={{ display: 'block', fontSize: '13px', fontWeight: 550, color: 'var(--text)', marginBottom: '6px' }}>
-                      Inquiry Topic
+                    <label htmlFor="topic" style={{ display: 'block', fontSize: '13px', fontWeight: 550, color: 'var(--text)', marginBottom: '6px' }}>
+                      Destination Channel
                     </label>
                     <select
-                      id="reason"
-                      value={formData.reason}
-                      onChange={(e) => setFormData({ ...formData, reason: e.target.value })}
+                      id="topic"
+                      value={formData.topic}
+                      onChange={(e) => setFormData({ ...formData, topic: e.target.value })}
                       style={{
                         width: '100%',
                         padding: '10px 12px',
@@ -181,10 +272,10 @@ export const ContactPage: React.FC = () => {
                         fontSize: '14px',
                       }}
                     >
-                      <option value="general">General Inquiry</option>
-                      <option value="feedback">Desktop Preview Feedback</option>
-                      <option value="security">Security / Vulnerability Disclosure</option>
-                      <option value="partnership">Studio / Commercial Partnership</option>
+                      <option value="contact@syntaflow.tech">contact@syntaflow.tech — General Inquiries & Partnerships</option>
+                      <option value="privacy@syntaflow.tech">privacy@syntaflow.tech — Privacy & Google OAuth Compliance</option>
+                      <option value="security@syntaflow.tech">security@syntaflow.tech — Security & Vulnerability Disclosures</option>
+                      <option value="support@syntaflow.tech">support@syntaflow.tech — Product Support & Bug Reports</option>
                     </select>
                   </div>
 
@@ -197,7 +288,7 @@ export const ContactPage: React.FC = () => {
                       rows={5}
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                      placeholder="Tell us what you're working on or how we can help..."
+                      placeholder="Describe your inquiry, project, or technical question..."
                       style={{
                         width: '100%',
                         padding: '10px 12px',
@@ -212,43 +303,66 @@ export const ContactPage: React.FC = () => {
                   </div>
 
                   <Button type="submit" variant="primary" style={{ marginTop: 'var(--space-8)' }}>
-                    Send Message
+                    Compose Email to {formData.topic} &rarr;
                   </Button>
                 </form>
               )}
             </Card>
 
-            {/* Direct Channels Column */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-20)' }}>
-              <Card variant="subtle" style={{ padding: 'var(--space-24)' }}>
-                <div style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--cyan)', textTransform: 'uppercase', marginBottom: '8px' }}>
-                  DIRECT CHANNELS
-                </div>
-                <h4 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--text)', marginBottom: '8px' }}>
-                  Electronic Mail
-                </h4>
-                <div style={{ fontSize: '13.5px', color: 'var(--text-muted)', lineHeight: 1.6 }}>
-                  General Inquiries:{' '}
-                  <a href="mailto:contact@syntaflow.tech" style={{ color: 'var(--cyan)' }}>
-                    contact@syntaflow.tech
-                  </a>
-                  <br />
-                  Security Disclosures:{' '}
-                  <a href="mailto:security@syntaflow.tech" style={{ color: 'var(--cyan)' }}>
-                    security@syntaflow.tech
-                  </a>
-                </div>
-              </Card>
+            {/* Official Public Channels List */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-16)' }}>
+              <div style={{ marginBottom: 'var(--space-8)' }}>
+                <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--cyan)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  DIRECT PUBLIC CHANNELS
+                </span>
+                <h3 style={{ fontSize: '18px', fontWeight: 600, color: 'var(--text)', marginTop: '4px' }}>
+                  Official Contact Points
+                </h3>
+              </div>
 
-              <Card variant="subtle" style={{ padding: 'var(--space-24)' }}>
-                <div style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--text-metadata)', textTransform: 'uppercase', marginBottom: '8px' }}>
-                  OPERATIONAL LOCATION
-                </div>
-                <h4 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--text)', marginBottom: '8px' }}>
-                  Domain Identity
+              {OFFICIAL_CHANNELS.map((ch) => (
+                <Card key={ch.name} variant="subtle" style={{ padding: 'var(--space-20)' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '8px', marginBottom: '6px' }}>
+                    <h4 style={{ fontSize: '15px', fontWeight: 600, color: 'var(--text)', margin: 0 }}>
+                      {ch.name}
+                    </h4>
+                    <span style={{ fontSize: '10.5px', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>
+                      {ch.sla}
+                    </span>
+                  </div>
+
+                  <p style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: 1.5, margin: 0, marginBottom: '10px' }}>
+                    {ch.purpose}
+                  </p>
+
+                  {ch.email && (
+                    <a
+                      href={`mailto:${ch.email}`}
+                      style={{ fontSize: '13.5px', fontFamily: 'var(--font-mono)', color: 'var(--cyan)', textDecoration: 'none', fontWeight: 500 }}
+                    >
+                      {ch.email} &rarr;
+                    </a>
+                  )}
+
+                  {ch.url && (
+                    <a
+                      href={ch.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ fontSize: '13.5px', fontFamily: 'var(--font-mono)', color: 'var(--cyan)', textDecoration: 'none', fontWeight: 500 }}
+                    >
+                      github.com/syntaflow/syntaflow &rarr;
+                    </a>
+                  )}
+                </Card>
+              ))}
+
+              <Card variant="subtle" style={{ padding: 'var(--space-20)', borderLeft: '3px solid var(--cyan)' }}>
+                <h4 style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text)', marginBottom: '4px' }}>
+                  Canonical Identity Verification
                 </h4>
-                <p style={{ fontSize: '13.5px', color: 'var(--text-muted)', lineHeight: 1.6 }}>
-                  Syntaflow operations operate under the verified domain <code style={{ fontFamily: 'var(--font-mono)', color: 'var(--cyan)' }}>syntaflow.tech</code>.
+                <p style={{ fontSize: '12.5px', color: 'var(--text-muted)', lineHeight: 1.5, margin: 0 }}>
+                  All authentic communications from Syntaflow originate strictly from verified addresses ending in <code style={{ fontFamily: 'var(--font-mono)', color: 'var(--cyan)' }}>@syntaflow.tech</code>.
                 </p>
               </Card>
             </div>

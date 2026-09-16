@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from './Link';
 
 interface ButtonProps {
   children: React.ReactNode;
@@ -83,9 +84,9 @@ export const Button: React.FC<ButtonProps> = ({
 
   if (href && !disabled) {
     return (
-      <a href={href} className={`btn btn-${variant} ${className}`} style={baseStyles} onClick={onClick}>
+      <Link href={href} className={`btn btn-${variant} ${className}`} style={baseStyles} onClick={onClick}>
         {children}
-      </a>
+      </Link>
     );
   }
 

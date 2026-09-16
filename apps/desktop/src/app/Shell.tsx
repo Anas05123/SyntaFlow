@@ -145,7 +145,7 @@ function Rail({
           aria-expanded={isAccountOpen && accountSource === 'brand'}
         >
           {collapsed ? (
-            <BrandMark size={22} />
+            <BrandMark size={24} variant="wbg" className="rail-brand-collapsed" />
           ) : (
             <BrandLogo height={30} className="rail-brand-logo" />
           )}

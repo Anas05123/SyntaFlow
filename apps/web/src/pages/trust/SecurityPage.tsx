@@ -4,6 +4,7 @@ import { PageHero } from '../../components/marketing/PageHero';
 import { Card } from '../../components/ui/Card';
 import { StatusBadge, type CapabilityStatus } from '../../components/brand/StatusBadge';
 import { CTASection } from '../../components/marketing/CTASection';
+import { getRouteMetadata } from '../../seo/seoConfig';
 
 interface SecurityDomain {
   title: string;
@@ -24,13 +25,13 @@ const SECURITY_DOMAINS: SecurityDomain[] = [
     ],
   },
   {
-    title: '2. Authentication & Session Protection',
+    title: '2. Authentication & Session Protection (OAuth PKCE)',
     status: 'AVAILABLE NOW',
-    description: 'Local authentication built with industry-standard cryptographic algorithms.',
+    description: 'Local authentication and external service connections built with modern cryptographic standards.',
     details: [
-      'Passwords hashed using memory-hard scrypt with unique salt per user.',
-      'Timing-safe cryptographic comparison prevents side-channel timing attacks.',
-      'Active session tokens encrypted at rest via native OS keychain (Electron safeStorage / DPAPI on Windows).',
+      'External tool integrations (Google, GitHub) use OAuth 2.0 with PKCE (Proof Key for Code Exchange) via system browser.',
+      'Integration credentials and OAuth refresh tokens are encrypted at rest using native OS keychain (Electron safeStorage / DPAPI on Windows).',
+      'Local authentication uses memory-hard scrypt hashing with timing-safe comparisons to prevent side-channel attacks.',
     ],
   },
   {
@@ -54,23 +55,23 @@ const SECURITY_DOMAINS: SecurityDomain[] = [
     ],
   },
   {
-    title: '5. Data Protection & Encryption at Rest',
+    title: '5. Local-First SQLite & Data Protection at Rest',
     status: 'AVAILABLE NOW',
-    description: 'Client records, proposals, and commercial contracts are stored locally on your machine.',
+    description: 'Client records, proposals, and commercial contracts are stored locally in SQLite on your machine.',
     details: [
-      'Zero outbound cloud telemetry beacons or marketing tracking scripts.',
-      'Local SQLite schemas prepared for AES-256 database-level encryption.',
-      'Sensitive session keys protected by operating system hardware/DPAPI encryption.',
+      'Local SQLite database serves as the canonical source of truth for all client records, tasks, and deliverables.',
+      'Zero outbound cloud telemetry beacons, keystroke logging, or background marketing trackers.',
+      'Local database schemas prepared for AES-256 database-level encryption with zero external cloud replication.',
     ],
   },
   {
-    title: '6. AI Boundaries & TaskRouter Isolation',
-    status: 'PLANNED',
-    description: 'Forward-looking AI integration strictly sandboxed behind the backend TaskRouter.',
+    title: '6. AI Boundaries & Human Confirmation Gate',
+    status: 'AVAILABLE NOW',
+    description: 'Assistive intelligence strictly sandboxed behind backend TaskRouter with mandatory human review.',
     details: [
-      'UI components never invoke remote LLM endpoints directly.',
-      'All AI requests route through typed Zod contracts in @syntaflow/contracts.',
-      'Designed for local-first Ollama runtime (http://localhost:11434) with zero cloud model leakage.',
+      'UI components never invoke remote LLM endpoints directly; all requests route through typed backend contracts.',
+      'Zero autonomous destructive execution: AI drafts cannot send emails, commit code, or approve milestones without explicit human approval.',
+      'Zero model training: customer project records and client communications are NEVER used to train foundation models.',
     ],
   },
   {
@@ -88,9 +89,9 @@ const SECURITY_DOMAINS: SecurityDomain[] = [
     status: 'AVAILABLE NOW',
     description: 'Rigorous engineering standards enforced across the repository.',
     details: [
-      'Automated linting via Oxlint enforcing React and TypeScript security rules.',
+      'Automated linting enforcing strict React and TypeScript security rules.',
       'Zero untyped any variables across IPC contract layers.',
-      'Regular automated dependency vulnerability audits via pnpm audit.',
+      'Continuous dependency scanning and vulnerability audits via npm and pnpm security checks.',
     ],
   },
   {
@@ -116,17 +117,16 @@ const SECURITY_DOMAINS: SecurityDomain[] = [
 ];
 
 export const SecurityPage: React.FC = () => {
+  const meta = getRouteMetadata('/security');
+
   return (
     <div>
-      <SEOHead
-        title="Security & Trust Architecture — Syntaflow"
-        description="Detailed security architecture, authentication cryptography, application sandboxing, and responsible disclosure for Syntaflow."
-        path="/security"
-      />
+      <SEOHead path="/security" />
 
       <PageHero
+        breadcrumbs={meta.breadcrumbs}
         eyebrow="Trust & Security Architecture"
-        title="Security engineered into the runtime."
+        title="Security built into the architecture."
         description="We believe in verifiable architecture over marketing claims. Below is the exact, unvarnished state of Syntaflow's security controls, isolation boundaries, and disclosure policies."
         status="AVAILABLE NOW"
       />
@@ -177,9 +177,9 @@ export const SecurityPage: React.FC = () => {
         title="Have a security inquiry or vulnerability report?"
         description="Our team takes security disclosures seriously. Reach out to our engineering team directly."
         primaryLabel="Contact Security Team"
-        primaryHref="#/contact"
+        primaryHref="/contact"
         secondaryLabel="Review Privacy Policy"
-        secondaryHref="#/privacy"
+        secondaryHref="/privacy"
       />
     </div>
   );

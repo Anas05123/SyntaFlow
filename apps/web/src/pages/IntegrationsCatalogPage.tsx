@@ -1,41 +1,56 @@
 import React, { useState } from 'react';
 import { SEOHead } from '../components/ui/SEOHead';
-import { Card } from '../components/ui/Card';
+import { Link } from '../components/ui/Link';
 import { INTEGRATIONS_LIST, type IntegrationMeta } from '../content/integrationsData';
+import { Card } from '../components/ui/Card';
+import { ServiceLogo } from '../components/brand/ServiceLogos';
+
+type IntegrationCategory = IntegrationMeta['category'];
 
 export const IntegrationsCatalogPage: React.FC = () => {
-  const [selectedFilter, setSelectedFilter] = useState<string>('ALL');
+  const [selectedCategory, setSelectedCategory] = useState<IntegrationCategory | 'All'>('All');
   const [activeModal, setActiveModal] = useState<IntegrationMeta | null>(null);
 
-  const categories = ['ALL', 'Communication', 'Calendar', 'Files', 'Development', 'Design', 'Knowledge'];
+  const categories: (IntegrationCategory | 'All')[] = [
+    'All',
+    'Communication',
+    'Calendar',
+    'Files',
+    'Development',
+    'Design',
+    'Knowledge',
+  ];
 
-  const filtered = selectedFilter === 'ALL'
-    ? INTEGRATIONS_LIST
-    : INTEGRATIONS_LIST.filter((i) => i.category === selectedFilter);
+  const filteredIntegrations =
+    selectedCategory === 'All'
+      ? INTEGRATIONS_LIST
+      : INTEGRATIONS_LIST.filter((item) => item.category === selectedCategory);
 
   return (
     <div style={{ paddingBottom: 'var(--space-64)' }}>
-      <SEOHead
-        title="Integrations Catalog — Syntaflow"
-        description="Explore supported tools connected to the Syntaflow client engagement environment: Gmail, Google Calendar, Google Drive, GitHub, Figma, Notion, Slack, and Linear."
-        path="/integrations"
-      />
+      <SEOHead path="/integrations" />
 
       {/* Header */}
       <section className="section" style={{ paddingTop: 'var(--space-48)', paddingBottom: 'var(--space-24)', textAlign: 'center' }}>
-        <div className="container" style={{ maxWidth: '800px' }}>
+        <div className="container" style={{ maxWidth: '840px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: 'var(--space-12)' }}>
+            <Link href="/" style={{ fontSize: '12.5px', color: 'var(--text-muted)', textDecoration: 'none' }}>Home</Link>
+            <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>/</span>
+            <span style={{ fontSize: '12.5px', color: 'var(--cyan)', fontWeight: 500 }}>Integrations</span>
+          </div>
+
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '4px 12px', borderRadius: '100px', backgroundColor: 'rgba(37, 99, 235, 0.08)', border: '1px solid rgba(37, 99, 235, 0.25)', marginBottom: 'var(--space-16)' }}>
             <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--cyan)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-              EXTERNAL TOOLS // ONE WORKING CONTEXT
+              EXTERNAL TOOLS // CONNECTED CLIENT WORKSPACE
             </span>
           </div>
 
-          <h1 className="heading-1" style={{ fontSize: 'clamp(32px, 5vw, 46px)', color: 'var(--text)', marginBottom: 'var(--space-16)' }}>
-            Your tools. Connected to the engagement.
+          <h1 className="heading-1" style={{ fontSize: 'clamp(32px, 5vw, 46px)', color: 'var(--text)', marginBottom: 'var(--space-16)', letterSpacing: '-0.02em' }}>
+            Your tools. One working context.
           </h1>
 
-          <p style={{ fontSize: '17px', color: 'var(--text-muted)', lineHeight: 1.6, maxWidth: '640px', margin: '0 auto' }}>
-            Syntaflow integrates external communications, calendars, storage, and tickets directly into the client record without centralizing or compromising your credentials.
+          <p style={{ fontSize: '17px', color: 'var(--text-muted)', lineHeight: 1.6, maxWidth: '680px', margin: '0 auto' }}>
+            Syntaflow connects external email, calendars, cloud storage, repositories, and issue trackers directly into the active client engagement without data centralization or secret leakage.
           </p>
         </div>
       </section>
@@ -45,12 +60,12 @@ export const IntegrationsCatalogPage: React.FC = () => {
         <div className="container" style={{ maxWidth: '1120px' }}>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', justifyContent: 'center' }}>
             {categories.map((cat) => {
-              const active = selectedFilter === cat;
+              const active = selectedCategory === cat;
               return (
                 <button
                   key={cat}
                   type="button"
-                  onClick={() => setSelectedFilter(cat)}
+                  onClick={() => setSelectedCategory(cat)}
                   style={{
                     padding: '8px 16px',
                     fontSize: '13px',
@@ -82,7 +97,7 @@ export const IntegrationsCatalogPage: React.FC = () => {
               gap: 'var(--space-20)',
             }}
           >
-            {filtered.map((item) => {
+            {filteredIntegrations.map((item) => {
               const isAvailable = item.status === 'AVAILABLE';
               const isTest = item.status === 'TEST';
               const badgeColor = isAvailable ? '#10B981' : isTest ? 'var(--cyan)' : 'var(--text-muted)';
@@ -92,25 +107,28 @@ export const IntegrationsCatalogPage: React.FC = () => {
                 <Card
                   key={item.id}
                   variant="default"
-                  onClick={() => setActiveModal(item)}
                   style={{
                     padding: 'var(--space-24)',
-                    cursor: 'pointer',
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'space-between',
-                    minHeight: '180px',
+                    minHeight: '210px',
                     transition: 'border-color 0.15s ease, transform 0.15s ease',
                   }}
                 >
                   <div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-12)' }}>
-                      <h3 style={{ fontSize: '18px', fontWeight: 600, color: 'var(--text)', margin: 0 }}>
-                        {item.name}
-                      </h3>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-16)' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <div style={{ width: '36px', height: '36px', borderRadius: '8px', backgroundColor: 'var(--surface-raised)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                          <ServiceLogo name={item.id} size={22} />
+                        </div>
+                        <h3 style={{ fontSize: '17px', fontWeight: 600, color: 'var(--text)', margin: 0 }}>
+                          {item.name}
+                        </h3>
+                      </div>
                       <span
                         style={{
-                          fontSize: '10.5px',
+                          fontSize: '10px',
                           fontFamily: 'var(--font-mono)',
                           fontWeight: 600,
                           padding: '2px 8px',
@@ -118,13 +136,14 @@ export const IntegrationsCatalogPage: React.FC = () => {
                           backgroundColor: badgeBg,
                           color: badgeColor,
                           border: `1px solid ${badgeColor}33`,
+                          letterSpacing: '0.04em',
                         }}
                       >
                         {item.status}
                       </span>
                     </div>
 
-                    <p style={{ fontSize: '13.5px', color: 'var(--text-muted)', lineHeight: 1.5, margin: 0, marginBottom: 'var(--space-16)' }}>
+                    <p style={{ fontSize: '13.5px', color: 'var(--text-muted)', lineHeight: 1.55, margin: 0, marginBottom: 'var(--space-16)' }}>
                       {item.description}
                     </p>
                   </div>
@@ -133,14 +152,76 @@ export const IntegrationsCatalogPage: React.FC = () => {
                     <span style={{ fontSize: '11.5px', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>
                       {item.category}
                     </span>
-                    <span style={{ fontSize: '12px', color: 'var(--cyan)' }}>
-                      Inspect scopes & privacy &rarr;
-                    </span>
+
+                    {item.dedicatedPage ? (
+                      <Link
+                        href={item.dedicatedPage}
+                        style={{
+                          fontSize: '12.5px',
+                          color: 'var(--cyan)',
+                          textDecoration: 'none',
+                          fontWeight: 500,
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '4px',
+                        }}
+                      >
+                        Explore Integration &rarr;
+                      </Link>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => setActiveModal(item)}
+                        style={{
+                          background: 'none',
+                          border: 'none',
+                          padding: 0,
+                          fontSize: '12px',
+                          color: 'var(--text-muted)',
+                          cursor: 'pointer',
+                        }}
+                      >
+                        View Scopes &rarr;
+                      </button>
+                    )}
                   </div>
                 </Card>
               );
             })}
           </div>
+        </div>
+      </section>
+
+      {/* Trust & Governance Summary Banner */}
+      <section className="section" style={{ paddingTop: 'var(--space-36)' }}>
+        <div className="container" style={{ maxWidth: '1120px' }}>
+          <Card variant="raised" style={{ padding: 'var(--space-28)', backgroundColor: 'var(--surface-raised)', border: '1px solid var(--border)' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 'var(--space-24)', alignItems: 'center' }}>
+              <div>
+                <div style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--cyan)', textTransform: 'uppercase', marginBottom: '8px' }}>
+                  DATA GOVERNANCE & INTEGRATION INTEGRITY
+                </div>
+                <h3 style={{ fontSize: '19px', fontWeight: 600, color: 'var(--text)', margin: '0 0 8px 0' }}>
+                  Local Credentials. Zero Cloud Intermediary.
+                </h3>
+                <p style={{ fontSize: '14px', color: 'var(--text-muted)', lineHeight: 1.6, margin: 0 }}>
+                  OAuth tokens and API credentials are saved exclusively in your operating system keychain (Windows DPAPI, macOS Keychain). Third-party data is retrieved ephemerally on demand and never sold, shared, or used to train public models.
+                </p>
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                <Link href="/privacy" style={{ fontSize: '13.5px', color: 'var(--cyan)', textDecoration: 'none' }}>
+                  &rarr; Read Official Privacy Policy & Google User Data Disclosures
+                </Link>
+                <Link href="/security" style={{ fontSize: '13.5px', color: 'var(--cyan)', textDecoration: 'none' }}>
+                  &rarr; Inspect Local-First Security Architecture
+                </Link>
+                <Link href="/contact" style={{ fontSize: '13.5px', color: 'var(--cyan)', textDecoration: 'none' }}>
+                  &rarr; Contact Security & Compliance Team
+                </Link>
+              </div>
+            </div>
+          </Card>
         </div>
       </section>
 
@@ -241,9 +322,9 @@ export const IntegrationsCatalogPage: React.FC = () => {
               </div>
 
               <div style={{ textAlign: 'right', marginTop: 'var(--space-8)' }}>
-                <a href="#/privacy" style={{ fontSize: '12.5px', color: 'var(--cyan)', textDecoration: 'underline' }}>
+                <Link href="/privacy" style={{ fontSize: '12.5px', color: 'var(--cyan)', textDecoration: 'underline' }}>
                   Read full Google User Data & Privacy Policy &rarr;
-                </a>
+                </Link>
               </div>
             </div>
           </div>

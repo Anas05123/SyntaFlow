@@ -1,4 +1,4 @@
-﻿export interface IntegrationMeta {
+export interface IntegrationMeta {
   id: string;
   name: string;
   category: 'Communication' | 'Calendar' | 'Files' | 'Development' | 'Design' | 'Knowledge';
@@ -9,6 +9,7 @@
   permissionsSummary: string;
   scopes?: string[];
   inAppPrivacyNote: string;
+  dedicatedPage?: string;
 }
 
 export const INTEGRATIONS_LIST: IntegrationMeta[] = [
@@ -19,6 +20,7 @@ export const INTEGRATIONS_LIST: IntegrationMeta[] = [
     status: 'AVAILABLE',
     description: 'Surface client correspondence and draft review notices directly within the project thread.',
     transports: ['api', 'mcp'],
+    dedicatedPage: '/integrations/gmail',
     dataAccessed: [
       'Email message threads matching client email addresses',
       'Sender, recipient, timestamp, and subject metadata',
@@ -40,6 +42,7 @@ export const INTEGRATIONS_LIST: IntegrationMeta[] = [
     status: 'AVAILABLE',
     description: 'Synchronize client milestone deadlines and review sessions with your calendar.',
     transports: ['api', 'mcp'],
+    dedicatedPage: '/integrations/google-calendar',
     dataAccessed: [
       'Calendar schedule and free/busy availability',
       'Event titles, start/end times, and attendee lists',
@@ -61,6 +64,7 @@ export const INTEGRATIONS_LIST: IntegrationMeta[] = [
     status: 'AVAILABLE',
     description: 'Attach design briefs, contract drafts, and final deliverable archives from Google Drive.',
     transports: ['api', 'mcp'],
+    dedicatedPage: '/integrations/google-drive',
     dataAccessed: [
       'Specific files and folders opened or created through Syntaflow',
       'Folder hierarchy and file revision metadata',
@@ -80,6 +84,7 @@ export const INTEGRATIONS_LIST: IntegrationMeta[] = [
     status: 'AVAILABLE',
     description: 'Link code repository milestones, issues, and pull requests to client deliverables.',
     transports: ['api', 'mcp'],
+    dedicatedPage: '/integrations/github',
     dataAccessed: ['Repository names', 'Issue threads and status', 'Commit and PR references'],
     permissionsSummary: 'Read issue titles and link commits to project blueprints.',
     scopes: ['repo', 'read:user'],
@@ -103,6 +108,7 @@ export const INTEGRATIONS_LIST: IntegrationMeta[] = [
     status: 'TEST',
     description: 'Synchronize client meeting notes and research documentation into document canvases.',
     transports: ['api', 'mcp'],
+    dedicatedPage: '/integrations/notion',
     dataAccessed: ['Workspace pages', 'Database tables', 'Block content'],
     permissionsSummary: 'Read pages explicitly shared with the Syntaflow integration.',
     inAppPrivacyNote: 'Limited strictly to pages you grant via the Notion OAuth selector.',
@@ -125,6 +131,7 @@ export const INTEGRATIONS_LIST: IntegrationMeta[] = [
     status: 'TEST',
     description: 'Map project blueprint milestones directly to Linear engineering issues and cycles.',
     transports: ['mcp', 'api'],
+    dedicatedPage: '/integrations/linear',
     dataAccessed: ['Team issues', 'Cycles', 'Project milestones'],
     permissionsSummary: 'Two-way synchronization between client tasks and technical tickets.',
     inAppPrivacyNote: 'Synced on demand; no customer data cached remotely.',

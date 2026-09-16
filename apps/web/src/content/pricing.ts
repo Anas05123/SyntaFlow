@@ -1,4 +1,4 @@
-﻿export interface PricingPlan {
+export interface PricingPlan {
   id: string;
   name: string;
   tagline: string;
@@ -34,7 +34,7 @@ export const PRICING_PLANS: PricingPlan[] = [
       'Direct local AI model support (Ollama / offline)',
     ],
     ctaLabel: 'Join Preview — Free',
-    ctaHref: '#/download',
+    ctaHref: '/download',
     highlighted: true,
   },
   {
@@ -56,7 +56,7 @@ export const PRICING_PLANS: PricingPlan[] = [
       'Priority vulnerability disclosures & release channel',
     ],
     ctaLabel: 'Get Notified at Launch',
-    ctaHref: '#/contact?topic=pricing-pro',
+    ctaHref: '/contact?topic=pricing-pro',
   },
   {
     id: 'team',
@@ -76,7 +76,7 @@ export const PRICING_PLANS: PricingPlan[] = [
       'Dedicated integration engineering support',
     ],
     ctaLabel: 'Inquire About Studio Pilot',
-    ctaHref: '#/contact?topic=pricing-studio',
+    ctaHref: '/contact?topic=pricing-studio',
   },
 ];
 

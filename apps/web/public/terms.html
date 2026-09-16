@@ -1,148 +1,431 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SyntaFlow (Syntaflow Desktop) — Terms of Service</title>
-  <meta name="description" content="Terms of Service for SyntaFlow and Syntaflow Desktop. Professional workstation software license, user content ownership, Google integration terms, and liability.">
-  <link rel="icon" type="image/x-icon" href="/favicon.ico">
-  <link rel="icon" type="image/png" href="/brand/logo-icon.png">
-  <link rel="canonical" href="https://syntaflow.tech/terms">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Sora:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Terms of Service — Syntaflow</title>
+  <meta name="description" content="Syntaflow terms of service. Understand user rights, local-first architecture commitments, preview disclosures, and third-party integration terms." />
+  <link rel="canonical" href="https://syntaflow.tech/terms" />
+  <meta name="robots" content="index, follow" />
+  <meta property="og:title" content="Terms of Service — Syntaflow" />
+  <meta property="og:description" content="Syntaflow terms of service. Understand user rights, local-first architecture commitments, preview disclosures, and third-party integration terms." />
+  <meta property="og:url" content="https://syntaflow.tech/terms" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary" />
   <style>
     :root {
-      --bg: #0B0F17;
-      --surface: #111726;
-      --surface-raised: #161F33;
-      --border: rgba(255, 255, 255, 0.08);
-      --text: #F8FAFC;
-      --text-muted: #94A3B8;
+      --bg: #090B0E;
+      --card-bg: #11141A;
+      --text: #F3F4F6;
+      --muted: #9CA3AF;
       --cyan: #06B6D4;
-      --blue: #2563EB;
-      --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      --font-display: 'Sora', var(--font-body);
-      --font-mono: 'JetBrains Mono', monospace;
+      --border: #232936;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background-color: var(--bg); color: var(--text); font-family: var(--font-body); line-height: 1.7; }
-    a { color: var(--cyan); text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    header { border-bottom: 1px solid var(--border); background: rgba(11, 15, 23, 0.85); backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 100; }
-    .header-inner { max-width: 1200px; margin: 0 auto; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; }
-    .brand { display: flex; align-items: center; gap: 12px; font-family: var(--font-display); font-weight: 700; font-size: 18px; color: #fff; text-decoration: none; }
-    .brand img { width: 28px; height: 28px; }
-    .nav-links { display: flex; gap: 24px; align-items: center; font-size: 14px; }
-    .nav-links a { color: var(--text-muted); font-weight: 500; }
-    .nav-links a:hover { color: #fff; text-decoration: none; }
-    .hero-banner { border-bottom: 1px solid var(--border); padding: 56px 24px 36px; background: radial-gradient(ellipse at 50% 0%, rgba(37, 99, 235, 0.15) 0%, rgba(6, 182, 212, 0.05) 50%, transparent 80%); }
-    .banner-inner { max-width: 1200px; margin: 0 auto; }
-    .badge { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 11px; color: var(--cyan); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 16px; }
-    h1 { font-family: var(--font-display); font-size: clamp(30px, 4.5vw, 44px); font-weight: 700; letter-spacing: -0.02em; margin-bottom: 16px; color: #fff; }
-    .intro-p { font-size: 16px; color: var(--text-muted); max-width: 860px; line-height: 1.65; }
-    .main-container { max-width: 900px; margin: 0 auto; padding: 48px 24px 96px; display: flex; flex-direction: column; gap: 32px; }
-    .section-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 24px; }
-    .section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
-    .num-pill { font-family: var(--font-mono); font-size: 11px; color: var(--cyan); background: rgba(6,182,212,0.12); padding: 2px 8px; border-radius: 4px; }
-    h2 { font-size: 18px; font-family: var(--font-display); color: #fff; }
-    .in-short { font-size: 13.5px; color: var(--cyan); margin-bottom: 14px; font-weight: 500; }
-    p { font-size: 14.5px; color: #CBD5E1; margin-bottom: 12px; line-height: 1.7; }
-    footer { border-top: 1px solid var(--border); padding: 48px 24px; background: var(--surface); font-size: 13px; color: var(--text-muted); }
-    .footer-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
-    .footer-links { display: flex; gap: 20px; }
-    .footer-links a { color: var(--text-muted); }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      margin: 0;
+      padding: 40px 20px;
+      line-height: 1.65;
+    }
+    .container {
+      max-width: 880px;
+      margin: 0 auto;
+    }
+    header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 24px;
+      margin-bottom: 36px;
+    }
+    .badge {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--cyan);
+      background: rgba(6, 182, 212, 0.1);
+      border: 1px solid rgba(6, 182, 212, 0.25);
+      padding: 4px 10px;
+      border-radius: 9999px;
+      margin-bottom: 16px;
+      letter-spacing: 0.05em;
+    }
+    h1 {
+      font-size: 36px;
+      margin: 0 0 12px 0;
+      letter-spacing: -0.02em;
+    }
+    .meta {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .summary-card {
+      background: var(--card-bg);
+      border-left: 4px solid var(--cyan);
+      padding: 24px;
+      border-radius: 8px;
+      margin-bottom: 36px;
+      border-top: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .summary-card h2 {
+      margin-top: 0;
+      font-size: 16px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .grid strong {
+      color: var(--text);
+      display: block;
+      margin-bottom: 2px;
+    }
+    .toc {
+      background: #0D1016;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 24px;
+      margin-bottom: 48px;
+    }
+    .toc h3 {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--cyan);
+      text-transform: uppercase;
+      margin: 0 0 16px 0;
+    }
+    .toc-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 8px 20px;
+      font-size: 13.5px;
+    }
+    .toc a {
+      color: var(--muted);
+      text-decoration: none;
+    }
+    .toc a:hover {
+      color: var(--cyan);
+    }
+    .mono {
+      font-family: var(--font-mono);
+      color: var(--cyan);
+    }
+    .section-block {
+      padding-bottom: 32px;
+      margin-bottom: 32px;
+      border-bottom: 1px solid var(--border);
+      scroll-margin-top: 40px;
+    }
+    .section-badge {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--cyan);
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .section-block h2 {
+      font-size: 22px;
+      margin: 0 0 16px 0;
+      letter-spacing: -0.01em;
+    }
+    .section-block p {
+      color: var(--muted);
+      font-size: 14.5px;
+      line-height: 1.7;
+    }
+    footer {
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      font-size: 13px;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    footer a {
+      color: var(--cyan);
+      text-decoration: none;
+    }
   </style>
 </head>
 <body>
-  <header>
-    <div class="header-inner">
-      <a href="/" class="brand">
-        <img src="/brand/LogoIcon_WBG.png" alt="SyntaFlow Logo">
-        <span>Syntaflow</span>
-      </a>
-      <nav class="nav-links">
-        <a href="/#/">Home</a>
-        <a href="/#/product">Product</a>
-        <a href="/#/docs">Docs</a>
-        <a href="/#/pricing">Pricing</a>
-        <a href="/terms" style="color: var(--cyan); font-weight: 600;">Terms</a>
-        <a href="/privacy">Privacy</a>
-        <a href="/#/download">Download</a>
-      </nav>
-    </div>
-  </header>
-  <section class="hero-banner">
-    <div class="banner-inner">
-      <div class="badge"><span>LEGAL TERMS // CLIENT AGREEMENT</span><span>·</span><span>Last Updated: September 16, 2026</span></div>
-      <h1>SyntaFlow (Syntaflow Desktop) Terms of Service</h1>
-      <p class="intro-p">Please read these Terms of Service carefully before using SyntaFlow or the Syntaflow Desktop native application.</p>
-    </div>
-  </section>
-  <div class="main-container">
-    <div class="section-card">
-      <div class="section-header"><span class="num-pill">01</span><h2>Agreement to Terms</h2></div>
-      <div class="in-short">By using Syntaflow, you agree to these legal terms. If you disagree, do not use the software.</div>
-      <p>These Terms of Service (&ldquo;Terms&rdquo;) constitute a legally binding agreement between you (&ldquo;User&rdquo; or &ldquo;you&rdquo;) and Syntaflow (&ldquo;Syntaflow,&rdquo; &ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;), governing your access to and use of the Syntaflow website (<a href="https://syntaflow.tech">https://syntaflow.tech</a>), desktop applications, software tools, and related documentation. By downloading, installing, or executing Syntaflow, you acknowledge that you have read, understood, and agree to be bound by these Terms.</p>
-    </div>
-    <div class="section-card">
-      <div class="section-header"><span class="num-pill">02</span><h2>Eligibility & Professional Accounts</h2></div>
-      <div class="in-short">You must be at least 18 years old or legal age of majority in your jurisdiction.</div>
-      <p>Syntaflow is designed exclusively for professional productivity and business purposes. You must be at least 18 years old to access or use the application. If you represent an organization, company, or boutique agency, you represent that you possess legal authority to bind that entity to these Terms.</p>
-    </div>
-    <div class="section-card">
-      <div class="section-header"><span class="num-pill">03</span><h2>Syntaflow Services & Preview Status</h2></div>
-      <div class="in-short">The software is currently in Desktop Preview ($0 / Free). Features and updates may occur frequently.</div>
-      <p>Syntaflow provides a unified desktop operating environment uniting client operations, blueprint scoping, dual-density task boards, typographic document authoring, client review sign-offs, and delivery gate enforcement. Because the desktop application is provided under a Desktop Preview program, features may be updated, adjusted, or refined toward general release.</p>
-    </div>
-    <div class="section-card">
-      <div class="section-header"><span class="num-pill">04</span><h2>Software License Grant & Restrictions</h2></div>
-      <div class="in-short">You receive a revocable, non-exclusive license to use the software on your devices.</div>
-      <p>Subject to your ongoing compliance with these Terms, Syntaflow grants you a limited, non-exclusive, non-transferable, non-sublicensable, revocable license to install and execute the desktop application solely for your own internal business and productivity purposes.</p>
-      <p>You agree not to reverse engineer, decompile, disassemble, or derive the underlying source code of the binary distributions, bypass license verification checks, or use the software in violation of applicable laws.</p>
-    </div>
-    <div class="section-card">
-      <div class="section-header"><span class="num-pill">05</span><h2>User Content Ownership & Data Sovereignty</h2></div>
-      <div class="in-short">You retain 100% exclusive ownership of all your content, client data, contracts, and documents.</div>
-      <p>You retain complete and exclusive ownership of all client records, commercial rates, blueprints, task allocations, documents, and review sign-offs you produce within Syntaflow. Syntaflow asserts zero intellectual property rights, zero copyright claims, and zero ownership claims over any content you create. Because our architecture is local-first, your content remains physically stored on your workstations within your local SQLite database.</p>
-    </div>
-    <div class="section-card">
-      <div class="section-header"><span class="num-pill">06</span><h2>Third-Party Services & Google Integrations</h2></div>
-      <div class="in-short">Connecting external tools (Google, GitHub, Slack) is optional and uses secure, on-demand local OAuth.</div>
-      <p>Syntaflow allows optional integration with third-party productivity services—including Google Workspace (Gmail, Calendar, Drive), GitHub, Notion, Figma, and Slack. External services operate under their respective terms and privacy policies.</p>
-      <p>When connecting Google Workspace accounts, Syntaflow accesses data solely on demand and adheres strictly to the <strong>Google API Services User Data Policy</strong>, including the Limited Use requirements. We never mirror your Google data onto external cloud databases.</p>
-    </div>
-    <div class="section-card">
-      <div class="section-header"><span class="num-pill">07</span><h2>AI Synthesis & Human Oversight</h2></div>
-      <div class="in-short">AI assistance features require your review. You are responsible for final deliverable approvals.</div>
-      <p>Syntaflow provides contextual intelligence tools to draft proposals, analyze client correspondence, and generate delivery checklists. All AI-generated outputs are recommendations for your editorial judgment. You retain full responsibility for verifying accuracy and maintaining client confidentiality before signing off on deliverables.</p>
-    </div>
-    <div class="section-card">
-      <div class="section-header"><span class="num-pill">08</span><h2>Security, Encryption & Credentials</h2></div>
-      <div class="in-short">Your credentials are protected via OS-level encryption (Windows DPAPI, macOS Keychain).</div>
-      <p>Integration secrets and OAuth tokens are stored exclusively in your operating system&rsquo;s secure credential vault. You are responsible for maintaining the physical and operational security of your workstations.</p>
-    </div>
-    <div class="section-card">
-      <div class="section-header"><span class="num-pill">09</span><h2>Disclaimer of Warranties & Limitation of Liability</h2></div>
-      <div class="in-short">The preview is provided &ldquo;as is&rdquo; without warranties of any kind.</div>
-      <p>The software is provided on an &ldquo;as is&rdquo; and &ldquo;as available&rdquo; basis without warranties of any kind, whether express or implied. In no event shall Syntaflow be liable for any indirect, incidental, special, consequential, or punitive damages arising out of your use of or inability to use the software.</p>
-    </div>
-    <div class="section-card">
-      <div class="section-header"><span class="num-pill">10</span><h2>Governing Law & Dispute Resolution</h2></div>
-      <div class="in-short">Governed by applicable laws with informal resolution prior to formal arbitration.</div>
-      <p>These Terms shall be governed by and construed in accordance with the laws of the applicable jurisdiction, without regard to conflict of law principles. Any dispute arising under these Terms shall first be attempted to be resolved informally by contacting <a href="mailto:legal@syntaflow.tech">legal@syntaflow.tech</a>.</p>
-    </div>
-  </div>
-  <footer>
-    <div class="footer-inner">
-      <div>&copy; 2026 Syntaflow. All rights reserved. Professional Workstation Environment.</div>
-      <div class="footer-links">
-        <a href="/terms">Terms of Service</a>
-        <a href="/privacy">Privacy Policy</a>
-        <a href="/#/docs">Documentation</a>
-        <a href="mailto:contact@syntaflow.tech">Contact</a>
+  <div class="container">
+    <header>
+      <div class="badge">LEGAL TERMS // CLIENT WORKSPACE SOFTWARE</div>
+      <h1>Syntaflow Terms of Service</h1>
+      <div class="meta">Effective Date: September 16, 2026 • Last Updated: September 16, 2026</div>
+    </header>
+
+    <div class="summary-card">
+      <h2>Summary of Key Terms</h2>
+      <div class="grid">
+        <div>
+          <strong>Local-First Architecture</strong>
+          Syntaflow operates locally on your workstation. You own 100% of your workspace records and files.
+        </div>
+        <div>
+          <strong>Preview Software</strong>
+          The desktop software is currently provided as a pre-release preview without warranty or licensing fees.
+        </div>
+        <div>
+          <strong>OAuth Tokens Protected</strong>
+          Integration credentials stay on your device encrypted via your OS hardware keychain (safeStorage / DPAPI).
+        </div>
+        <div>
+          <strong>AI Human Confirmation</strong>
+          Automated drafts never send communications or finalize approvals without explicit human verification.
+        </div>
       </div>
     </div>
-  </footer>
+
+    <div class="toc">
+      <h3>Contents</h3>
+      <div class="toc-grid">
+        
+    <a href="#section-1"><span class="mono">1.</span> Agreement to Terms</a>
+  
+
+    <a href="#section-2"><span class="mono">2.</span> Eligibility and Authority</a>
+  
+
+    <a href="#section-3"><span class="mono">3.</span> Account Registration and Credentials</a>
+  
+
+    <a href="#section-4"><span class="mono">4.</span> The Service and Software Nature</a>
+  
+
+    <a href="#section-5"><span class="mono">5.</span> Preview, Beta, and Pre-Release Software</a>
+  
+
+    <a href="#section-6"><span class="mono">6.</span> Integration Services and External Authentication</a>
+  
+
+    <a href="#section-7"><span class="mono">7.</span> Third-Party Services and Content</a>
+  
+
+    <a href="#section-8"><span class="mono">8.</span> AI-Generated Content and Automated Output</a>
+  
+
+    <a href="#section-9"><span class="mono">9.</span> User Responsibilities and Conduct</a>
+  
+
+    <a href="#section-10"><span class="mono">10.</span> Acceptable Use Policy and Prohibited Activities</a>
+  
+
+    <a href="#section-11"><span class="mono">11.</span> Intellectual Property Rights</a>
+  
+
+    <a href="#section-12"><span class="mono">12.</span> User Content and Workspace Data</a>
+  
+
+    <a href="#section-13"><span class="mono">13.</span> Software License and Restrictions</a>
+  
+
+    <a href="#section-14"><span class="mono">14.</span> Service Availability, Maintenance, and Modifications</a>
+  
+
+    <a href="#section-15"><span class="mono">15.</span> Updates, Releases, and Automatic Patches</a>
+  
+
+    <a href="#section-16"><span class="mono">16.</span> Fees, Payments, and Subscriptions (Preview Disclosures)</a>
+  
+
+    <a href="#section-17"><span class="mono">17.</span> Cancellation and Refund Policy</a>
+  
+
+    <a href="#section-18"><span class="mono">18.</span> Suspension and Termination</a>
+  
+
+    <a href="#section-19"><span class="mono">19.</span> Disclaimers and As-Is Warranties</a>
+  
+
+    <a href="#section-20"><span class="mono">20.</span> Limitation of Liability</a>
+  
+
+    <a href="#section-21"><span class="mono">21.</span> Changes to Terms</a>
+  
+
+    <a href="#section-22"><span class="mono">22.</span> Contact Information</a>
+  
+      </div>
+    </div>
+
+    <main>
+      
+    <div id="section-1" class="section-block">
+      <div class="section-badge">SECTION 01</div>
+      <h2>1. Agreement to Terms</h2>
+      <p>These Terms of Service ("Terms") constitute a legally binding agreement between you (whether personally or on behalf of an entity, "you" or "User") and Syntaflow ("Syntaflow", "we", "us", or "our"), governing your access to and use of the Syntaflow website located at https://syntaflow.tech (the "Site"), the Syntaflow desktop application ("Desktop Application"), and all associated documentation, services, and software interfaces (collectively, the "Service").</p><p>By downloading, installing, accessing, or using the Service, you signify that you have read, understood, and agree to be bound by these Terms and our Privacy Policy (https://syntaflow.tech/privacy), which is incorporated herein by reference. IF YOU DO NOT AGREE WITH ALL OF THESE TERMS, YOU ARE EXPRESSLY PROHIBITED FROM USING THE SERVICE AND MUST DISCONTINUE USE AND UNINSTALL THE APPLICATION IMMEDIATELY.</p>
+    </div>
+  
+
+    <div id="section-2" class="section-block">
+      <div class="section-badge">SECTION 02</div>
+      <h2>2. Eligibility and Authority</h2>
+      <p>The Service is intended solely for business, commercial, freelance, and professional use by individuals who have reached the legal age of majority in their jurisdiction (typically 18 years of age or older). By using the Service, you represent and warrant that:<br/>(a) You have the legal capacity and authority to enter into these Terms;<br/>(b) You are not a minor in your jurisdiction of residence;<br/>(c) If you are using the Service on behalf of a company, organization, agency, or other legal entity, you have full authority to bind that entity to these Terms, and your agreement to these Terms will be treated as the agreement of that entity;<br/>(d) You will not use the Service for any unlawful or unauthorized purpose; and<br/>(e) Your use of the Service will not violate any applicable local, state, national, or international law or regulation.</p>
+    </div>
+  
+
+    <div id="section-3" class="section-block">
+      <div class="section-badge">SECTION 03</div>
+      <h2>3. Account Registration and Credentials</h2>
+      <p>Certain features of the Service or desktop licensing may require creating an account or registering a workspace profile. You agree to:<br/>(a) Provide accurate, current, and complete information during registration;<br/>(b) Maintain and promptly update your information to keep it accurate, current, and complete;<br/>(c) Maintain the strict confidentiality and security of your account credentials, encryption keys, and session tokens;<br/>(d) Accept sole responsibility for all activities, actions, and deliverables generated under your credentials; and<br/>(e) Notify Syntaflow immediately at security@syntaflow.tech upon discovering or suspecting any unauthorized access, security breach, or loss of account credentials.</p><p>Syntaflow cannot and will not be liable for any loss, damage, or unauthorized disclosure arising from your failure to safeguard your credentials or local cryptographic vault.</p>
+    </div>
+  
+
+    <div id="section-4" class="section-block">
+      <div class="section-badge">SECTION 04</div>
+      <h2>4. The Service and Software Nature</h2>
+      <p>Syntaflow is a specialized client work management system engineered primarily as a local-first desktop application. The core software operates on your local workstation, persisting client workspaces, engagement stages, deliverable versions, and operational state to a local SQLite database on your device.</p><p>Unless explicitly configured with optional cloud synchronization or external third-party integrations, the Service does not continuously stream or centralize your proprietary client communications, contracts, or work records to remote servers. You understand and acknowledge that the primary performance, persistence, and storage integrity of your client records depend upon your workstation's hardware, filesystem integrity, and backup practices.</p>
+    </div>
+  
+
+    <div id="section-5" class="section-block">
+      <div class="section-badge">SECTION 05</div>
+      <h2>5. Preview, Beta, and Pre-Release Software</h2>
+      <p>Syntaflow may provide access to pre-release, preview, developer, or "beta" versions of the Desktop Application or specific feature modules (including experimental integration connectors marked as "TEST" or "PREVIEW"). </p><p>You acknowledge and agree that:<br/>(a) Preview software is provided strictly for evaluation, testing, and feedback purposes;<br/>(b) Preview software may contain bugs, defects, schema migrations, or unexpected behaviors and is not guaranteed to be feature-complete or error-free;<br/>(c) Features, APIs, and data schemas present in preview builds may be modified, deprecated, or discontinued at any time without notice;<br/>(d) You are solely responsible for maintaining external, verified backups of all production deliverables, contracts, and critical client records prior to testing preview versions; and<br/>(e) Syntaflow disclaims all liability for data corruption, downtime, or operational interruption arising from your use of preview software to the maximum extent permitted by law.</p>
+    </div>
+  
+
+    <div id="section-6" class="section-block">
+      <div class="section-badge">SECTION 06</div>
+      <h2>6. Integration Services and External Authentication</h2>
+      <p>The Service enables you to optionally connect external third-party software tools, including Google Workspace (Gmail, Google Calendar, Google Drive), GitHub, Slack, Notion, and Linear.</p><p>When connecting an external service:<br/>(a) Authentication is executed using OAuth 2.0 with PKCE (Proof Key for Code Exchange). Sensitive OAuth tokens, refresh tokens, and API secrets are stored locally on your physical device using your operating system's hardware-backed cryptographic keychain (Electron safeStorage / Windows DPAPI);<br/>(b) Syntaflow does not transmit your integration credentials or third-party access tokens to Syntaflow servers;<br/>(c) You grant Syntaflow permission to interface with the third-party service solely on your behalf and strictly within the scope of permissions and API scopes you explicitly authorize;<br/>(d) You may revoke Syntaflow's access at any time through the in-app Integration settings or via the external provider's security portal (e.g., Google Account Security Permissions); and<br/>(e) Upon disconnecting an integration, all locally cached tokens and ephemeral identifiers for that service are immediately and permanently erased from your local machine.</p>
+    </div>
+  
+
+    <div id="section-7" class="section-block">
+      <div class="section-badge">SECTION 07</div>
+      <h2>7. Third-Party Services and Content</h2>
+      <p>The Service may reference, link to, or interact with third-party software, APIs, repositories, websites, and services. Syntaflow does not own, control, operate, or endorse any third-party services.</p><p>Your use of third-party services is governed exclusively by the applicable terms and privacy policies of those third parties (e.g., Google Terms of Service, GitHub Terms of Service, Slack Terms of Service). Syntaflow is not responsible or liable for:<br/>(a) The availability, accuracy, or continuous uptime of third-party APIs;<br/>(b) Changes to third-party API rate limits, pricing, scopes, or terms;<br/>(c) The acts, errors, omissions, or data handling practices of third-party providers; or<br/>(d) Any loss, damage, or service disruption caused by a third-party service.</p>
+    </div>
+  
+
+    <div id="section-8" class="section-block">
+      <div class="section-badge">SECTION 08</div>
+      <h2>8. AI-Generated Content and Automated Output</h2>
+      <p>Syntaflow incorporates artificial intelligence workflows and assistive task generation designed to accelerate client intake, brief structuring, proposal drafting, and deliverable review summaries.</p><p>You understand and agree that:<br/>(a) AI-generated text, task breakdowns, summaries, and suggestions are automated assistive drafts provided for your review and discretionary modification;<br/>(b) Syntaflow DOES NOT guarantee the accuracy, completeness, legal soundness, factual correctness, or quality of any AI output;<br/>(c) YOU ARE SOLELY RESPONSIBLE FOR INDEPENDENTLY REVIEWING, VERIFYING, EDITING, AND APPROVING ALL AI-GENERATED CONTENT BEFORE TRANSMITTING IT TO CLIENTS, COUNSEL, OR COUNTERPARTIES;<br/>(d) AI features in Syntaflow do not initiate destructive actions, outbound communications, or irreversible approvals without explicit human confirmation; and<br/>(e) Under no circumstances does Syntaflow sell your client data or use your confidential project records to train generalized machine learning or foundation models.</p>
+    </div>
+  
+
+    <div id="section-9" class="section-block">
+      <div class="section-badge">SECTION 09</div>
+      <h2>9. User Responsibilities and Conduct</h2>
+      <p>You retain sole responsibility for your conduct and all client engagements managed through the Service. You agree that you will:<br/>(a) Comply with all applicable laws, export controls, intellectual property laws, data protection regulations (including GDPR, CCPA, and applicable state privacy statutes), and professional ethics codes governing your practice;<br/>(b) Ensure you have obtained all necessary client consents, non-disclosure agreements, and rights before importing third-party data, client files, or credentials into the Service;<br/>(c) Maintain adequate independent backups of your local database files and critical deliverables; and<br/>(d) Cooperate with reasonable security requests and promptly address any discovered vulnerabilities in your workstation environment.</p>
+    </div>
+  
+
+    <div id="section-10" class="section-block">
+      <div class="section-badge">SECTION 10</div>
+      <h2>10. Acceptable Use Policy and Prohibited Activities</h2>
+      <p>You agree not to use the Service, directly or indirectly, for any prohibited purpose. Specifically, you shall NOT:<br/>(a) Reverse engineer, decompile, disassemble, or attempt to derive the source code of any proprietary components of the Service, except to the extent permitted by applicable open-source licenses or mandatory law;<br/>(b) Circumvent, disable, bypass, or tamper with any digital rights management, license key validation, or security boundary mechanisms;<br/>(c) Use the Service to transmit, store, or distribute malicious code, viruses, trojans, ransomware, or spyware;<br/>(d) Interfere with, disrupt, or place an unreasonable load on the Service's web infrastructure, networks, or connected third-party APIs;<br/>(e) Use the Service to engage in deceptive practices, fraudulent billing, harassment, defamation, or transmission of unauthorized unsolicited commercial communications (spam);<br/>(f) Impersonate any person, client, organization, or entity, or misrepresent your affiliation with Syntaflow; or<br/>(g) Rent, lease, sublicense, resell, or distribute the proprietary desktop software to unauthorized third parties.</p>
+    </div>
+  
+
+    <div id="section-11" class="section-block">
+      <div class="section-badge">SECTION 11</div>
+      <h2>11. Intellectual Property Rights</h2>
+      <p>Unless otherwise indicated, the Site, Desktop Application, software code, user interface designs, visual layouts, branding, trademarks, logos, domain names, and technical documentation are the exclusive property of Syntaflow or its licensors and are protected by copyright, trademark, patent, trade secret, and unfair competition laws.</p><p>The "Syntaflow" name, the Syntaflow logo, and all related graphic marks are trademarks of Syntaflow. You are granted no right or license to use any Syntaflow trademarks without our prior written consent. All third-party trademarks, service marks, and company names referenced across our integrations catalog remain the property of their respective owners.</p>
+    </div>
+  
+
+    <div id="section-12" class="section-block">
+      <div class="section-badge">SECTION 12</div>
+      <h2>12. User Content and Workspace Data</h2>
+      <p>You retain 100% ownership of and all intellectual property rights in all data, text, files, contracts, client records, designs, code, and materials that you create, import, or manage within the Service ("User Content").</p><p>Syntaflow asserts NO ownership, copyright, or intellectual property claims over your User Content. Because Syntaflow operates primarily as a local-first application, your User Content remains stored on your local hardware. To the extent you utilize our website feedback forms or transmit data during technical support inquiries, you grant Syntaflow only a limited, non-exclusive license to process such data strictly to resolve your support inquiry or deliver requested services.</p>
+    </div>
+  
+
+    <div id="section-13" class="section-block">
+      <div class="section-badge">SECTION 13</div>
+      <h2>13. Software License and Restrictions</h2>
+      <p>Subject to your ongoing compliance with these Terms, Syntaflow grants you a limited, revocable, non-exclusive, non-transferable, non-sublicensable license to download, install, and execute the Syntaflow Desktop Application on compatible devices owned or controlled by you, solely for your internal professional or commercial business purposes.</p><p>Open-source libraries and dependencies bundled within the Service are governed by their respective third-party licenses (e.g., MIT, Apache 2.0, BSD). Nothing in these Terms limits or alters your rights under such open-source licenses.</p>
+    </div>
+  
+
+    <div id="section-14" class="section-block">
+      <div class="section-badge">SECTION 14</div>
+      <h2>14. Service Availability, Maintenance, and Modifications</h2>
+      <p>Syntaflow strives to maintain high availability and reliability for our website and distribution services. However, we do not guarantee uninterrupted, continuous, or error-free operation. We reserve the right to:<br/>(a) Modify, update, enhance, or temporarily suspend the Site or distribution endpoints for maintenance, security patches, or feature revisions;<br/>(b) Modify or discontinue specific features or capabilities with reasonable prior notice where practicable; and<br/>(c) Discontinue support for deprecated operating system versions or legacy desktop platforms as software runtimes evolve.</p><p>Because the Desktop Application stores state locally, scheduled maintenance on our web servers will not prevent you from accessing your existing offline local database or continuing client work on your machine.</p>
+    </div>
+  
+
+    <div id="section-15" class="section-block">
+      <div class="section-badge">SECTION 15</div>
+      <h2>15. Updates, Releases, and Automatic Patches</h2>
+      <p>The Desktop Application may periodically check our official release servers (https://syntaflow.tech) for updated versions, security patches, and schema improvements. </p><p>You acknowledge that:<br/>(a) Updates may be downloaded and prompted for installation to maintain security and interoperability;<br/>(b) Critical security fixes may be applied to resolve discovered vulnerabilities; and<br/>(c) Certain updates may include automated schema migrations for your local SQLite database, for which the application maintains defensive snapshot backups prior to migration execution.</p>
+    </div>
+  
+
+    <div id="section-16" class="section-block">
+      <div class="section-badge">SECTION 16</div>
+      <h2>16. Fees, Payments, and Subscriptions (Preview Disclosures)</h2>
+      <p>During the current public desktop preview phase, access to core Syntaflow capabilities, including client workspace management, document version tracking, approval audits, and external integrations, is provided without subscription fees.</p><p>Commercial tiers, professional studio licenses, and premium hosted capabilities may be introduced in future releases. Any future fees, payment schedules, and subscription terms will be clearly disclosed prior to implementation, and no fees will be assessed without your affirmative consent and selection of a paid tier.</p>
+    </div>
+  
+
+    <div id="section-17" class="section-block">
+      <div class="section-badge">SECTION 17</div>
+      <h2>17. Cancellation and Refund Policy</h2>
+      <p>Because preview versions of the Service are currently provided free of charge, standard consumer billing cancellation and refund mechanisms are not applicable to preview downloads.</p><p>For any future commercial licensing tiers, cancellation and refund policies will be clearly specified in the commercial agreement and subscription checkout flow, providing at least thirty (30) days notice of any pricing changes.</p>
+    </div>
+  
+
+    <div id="section-18" class="section-block">
+      <div class="section-badge">SECTION 18</div>
+      <h2>18. Suspension and Termination</h2>
+      <p>These Terms remain in full force and effect while you use the Service. You may terminate these Terms at any time by discontinuing use of the Service and uninstalling the Desktop Application from your devices.</p><p>Syntaflow may suspend or terminate your right to access the Site, cloud distribution services, or account credentials immediately, without prior notice or liability, if:<br/>(a) You breach any provision of these Terms or the Acceptable Use Policy;<br/>(b) We are required to do so by applicable law, court order, or regulatory directive; or<br/>(c) We detect fraudulent, malicious, or abusive activity threatening the security of our infrastructure or other users.</p><p>Upon termination, all licenses granted to you under these Terms terminate immediately, and you must cease all use of the proprietary software components.</p>
+    </div>
+  
+
+    <div id="section-19" class="section-block">
+      <div class="section-badge">SECTION 19</div>
+      <h2>19. Disclaimers and As-Is Warranties</h2>
+      <p>THE SERVICE, SITE, DESKTOP APPLICATION, AND ALL CONTENT ARE PROVIDED ON AN "AS IS" AND "AS AVAILABLE" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE.</p><p>TO THE FULLEST EXTENT PERMISSIBLE UNDER APPLICABLE LAW, SYNTAFLOW EXPRESSLY DISCLAIMS ALL WARRANTIES, INCLUDING BUT NOT LIMITED TO:<br/>(A) IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND NON-INFRINGEMENT;<br/>(B) WARRANTIES THAT THE SERVICE WILL BE SECURE, UNINTERRUPTED, ACCURATE, ERROR-FREE, OR FREE OF HARMFUL COMPONENTS;<br/>(C) WARRANTIES REGARDING THE ACCURACY, RELIABILITY, OR SUITABILITY OF ANY AI-GENERATED DRAFT, SUMMARY, OR RECOMMENDATION; AND<br/>(D) WARRANTIES REGARDING THE UPTIME, DATA FIDELITY, OR CONTINUOUS AVAILABILITY OF ANY THIRD-PARTY INTEGRATION (GMAIL, GOOGLE CALENDAR, GOOGLE DRIVE, GITHUB, NOTION, OR LINEAR).</p><p>YOU ASSUME TOTAL RESPONSIBILITY AND RISK FOR YOUR USE OF THE SERVICE AND YOUR SELECTION OF LOCAL BACKUP PRACTICES.</p>
+    </div>
+  
+
+    <div id="section-20" class="section-block">
+      <div class="section-badge">SECTION 20</div>
+      <h2>20. Limitation of Liability</h2>
+      <p>TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, IN NO EVENT SHALL SYNTAFLOW, ITS AFFILIATES, OFFICERS, DIRECTORS, EMPLOYEES, CONTRACTORS, OR AGENTS BE LIABLE TO YOU OR ANY THIRD PARTY FOR ANY INDIRECT, CONSEQUENTIAL, EXEMPLARY, INCIDENTAL, SPECIAL, OR PUNITIVE DAMAGES, INCLUDING BUT NOT LIMITED TO:<br/>(A) LOSS OF PROFITS, REVENUE, OR COMMERCIAL OPPORTUNITY;<br/>(B) LOSS OF BUSINESS, CLIENT ENGAGEMENTS, REPUTATION, OR GOODWILL;<br/>(C) LOSS, CORRUPTION, OR TAMPERING OF WORK RECORDS, DATA, OR LOCAL HARDWARE FILES; OR<br/>(D) INTERRUPTIONS ARISING FROM THIRD-PARTY API REVOCATIONS OR SERVICE OUTAGES,<br/>EVEN IF SYNTAFLOW HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.</p><p>TO THE MAXIMUM EXTENT PERMITTED BY LAW, SYNTAFLOW'S TOTAL AGGREGATE LIABILITY ARISING OUT OF OR RELATING TO THESE TERMS OR THE SERVICE SHALL NOT EXCEED THE GREATER OF: (I) THE TOTAL AMOUNT ACTUALLY PAID BY YOU TO SYNTAFLOW IN THE TWELVE (12) MONTHS PRECEDING THE CLAIM, OR (II) ONE HUNDRED UNITED STATES DOLLARS ($100.00 USD).</p>
+    </div>
+  
+
+    <div id="section-21" class="section-block">
+      <div class="section-badge">SECTION 21</div>
+      <h2>21. Changes to Terms</h2>
+      <p>Syntaflow reserves the right, in our sole discretion, to modify, amend, or replace these Terms at any time. When we make material changes, we will update the "Last Updated" date at the top of these Terms and provide prominent notice on our website or within the application release notes.</p><p>Your continued use of the Service following the posting of revised Terms constitutes your irrevocable acceptance of the updated terms. If you do not agree with the modified Terms, your sole remedy is to cease using the Service and uninstall the Desktop Application.</p>
+    </div>
+  
+
+    <div id="section-22" class="section-block">
+      <div class="section-badge">SECTION 22</div>
+      <h2>22. Contact Information</h2>
+      <p>If you have questions, comments, or legal notices concerning these Terms, please contact our legal and support team:</p><p>Syntaflow Legal & Governance<br/>Primary Contact: contact@syntaflow.tech<br/>Privacy Inquiries: privacy@syntaflow.tech<br/>Security Disclosures: security@syntaflow.tech<br/>Support & Operations: support@syntaflow.tech<br/>Official Domain: https://syntaflow.tech<br/>Public Repository & Issues: https://github.com/syntaflow/syntaflow</p>
+    </div>
+  
+    </main>
+
+    <footer>
+      <div>&copy; 2026 Syntaflow. All rights reserved.</div>
+      <div>
+        <a href="/privacy">Privacy Policy</a> • 
+        <a href="/security">Security Architecture</a> • 
+        <a href="/contact">Contact</a>
+      </div>
+    </footer>
+  </div>
 </body>
 </html>

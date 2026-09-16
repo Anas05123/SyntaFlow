@@ -202,11 +202,7 @@ export const DocsPage: React.FC = () => {
 
   return (
     <div style={{ paddingBottom: 'var(--space-80)', fontFamily: 'var(--font-body)' }}>
-      <SEOHead
-        title="Documentation — Syntaflow Knowledge Hub"
-        description="Comprehensive technical and workflow documentation for Syntaflow Desktop. Architecture, Client Ops, Blueprints, Documents, Reviews, and OAuth Vault."
-        path="/docs"
-      />
+      <SEOHead path="/docs" />
 
       {/* Hero Header */}
       <section className="section" style={{ paddingTop: 'var(--space-48)', paddingBottom: 'var(--space-28)', borderBottom: '1px solid var(--border)' }}>

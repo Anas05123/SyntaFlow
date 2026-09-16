@@ -65,11 +65,7 @@ export const DesktopAuthPage: React.FC = () => {
         fontFamily: 'var(--font-body)',
       }}
     >
-      <SEOHead
-        title="Authorize Desktop Application — Syntaflow"
-        description="Secure browser authentication bridge connecting your Syntaflow web account with your local desktop workspace."
-        path="/auth/desktop"
-      />
+      <SEOHead path="/auth/desktop" />
 
       {/* Ambient Lighting Backdrop */}
       <div
@@ -345,7 +341,7 @@ export const DesktopAuthPage: React.FC = () => {
               >
                 Approve Desktop Authorization &rarr;
               </Button>
-              <Button variant="secondary" href="#/" style={{ width: '100%', textAlign: 'center', padding: '12px' }}>
+              <Button variant="secondary" href="/" style={{ width: '100%', textAlign: 'center', padding: '12px' }}>
                 Cancel & Return Home
               </Button>
             </div>

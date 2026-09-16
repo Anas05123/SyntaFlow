@@ -25,11 +25,7 @@ export const DownloadPage: React.FC = () => {
 
   return (
     <div style={{ paddingBottom: 'var(--space-80)', fontFamily: 'var(--font-body)', position: 'relative', overflow: 'hidden' }}>
-      <SEOHead
-        title="Download Syntaflow — Desktop Preview for Windows, macOS & Linux"
-        description="Download Syntaflow for Windows 10/11 x64. Local-first desktop workspace connecting client operations, scoping blueprints, documents, and reviews."
-        path="/download"
-      />
+      <SEOHead path="/download" />
 
       {/* Ambient Top Glow Backdrop */}
       <div
@@ -115,7 +111,7 @@ export const DownloadPage: React.FC = () => {
                   </Button>
                   <Button
                     variant="secondary"
-                    href="#/docs"
+                    href="/docs"
                     style={{ padding: '14px 20px', fontSize: '14px' }}
                   >
                     Installation Guide &rarr;

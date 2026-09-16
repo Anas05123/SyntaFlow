@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { SEOHead } from '../../components/ui/SEOHead';
+import { Link } from '../../components/ui/Link';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 
@@ -23,7 +24,7 @@ const FAQ_DATA: FAQItem[] = [
       'Eliminates fragmented SaaS stacks (disjointed Notion, Linear, Slack, Google Drive).',
       'Provides legally defensible client review snapshots bound to exact versions.',
     ],
-    link: { text: 'Explore Product Overview', href: '#/product/overview' },
+    link: { text: 'Explore Product Overview', href: '/product' },
   },
   {
     id: 'who-is-it-for',
@@ -35,7 +36,7 @@ const FAQ_DATA: FAQItem[] = [
       'Boutique agencies managing multi-stage client approval pipelines.',
       'Solo practitioners requiring local privacy and defensible sign-offs.',
     ],
-    link: { text: 'Explore Studio Solutions', href: '#/solutions/studios' },
+    link: { text: 'Explore Studio Solutions', href: '/solutions/studios' },
   },
   {
     id: 'dual-density-tasks',
@@ -47,7 +48,7 @@ const FAQ_DATA: FAQItem[] = [
       'Full keyboard navigation (J/K movement, Enter to inspect, Esc to collapse).',
       'Tasks bind directly to blueprint scoping phases and document deliverables.',
     ],
-    link: { text: 'Learn Tasks Architecture', href: '#/product/projects-tasks' },
+    link: { text: 'Learn Tasks Architecture', href: '/product/projects-tasks' },
   },
   {
     id: 'delivery-gate-enforcement',
@@ -59,7 +60,7 @@ const FAQ_DATA: FAQItem[] = [
       'Immutable cryptographic hash stamped onto each final delivery package.',
       'Eliminates disputes over whether work was completed before handover.',
     ],
-    link: { text: 'Learn Delivery Approvals', href: '#/product/delivery-approvals' },
+    link: { text: 'Learn Delivery Approvals', href: '/product/delivery-approvals' },
   },
   {
     id: 'offline-sqlite',
@@ -82,7 +83,7 @@ const FAQ_DATA: FAQItem[] = [
       'macOS (Apple Silicon & Intel): In active engineering pipeline.',
       'Linux (x86_64 AppImage / deb): Waitlist open.',
     ],
-    link: { text: 'View Download Page', href: '#/download' },
+    link: { text: 'View Download Page', href: '/download' },
   },
   {
     id: 'data-storage-location',
@@ -94,7 +95,7 @@ const FAQ_DATA: FAQItem[] = [
       'Full database export (.sqlite / .db) accessible via Settings with one click.',
       'Zero remote database synchronization servers.',
     ],
-    link: { text: 'Read Data Handling Policy', href: '#/trust/data-handling' },
+    link: { text: 'Read Data Handling Policy', href: '/data-handling' },
   },
   {
     id: 'google-data-access',
@@ -106,7 +107,7 @@ const FAQ_DATA: FAQItem[] = [
       'OAuth tokens are stored locally in the OS keychain (Windows DPAPI) and never sent to our servers.',
       'Zero cross-client data correlation or unauthorized background indexing.',
     ],
-    link: { text: 'Inspect Full Privacy Disclosures', href: '#/privacy' },
+    link: { text: 'Inspect Full Privacy Disclosures', href: '/privacy' },
   },
   {
     id: 'google-limited-use',
@@ -118,7 +119,7 @@ const FAQ_DATA: FAQItem[] = [
       'No behavioral advertising or ad profiling of any kind.',
       'Explicit zero-retention guarantee for cloud AI models.',
     ],
-    link: { text: 'Read Google Limited Use Section', href: '#/privacy' },
+    link: { text: 'Read Google Limited Use Section', href: '/privacy' },
   },
   {
     id: 'token-revocation',
@@ -141,7 +142,7 @@ const FAQ_DATA: FAQItem[] = [
       'MCP (Model Context Protocol) server registry for extensible tool access.',
       'All integration operations execute locally from your desktop runtime.',
     ],
-    link: { text: 'Browse Integrations Catalog', href: '#/integrations' },
+    link: { text: 'Browse Integrations Catalog', href: '/integrations' },
   },
   {
     id: 'contextual-ai',
@@ -153,7 +154,7 @@ const FAQ_DATA: FAQItem[] = [
       'No generalized model training on your proprietary data.',
       'Full human-in-the-loop oversight before any draft or status change is committed.',
     ],
-    link: { text: 'Learn AI Engine Architecture', href: '#/docs' },
+    link: { text: 'Learn AI Engine Architecture', href: '/docs' },
   },
   {
     id: 'preview-pricing',
@@ -165,7 +166,7 @@ const FAQ_DATA: FAQItem[] = [
       'No credit card or payment information required.',
       'All data created during preview remains 100% yours to keep indefinitely.',
     ],
-    link: { text: 'View Pricing Details', href: '#/pricing' },
+    link: { text: 'View Pricing Details', href: '/pricing' },
   },
   {
     id: 'commercial-use',
@@ -177,7 +178,7 @@ const FAQ_DATA: FAQItem[] = [
       'Zero royalty or telemetry claims by Syntaflow.',
       'Full local export capabilities for client handover.',
     ],
-    link: { text: 'Read Terms of Service', href: '#/terms' },
+    link: { text: 'Read Terms of Service', href: '/terms' },
   },
 ];
 
@@ -220,11 +221,7 @@ export const FAQPage: React.FC = () => {
 
   return (
     <div style={{ paddingBottom: 'var(--space-80)', fontFamily: 'var(--font-body)', position: 'relative', overflow: 'hidden' }}>
-      <SEOHead
-        title="Frequently Asked Questions — Syntaflow"
-        description="Clear, direct answers regarding Syntaflow Desktop, local SQLite persistence, Google OAuth data usage, pricing, and system architecture."
-        path="/faq"
-      />
+      <SEOHead path="/faq" />
 
       {/* Ambient Top Glow Backdrop */}
       <div
@@ -428,9 +425,9 @@ export const FAQPage: React.FC = () => {
                   Contact Support &rarr;
                 </Button>
                 <div style={{ display: 'flex', gap: '8px', marginTop: '12px', fontSize: '11.5px', color: 'var(--text-metadata)', justifyContent: 'center' }}>
-                  <a href="#/docs" style={{ color: 'var(--cyan)', textDecoration: 'underline' }}>Read Docs</a>
+                  <Link href="/docs" style={{ color: 'var(--cyan)', textDecoration: 'underline' }}>Read Docs</Link>
                   <span>·</span>
-                  <a href="#/privacy" style={{ color: 'var(--cyan)', textDecoration: 'underline' }}>Privacy Policy</a>
+                  <Link href="/privacy" style={{ color: 'var(--cyan)', textDecoration: 'underline' }}>Privacy Policy</Link>
                 </div>
               </Card>
             </aside>
@@ -588,7 +585,7 @@ export const FAQPage: React.FC = () => {
 
                             {item.link && (
                               <div style={{ marginTop: '14px', paddingTop: '10px', borderTop: '1px solid rgba(255, 255, 255, 0.05)' }}>
-                                <a
+                                <Link
                                   href={item.link.href}
                                   style={{
                                     fontSize: '12.5px',
@@ -600,7 +597,7 @@ export const FAQPage: React.FC = () => {
                                   }}
                                 >
                                   {item.link.text} &rarr;
-                                </a>
+                                </Link>
                               </div>
                             )}
                           </div>

@@ -49,11 +49,7 @@ export const PrivacyPage: React.FC = () => {
 
   return (
     <div style={{ paddingBottom: 'var(--space-80)', fontFamily: 'var(--font-body)', position: 'relative', overflow: 'hidden' }}>
-      <SEOHead
-        title="Privacy Policy — Syntaflow"
-        description="Official Privacy Policy for Syntaflow. Detailed disclosures on local-first data handling, Google OAuth scopes, Gmail, Calendar, Drive access, and Google Limited Use compliance."
-        path="/privacy"
-      />
+      <SEOHead path="/privacy" />
 
       {/* Ambient Top Glow Backdrop */}
       <div

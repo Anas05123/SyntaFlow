@@ -5,10 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "node --experimental-strip-types ./scripts/generate-sitemap.mjs && tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "verify": "node verify-web.mjs"
+    "verify": "node verify-web.mjs",
+    "verify:seo": "node --experimental-strip-types ./scripts/verify-seo.mjs"
   },
   "dependencies": {
     "react": "^19.2.8",

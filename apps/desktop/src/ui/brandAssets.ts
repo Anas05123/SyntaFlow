@@ -27,10 +27,13 @@
  */
 
 import iconUrl from '../assets/syntaflow-icon.png';
+import iconWbgUrl from '../assets/syntaflow-icon-wbg.png';
 import fullLogoUrl from '../assets/syntaflow-full.png';
 
 /** The Syntaflow symbol mark (logo icon). Real artwork, never a substituted glyph. */
 export const BRAND_MARK_SRC: string = iconUrl;
+/** The Syntaflow symbol mark with background (LogoIcon_WBG.png), used for collapsed sidebar. */
+export const BRAND_MARK_WBG_SRC: string = iconWbgUrl;
 export const BRAND_ICON_SRC: string = iconUrl;
 
 /** The full horizontal Syntaflow logo (logo 4) with symbol and wordmark. */

@@ -3,6 +3,7 @@ import { SEOHead } from '../../components/ui/SEOHead';
 import { PageHero } from '../../components/marketing/PageHero';
 import { Card } from '../../components/ui/Card';
 import { CTASection } from '../../components/marketing/CTASection';
+import { getRouteMetadata } from '../../seo/seoConfig';
 
 const DATA_HANDLING_PILLARS = [
   {
@@ -24,15 +25,14 @@ const DATA_HANDLING_PILLARS = [
 ];
 
 export const DataHandlingPage: React.FC = () => {
+  const meta = getRouteMetadata('/data-handling');
+
   return (
     <div>
-      <SEOHead
-        title="Data Handling & Storage — Syntaflow"
-        description="Learn how Syntaflow stores, backups, and exports your client operational records using local-first SQLite persistence."
-        path="/data-handling"
-      />
+      <SEOHead path="/data-handling" />
 
       <PageHero
+        breadcrumbs={meta.breadcrumbs}
         eyebrow="Trust // Data Handling"
         title="Physical ownership of your client database."
         description="In an era of disappearing SaaS startups and unpredictable price hikes, Syntaflow ensures your business records belong to you forever."
@@ -66,7 +66,7 @@ export const DataHandlingPage: React.FC = () => {
         title="Experience true software ownership."
         description="Download the Syntaflow desktop preview for Windows."
         primaryLabel="Explore Desktop Preview"
-        primaryHref="#/product"
+        primaryHref="/download"
       />
     </div>
   );

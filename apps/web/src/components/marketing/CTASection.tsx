@@ -14,9 +14,9 @@ export const CTASection: React.FC<CTASectionProps> = ({
   title = 'One continuous working context. Built for your machine.',
   description = 'Experience client operations designed for clarity, version integrity, and zero cloud lock-in. Available as an offline-first Windows desktop preview.',
   primaryLabel = 'Explore Desktop Preview',
-  primaryHref = '#/product',
+  primaryHref = '/product',
   secondaryLabel = 'Review Security Model',
-  secondaryHref = '#/security',
+  secondaryHref = '/security',
 }) => {
   return (
     <section className="section scroll-reveal">

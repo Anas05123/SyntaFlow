@@ -1,14 +1,37 @@
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { preview } from 'vite';
 import { chromium } from '@playwright/test';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const ROUTES = [
   '/',
+  '/product',
+  '/product/client-management',
+  '/product/projects',
+  '/product/documents',
+  '/product/reviews-approvals',
+  '/product/ai-workspace',
+  '/solutions',
+  '/solutions/agencies',
+  '/solutions/freelancers',
+  '/solutions/consultants',
+  '/solutions/studios',
   '/pricing',
   '/download',
   '/integrations',
+  '/integrations/gmail',
+  '/integrations/google-calendar',
+  '/integrations/google-drive',
+  '/integrations/github',
+  '/integrations/notion',
+  '/integrations/linear',
   '/security',
   '/docs',
   '/faq',
+  '/contact',
   '/privacy',
   '/terms',
   '/login',
@@ -16,7 +39,9 @@ const ROUTES = [
 ];
 
 const VIEWPORTS = [
-  { name: 'Mobile (375x812)', width: 375, height: 812 },
+  { name: 'Mobile Small (375x812)', width: 375, height: 812 },
+  { name: 'Mobile Medium (390x844)', width: 390, height: 844 },
+  { name: 'Mobile Large (430x932)', width: 430, height: 932 },
   { name: 'Tablet (768x1024)', width: 768, height: 1024 },
   { name: 'Laptop (1280x720)', width: 1280, height: 720 },
   { name: 'Desktop (1440x900)', width: 1440, height: 900 },
@@ -28,7 +53,7 @@ async function run() {
 
   // Start in-process vite preview server
   const server = await preview({
-    root: 'apps/web',
+    root: __dirname,
     preview: {
       port: 5199,
       strictPort: true,
@@ -56,7 +81,7 @@ async function run() {
         page.on('pageerror', (err) => errors.push(err.message));
 
         await page.goto(url, { waitUntil: 'domcontentloaded' });
-        await page.waitForTimeout(40);
+        await page.waitForFunction(() => document.title.includes('Syntaflow'), { timeout: 4000 }).catch(() => {});
 
         const title = await page.title();
         const hasTitle = title.includes('Syntaflow');
@@ -106,7 +131,7 @@ async function run() {
     console.log(`Failed Checks: ${failedChecks}`);
 
     if (failedChecks === 0 && paperCanvasActive && tasksActive && stage01Active && stage04Active) {
-      console.log('✓ ALL ROUTES AND 5 VIEWPORTS VERIFIED CLEANLY WITH ZERO ERRORS.\n');
+      console.log('✓ ALL ROUTES AND 7 VIEWPORTS VERIFIED CLEANLY WITH ZERO ERRORS.\n');
     } else {
       process.exit(1);
     }
