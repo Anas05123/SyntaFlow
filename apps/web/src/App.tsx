@@ -6,7 +6,7 @@ import { SiteFooter } from './components/navigation/SiteFooter';
 import { AuthProvider } from './services/auth/AuthContext';
 import { HomePage } from './pages/HomePage';
 
-/* Route-Level Code Splitting (Dynamic Imports for All Other Routes) */
+/* Route-Level Code Splitting for Public Routes */
 const ProductOverviewPage = lazy(() => import('./pages/product/ProductOverviewPage').then((m) => ({ default: m.ProductOverviewPage })));
 const ClientManagementPage = lazy(() => import('./pages/product/ClientManagementPage').then((m) => ({ default: m.ClientManagementPage })));
 const ProjectsPage = lazy(() => import('./pages/product/ProjectsPage').then((m) => ({ default: m.ProjectsPage })));
@@ -38,12 +38,26 @@ const GitHubIntegrationPage = lazy(() => import('./pages/integrations/GitHubInte
 const NotionIntegrationPage = lazy(() => import('./pages/integrations/NotionIntegrationPage').then((m) => ({ default: m.NotionIntegrationPage })));
 const LinearIntegrationPage = lazy(() => import('./pages/integrations/LinearIntegrationPage').then((m) => ({ default: m.LinearIntegrationPage })));
 const DocsPage = lazy(() => import('./pages/DocsPage').then((m) => ({ default: m.DocsPage })));
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage').then((m) => ({ default: m.NotFoundPage })));
+
+/* Dedicated Auth Pages */
 const LoginPage = lazy(() => import('./pages/auth/LoginPage').then((m) => ({ default: m.LoginPage })));
 const SignUpPage = lazy(() => import('./pages/auth/SignUpPage').then((m) => ({ default: m.SignUpPage })));
 const ForgotPasswordPage = lazy(() => import('./pages/auth/ForgotPasswordPage').then((m) => ({ default: m.ForgotPasswordPage })));
 const DesktopAuthPage = lazy(() => import('./pages/auth/DesktopAuthPage').then((m) => ({ default: m.DesktopAuthPage })));
-const AccountPage = lazy(() => import('./pages/AccountPage').then((m) => ({ default: m.AccountPage })));
-const NotFoundPage = lazy(() => import('./pages/NotFoundPage').then((m) => ({ default: m.NotFoundPage })));
+
+/* Onboarding Flow */
+const OnboardingFlow = lazy(() => import('./pages/onboarding/OnboardingFlow').then((m) => ({ default: m.OnboardingFlow })));
+
+/* Authenticated Account Application Shell & Pages */
+const AccountShell = lazy(() => import('./components/account/AccountShell').then((m) => ({ default: m.AccountShell })));
+const AccountHomePage = lazy(() => import('./pages/account/AccountHomePage').then((m) => ({ default: m.AccountHomePage })));
+const ProfilePage = lazy(() => import('./pages/account/ProfilePage').then((m) => ({ default: m.ProfilePage })));
+const PlanPage = lazy(() => import('./pages/account/PlanPage').then((m) => ({ default: m.PlanPage })));
+const SessionsPage = lazy(() => import('./pages/account/SessionsPage').then((m) => ({ default: m.SessionsPage })));
+const DownloadsPage = lazy(() => import('./pages/account/DownloadsPage').then((m) => ({ default: m.DownloadsPage })));
+const DesktopConnectPage = lazy(() => import('./pages/account/DesktopConnectPage').then((m) => ({ default: m.DesktopConnectPage })));
+const TutorialsPage = lazy(() => import('./pages/account/TutorialsPage').then((m) => ({ default: m.TutorialsPage })));
 
 /**
  * Route Loading Fallback (Zero CLS, lightweight indicator)
@@ -55,6 +69,7 @@ const RouteLoadingFallback: React.FC = () => (
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
+      backgroundColor: '#08090b',
     }}
     role="status"
     aria-label="Loading page content"
@@ -64,8 +79,8 @@ const RouteLoadingFallback: React.FC = () => (
         width: '24px',
         height: '24px',
         borderRadius: '50%',
-        border: '2px solid var(--border)',
-        borderTopColor: 'var(--cyan)',
+        border: '2px solid rgba(255, 255, 255, 0.1)',
+        borderTopColor: '#00f2fe',
         animation: 'spin 0.6s linear infinite',
       }}
     />
@@ -103,10 +118,86 @@ export const App: React.FC = () => {
     }
   }, [currentPath]);
 
-  const renderRoute = () => {
-    const path = currentPath.replace(/\/+$/, '') || '/';
+  const path = currentPath.replace(/\/+$/, '') || '/';
+  const hostname = typeof window !== 'undefined' ? window.location.hostname : '';
+  const isAppHost = hostname === 'app.syntaflow.tech';
 
-    // Canonical legal routes (including legacy alias mapping)
+  // Determine application environment
+  const isAccountRoute =
+    isAppHost ||
+    path.startsWith('/account') ||
+    path === '/onboarding' ||
+    (isAppHost && (path === '/' || path === '/profile' || path === '/plan' || path === '/sessions' || path === '/downloads' || path === '/desktop' || path === '/tutorials'));
+
+  const isAuthRoute =
+    !isAccountRoute &&
+    (path === '/login' || path === '/signup' || path === '/forgot-password' || path.startsWith('/auth/desktop'));
+
+  // 1. DEDICATED AUTH ROUTE (Split-screen, NO marketing navbar/footer)
+  if (isAuthRoute) {
+    return (
+      <AuthProvider>
+        <Suspense fallback={<RouteLoadingFallback />}>
+          {path === '/login' && <LoginPage />}
+          {path === '/signup' && <SignUpPage />}
+          {path === '/forgot-password' && <ForgotPasswordPage />}
+          {path.startsWith('/auth/desktop') && <DesktopAuthPage />}
+        </Suspense>
+      </AuthProvider>
+    );
+  }
+
+  // 2. ONBOARDING JOURNEY (Progress bar shell, NO marketing navbar/footer)
+  if (path === '/onboarding') {
+    return (
+      <AuthProvider>
+        <Suspense fallback={<RouteLoadingFallback />}>
+          <OnboardingFlow />
+        </Suspense>
+      </AuthProvider>
+    );
+  }
+
+  // 3. AUTHENTICATED ACCOUNT PORTAL (Sidebar shell, NO marketing navbar/footer)
+  if (isAccountRoute) {
+    const renderAccountModule = () => {
+      if (path === '/account/profile' || path === '/profile') {
+        return <ProfilePage />;
+      }
+      if (path === '/account/plan' || path === '/plan') {
+        return <PlanPage />;
+      }
+      if (path === '/account/sessions' || path === '/sessions') {
+        return <SessionsPage />;
+      }
+      if (path === '/account/downloads' || path === '/downloads') {
+        return <DownloadsPage />;
+      }
+      if (path === '/account/desktop' || path === '/desktop') {
+        return <DesktopConnectPage />;
+      }
+      if (path === '/account/tutorials' || path === '/tutorials') {
+        return <TutorialsPage />;
+      }
+      // Default to Account Home
+      return <AccountHomePage />;
+    };
+
+    const canonicalSubpath = path.startsWith('/account') ? path : `/account${path === '/' ? '' : path}`;
+
+    return (
+      <AuthProvider>
+        <Suspense fallback={<RouteLoadingFallback />}>
+          <AccountShell currentSubpath={canonicalSubpath}>
+            {renderAccountModule()}
+          </AccountShell>
+        </Suspense>
+      </AuthProvider>
+    );
+  }
+
+  // 4. PUBLIC MARKETING WEBSITE (Header + Content + Footer)
+  const renderPublicRoute = () => {
     if (path === '/privacy-policy' || path === '/cookies' || path === '/privacy') {
       return <PrivacyPage />;
     }
@@ -148,7 +239,7 @@ export const App: React.FC = () => {
       case '/solutions/studios':
         return <StudiosPage />;
 
-      /* Core Navigation (Section 5) */
+      /* Core Navigation */
       case '/integrations':
         return <IntegrationsCatalogPage />;
       case '/integrations/gmail':
@@ -170,16 +261,6 @@ export const App: React.FC = () => {
         return <DocsPage />;
       case '/download':
         return <DownloadPage />;
-      case '/login':
-        return <LoginPage />;
-      case '/signup':
-        return <SignUpPage />;
-      case '/forgot-password':
-        return <ForgotPasswordPage />;
-      case '/auth/desktop':
-        return <DesktopAuthPage />;
-      case '/account':
-        return <AccountPage />;
 
       /* Trust & Security */
       case '/security':
@@ -218,7 +299,7 @@ export const App: React.FC = () => {
         <SiteHeader currentPath={currentPath} />
         <main style={{ flex: 1 }}>
           <Suspense fallback={<RouteLoadingFallback />}>
-            {renderRoute()}
+            {renderPublicRoute()}
           </Suspense>
         </main>
         <SiteFooter />

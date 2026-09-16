@@ -23,6 +23,7 @@
 | **ADR-010** | Ollama-First AI Engine Abstraction | 2026-08-08 | Accepted |
 | **ADR-011** | Non-Transitive, Scoped Access Grant Model | 2026-08-12 | Accepted |
 | **ADR-012** | Available Workspace Width Responsive Inspector | 2026-09-12 | Accepted |
+| **ADR-013** | Unified Web Identity & Decoupled Account Portal | 2026-09-17 | Accepted |
 
 ---
 
@@ -63,4 +64,11 @@
 ### ADR-012: Available Workspace Width Responsive Inspector
 - **Context**: Viewport media queries (`min-width: 1360px`) broke when the sidebar expanded/collapsed, causing cards to clip.
 - **Decision**: Use `ResizeObserver` measuring the parent work container (`>= 1020px`) to toggle side-by-side vs overlay mode. Suppress backdrop scrim during side-by-side mode.
+- **Status**: Accepted.
+
+---
+
+### ADR-013: Unified Web Identity & Decoupled Account Portal
+- **Context**: Conflation of marketing chrome with authentication and account portal views; lack of unified pricing configuration and PKCE desktop linking.
+- **Decision**: Four structurally decoupled environments (`Public Marketing`, `Cinematic Auth`, `Onboarding Flow`, `Account Application Shell`). Canonical `pricingConfig.ts` single source of truth. Gated download workflow. Scoped OAuth identity tokens.
 - **Status**: Accepted.

@@ -35,7 +35,17 @@ const ROUTES = [
   '/privacy',
   '/terms',
   '/login',
+  '/signup',
+  '/forgot-password',
   '/auth/desktop',
+  '/onboarding',
+  '/account',
+  '/account/profile',
+  '/account/plan',
+  '/account/sessions',
+  '/account/downloads',
+  '/account/desktop-connect',
+  '/account/tutorials',
 ];
 
 const VIEWPORTS = [
@@ -116,22 +126,22 @@ async function run() {
     const tasksActive = await page.isVisible('text=Dual-Density Task Boards');
     console.log(`  Simulator Tasks Tab: ${tasksActive ? 'PASSED' : 'FAILED'}`);
 
-    // Test Stage Pipeline Graph node switching
-    console.log('  Testing Stage Pipeline Graph nodes...');
-    await page.click('button:has-text("STAGE 01")');
-    const stage01Active = await page.isVisible('text=STAGE 01 // CLIENT OPS');
-    console.log(`  Pipeline Stage 01 Switch: ${stage01Active ? 'PASSED' : 'FAILED'}`);
+    // Test FlowCanvas pipeline node switching
+    console.log('  Testing FlowCanvas pipeline node switching...');
+    await page.click('button:has-text("Client Account")');
+    const stage01Active = await page.isVisible('text=Commercial Terms');
+    console.log(`  FlowCanvas Client Account Switch: ${stage01Active ? 'PASSED' : 'FAILED'}`);
 
-    await page.click('button:has-text("STAGE 04")');
-    const stage04Active = await page.isVisible('text=STAGE 04 // STUDIO DOCS');
-    console.log(`  Pipeline Stage 04 Switch: ${stage04Active ? 'PASSED' : 'FAILED'}`);
+    await page.click('button:has-text("Handover Package")');
+    const stage06Active = await page.isVisible('text=Verified Delivery');
+    console.log(`  FlowCanvas Handover Package Switch: ${stage06Active ? 'PASSED' : 'FAILED'}`);
 
     console.log(`\n--- Verification Summary ---`);
     console.log(`Total Checks: ${totalChecks}`);
     console.log(`Failed Checks: ${failedChecks}`);
 
-    if (failedChecks === 0 && paperCanvasActive && tasksActive && stage01Active && stage04Active) {
-      console.log('✓ ALL ROUTES AND 7 VIEWPORTS VERIFIED CLEANLY WITH ZERO ERRORS.\n');
+    if (failedChecks === 0 && paperCanvasActive && tasksActive && stage01Active && stage06Active) {
+      console.log('✓ ALL 39 ROUTES AND 7 VIEWPORTS VERIFIED CLEANLY WITH ZERO ERRORS.\n');
     } else {
       process.exit(1);
     }

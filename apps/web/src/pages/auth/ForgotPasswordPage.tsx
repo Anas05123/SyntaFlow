@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { SEOHead } from '../../components/ui/SEOHead';
-import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
-import { BrandMark } from '../../components/brand/BrandMark';
 import { Link } from '../../components/ui/Link';
 import { sendPasswordRecovery, completePasswordRecovery } from '../../services/auth/appwriteClient';
+import { AuthLayout } from './AuthLayout';
 
 export const ForgotPasswordPage: React.FC = () => {
   const [recoveryParams] = useState<{ userId: string | null; secret: string | null }>(() => {
@@ -42,9 +41,9 @@ export const ForgotPasswordPage: React.FC = () => {
 
     if (res.success) {
       setIsSubmitted(true);
-      setSuccessMessage(`Password recovery instructions sent to ${email}. Please check your inbox.`);
+      setSuccessMessage(`Password recovery link sent to ${email}. Check your inbox.`);
     } else {
-      setErrorMessage(res.error || 'Failed to send recovery email. Please check the address and try again.');
+      setErrorMessage(res.error || 'Failed to send recovery email. Please check your address.');
     }
   };
 
@@ -72,244 +71,223 @@ export const ForgotPasswordPage: React.FC = () => {
       setIsSubmitted(true);
       setSuccessMessage('Your password has been successfully updated. You can now sign in.');
     } else {
-      setErrorMessage(res.error || 'Password reset token is invalid or expired.');
+      setErrorMessage(res.error || 'Password reset link is invalid or has expired.');
     }
   };
 
-  const isResetMode = Boolean(userId && secret);
+  const isResetting = Boolean(userId && secret);
 
   return (
-    <div
-      style={{
-        position: 'relative',
-        minHeight: '85vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingTop: 'var(--space-48)',
-        paddingBottom: 'var(--space-64)',
-        overflow: 'hidden',
-      }}
+    <AuthLayout
+      title={isResetting ? 'Set new password' : 'Reset password'}
+      subtitle={
+        isResetting
+          ? 'Enter a new secure password for your Syntaflow account.'
+          : 'Enter your email address and we will send you a link to reset your password.'
+      }
     >
-      <SEOHead path="/forgot-password" />
-
-      {/* Ambient Lighting Backdrop */}
-      <div
-        style={{
-          position: 'absolute',
-          top: '-120px',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          width: '1000px',
-          height: '500px',
-          background: 'radial-gradient(ellipse at 50% 20%, rgba(37, 99, 235, 0.14) 0%, rgba(6, 182, 212, 0.06) 40%, transparent 70%)',
-          pointerEvents: 'none',
-          zIndex: 0,
-        }}
+      <SEOHead
+        title="Reset Password — Syntaflow"
+        description="Reset your Syntaflow account password securely."
+        path="/forgot-password"
+        indexable={false}
       />
 
-      <div className="container" style={{ maxWidth: '440px', position: 'relative', zIndex: 1 }}>
-        <div style={{ textAlign: 'center', marginBottom: 'var(--space-28)' }}>
-          <div style={{ display: 'inline-block', marginBottom: 'var(--space-16)' }}>
-            <Link href="/" aria-label="Syntaflow Home">
-              <BrandMark variant="full" size="lg" />
-            </Link>
-          </div>
-          <h1
-            className="heading-1"
-            style={{
-              fontSize: '26px',
-              color: 'var(--text)',
-              marginBottom: '6px',
-              letterSpacing: '-0.02em',
-            }}
-          >
-            {isResetMode ? 'Choose new password' : 'Reset your password'}
-          </h1>
-          <p style={{ fontSize: '13.5px', color: 'var(--text-muted)', margin: 0 }}>
-            {isResetMode
-              ? 'Enter a new secure password for your Syntaflow account.'
-              : 'Enter your email address and we will send you a recovery link.'}
-          </p>
-        </div>
-
-        <Card
-          variant="raised"
+      {errorMessage && (
+        <div
+          role="alert"
           style={{
-            padding: 'var(--space-32)',
-            backgroundColor: 'var(--surface-raised)',
-            border: '1px solid rgba(255, 255, 255, 0.08)',
-            boxShadow: '0 24px 60px -12px rgba(0, 0, 0, 0.8), 0 0 28px -6px rgba(6, 182, 212, 0.1)',
-            borderRadius: '12px',
+            padding: '12px 14px',
+            backgroundColor: 'rgba(239, 68, 68, 0.1)',
+            border: '1px solid rgba(239, 68, 68, 0.3)',
+            borderRadius: '8px',
+            color: '#f87171',
+            fontSize: '13px',
+            marginBottom: '1.25rem',
+            lineHeight: 1.4,
           }}
         >
-          {errorMessage && (
-            <div
-              style={{
-                padding: '10px 14px',
-                backgroundColor: 'rgba(239, 68, 68, 0.1)',
-                border: '1px solid rgba(239, 68, 68, 0.3)',
-                borderRadius: '6px',
-                color: '#F87171',
-                fontSize: '13px',
-                marginBottom: 'var(--space-20)',
-                lineHeight: 1.45,
-              }}
-              role="alert"
-            >
-              {errorMessage}
-            </div>
-          )}
+          {errorMessage}
+        </div>
+      )}
 
-          {successMessage && (
-            <div
-              style={{
-                padding: '12px 14px',
-                backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                border: '1px solid rgba(16, 185, 129, 0.35)',
-                borderRadius: '6px',
-                color: '#34D399',
-                fontSize: '13.5px',
-                marginBottom: 'var(--space-20)',
-                lineHeight: 1.5,
-                textAlign: 'center',
-              }}
-              role="status"
-            >
-              <div style={{ fontSize: '18px', marginBottom: '4px' }}>✓</div>
-              {successMessage}
-            </div>
-          )}
+      {successMessage && (
+        <div
+          role="status"
+          style={{
+            padding: '12px 14px',
+            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+            border: '1px solid rgba(16, 185, 129, 0.3)',
+            borderRadius: '8px',
+            color: '#34d399',
+            fontSize: '13px',
+            marginBottom: '1.25rem',
+            lineHeight: 1.4,
+          }}
+        >
+          {successMessage}
+        </div>
+      )}
 
-          {!isSubmitted ? (
-            isResetMode ? (
-              /* Reset Password Form */
-              <form onSubmit={handleCompleteReset} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                <div>
-                  <label htmlFor="new-password" style={{ display: 'block', fontSize: '12.5px', color: 'var(--text)', marginBottom: '6px', fontWeight: 500 }}>
-                    New Password (min. 8 characters)
-                  </label>
-                  <input
-                    id="new-password"
-                    type="password"
-                    placeholder="••••••••••••"
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                    required
-                    minLength={8}
-                    style={{
-                      width: '100%',
-                      padding: '10px 12px',
-                      fontSize: '14px',
-                      backgroundColor: 'var(--surface-sunken)',
-                      border: '1px solid var(--border)',
-                      borderRadius: '6px',
-                      color: 'var(--text)',
-                      outline: 'none',
-                      boxSizing: 'border-box',
-                    }}
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="confirm-new-password" style={{ display: 'block', fontSize: '12.5px', color: 'var(--text)', marginBottom: '6px', fontWeight: 500 }}>
-                    Confirm New Password
-                  </label>
-                  <input
-                    id="confirm-new-password"
-                    type="password"
-                    placeholder="••••••••••••"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    required
-                    minLength={8}
-                    style={{
-                      width: '100%',
-                      padding: '10px 12px',
-                      fontSize: '14px',
-                      backgroundColor: 'var(--surface-sunken)',
-                      border: '1px solid var(--border)',
-                      borderRadius: '6px',
-                      color: 'var(--text)',
-                      outline: 'none',
-                      boxSizing: 'border-box',
-                    }}
-                  />
-                </div>
-
-                <Button
-                  type="submit"
-                  variant="primary"
-                  disabled={isLoading || !newPassword || !confirmPassword}
-                  style={{ width: '100%', textAlign: 'center', marginTop: '4px', padding: '11px' }}
-                >
-                  {isLoading ? 'Updating password...' : 'Update Password'}
-                </Button>
-              </form>
-            ) : (
-              /* Request Recovery Link Form */
-              <form onSubmit={handleRequestReset} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                <div>
-                  <label htmlFor="recovery-email" style={{ display: 'block', fontSize: '12.5px', color: 'var(--text)', marginBottom: '6px', fontWeight: 500 }}>
-                    Work Email
-                  </label>
-                  <input
-                    id="recovery-email"
-                    type="email"
-                    placeholder="name@company.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    autoComplete="email"
-                    style={{
-                      width: '100%',
-                      padding: '10px 12px',
-                      fontSize: '14px',
-                      backgroundColor: 'var(--surface-sunken)',
-                      border: '1px solid var(--border)',
-                      borderRadius: '6px',
-                      color: 'var(--text)',
-                      outline: 'none',
-                      boxSizing: 'border-box',
-                    }}
-                  />
-                </div>
-
-                <Button
-                  type="submit"
-                  variant="primary"
-                  disabled={isLoading || !email}
-                  style={{ width: '100%', textAlign: 'center', marginTop: '4px', padding: '11px' }}
-                >
-                  {isLoading ? 'Sending recovery link...' : 'Send Recovery Link'}
-                </Button>
-              </form>
-            )
-          ) : (
-            <div style={{ textAlign: 'center', marginTop: '8px' }}>
-              <Link href="/login" style={{ color: 'var(--cyan)', fontWeight: 500, textDecoration: 'none' }}>
-                Return to Sign in &rarr;
-              </Link>
-            </div>
-          )}
-
-          <div
+      {isSubmitted && !isResetting ? (
+        <div style={{ textAlign: 'center', marginTop: '1.5rem' }}>
+          <Link
+            href="/login"
             style={{
-              marginTop: 'var(--space-20)',
-              paddingTop: 'var(--space-16)',
-              borderTop: '1px solid var(--border)',
-              textAlign: 'center',
-              fontSize: '13px',
-              color: 'var(--text-muted)',
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '10px 20px',
+              borderRadius: '8px',
+              backgroundColor: 'var(--cobalt)',
+              color: '#ffffff',
+              textDecoration: 'none',
+              fontSize: '14px',
+              fontWeight: 600,
             }}
           >
-            Remembered your password?{' '}
-            <Link href="/login" style={{ color: 'var(--cyan)', fontWeight: 500, textDecoration: 'none' }}>
-              Sign in
-            </Link>
+            Return to Sign in
+          </Link>
+        </div>
+      ) : isSubmitted && isResetting ? (
+        <div style={{ textAlign: 'center', marginTop: '1.5rem' }}>
+          <Link
+            href="/login"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '10px 20px',
+              borderRadius: '8px',
+              backgroundColor: 'var(--cobalt)',
+              color: '#ffffff',
+              textDecoration: 'none',
+              fontSize: '14px',
+              fontWeight: 600,
+            }}
+          >
+            Sign in with new password
+          </Link>
+        </div>
+      ) : isResetting ? (
+        <form onSubmit={handleCompleteReset} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+          <div>
+            <label
+              htmlFor="new-password"
+              style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: 'var(--text-secondary)', marginBottom: '6px' }}
+            >
+              New Password (min. 8 characters)
+            </label>
+            <input
+              id="new-password"
+              type="password"
+              required
+              placeholder="••••••••••••"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              disabled={isLoading}
+              style={{
+                width: '100%',
+                padding: '10px 14px',
+                borderRadius: '8px',
+                backgroundColor: 'rgba(0, 0, 0, 0.3)',
+                border: '1px solid rgba(255, 255, 255, 0.12)',
+                color: 'var(--text-primary)',
+                fontSize: '14px',
+                outline: 'none',
+                boxSizing: 'border-box',
+              }}
+            />
           </div>
-        </Card>
+
+          <div>
+            <label
+              htmlFor="confirm-password"
+              style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: 'var(--text-secondary)', marginBottom: '6px' }}
+            >
+              Confirm New Password
+            </label>
+            <input
+              id="confirm-password"
+              type="password"
+              required
+              placeholder="••••••••••••"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              disabled={isLoading}
+              style={{
+                width: '100%',
+                padding: '10px 14px',
+                borderRadius: '8px',
+                backgroundColor: 'rgba(0, 0, 0, 0.3)',
+                border: '1px solid rgba(255, 255, 255, 0.12)',
+                color: 'var(--text-primary)',
+                fontSize: '14px',
+                outline: 'none',
+                boxSizing: 'border-box',
+              }}
+            />
+          </div>
+
+          <Button
+            type="submit"
+            variant="primary"
+            size="lg"
+            disabled={isLoading}
+            style={{ width: '100%', marginTop: '0.5rem', backgroundColor: 'var(--cobalt)', borderRadius: '8px' }}
+          >
+            {isLoading ? 'Updating...' : 'Update Password'}
+          </Button>
+        </form>
+      ) : (
+        <form onSubmit={handleRequestReset} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+          <div>
+            <label
+              htmlFor="reset-email"
+              style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: 'var(--text-secondary)', marginBottom: '6px' }}
+            >
+              Account Email
+            </label>
+            <input
+              id="reset-email"
+              type="email"
+              required
+              placeholder="operator@studio.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              disabled={isLoading}
+              style={{
+                width: '100%',
+                padding: '10px 14px',
+                borderRadius: '8px',
+                backgroundColor: 'rgba(0, 0, 0, 0.3)',
+                border: '1px solid rgba(255, 255, 255, 0.12)',
+                color: 'var(--text-primary)',
+                fontSize: '14px',
+                outline: 'none',
+                boxSizing: 'border-box',
+              }}
+            />
+          </div>
+
+          <Button
+            type="submit"
+            variant="primary"
+            size="lg"
+            disabled={isLoading}
+            style={{ width: '100%', marginTop: '0.5rem', backgroundColor: 'var(--cobalt)', borderRadius: '8px' }}
+          >
+            {isLoading ? 'Sending...' : 'Send Recovery Link'}
+          </Button>
+        </form>
+      )}
+
+      <div style={{ marginTop: '1.5rem', textAlign: 'center', fontSize: '13px', color: 'var(--text-secondary)' }}>
+        Remember your password?{' '}
+        <Link href="/login" style={{ color: '#00f2fe', textDecoration: 'none', fontWeight: 500 }}>
+          Sign in
+        </Link>
       </div>
-    </div>
+    </AuthLayout>
   );
 };

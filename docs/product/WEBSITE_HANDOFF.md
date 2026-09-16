@@ -1,17 +1,21 @@
-# CoreDesk — Marketing Website & Web Authentication Handoff
+# Syntaflow — Marketing Website & Web Authentication Architecture
 
-> **Status:** SPECIFIED & PLANNED FOR FUTURE WEB AGENT  
-> **Last verified:** 2026-09-13  
-> **Relevant source areas:** `docs/coredesk/PRODUCT_VISION.md`, `docs/coredesk/DESIGN_SYSTEM.md`  
+> **Status:** IMPLEMENTED & VERIFIED  
+> **Last verified:** 2026-09-17  
+> **Relevant source areas:** `apps/web/`, `docs/decisions/ADR-013-unified-auth-and-account-portal.md`  
 > **Owner domain:** Web Engineering & Growth  
 
 ---
 
 ## 1. Executive Purpose
 
-This document serves as the standalone architectural handoff for a future AI agent tasked with designing and building the **CoreDesk Marketing Website, Documentation Hub, and Web Authentication Portal** (`https://coredesk.app`).
+This document outlines the architecture, routing, visual foundations, and verification suite for the **Syntaflow Public Website (`https://syntaflow.tech`) and Authenticated Account Portal (`https://app.syntaflow.tech` / `/account`)**.
 
-An AI reading this document can build the web presence without needing to inspect desktop application source code.
+The web presence features four structurally decoupled environments:
+1. Public Marketing Website (`/`, `/pricing`, `/download`, `/docs`, etc.) with animated FlowCanvas pipeline and minimal navigation.
+2. Cinematic Auth Shell (`/login`, `/signup`, `/forgot-password`, `/auth/desktop`).
+3. Guided 5-Step Onboarding Flow (`/onboarding`).
+4. Full Application Account Portal (`/account/*`) with categorized sidebar, device sessions, and downloads.
 
 ---
 

@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { BrandMark } from '../brand/BrandMark';
-import { Button } from '../ui/Button';
 import { Link } from '../ui/Link';
 import { useAuth } from '../../services/auth/AuthContext';
 
@@ -39,13 +38,24 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ currentPath }) => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [dropdownOpen]);
 
+  // Prevent background scroll when mobile nav is open
+  useEffect(() => {
+    if (mobileOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [mobileOpen]);
+
+  // Clean, minimal IA: Features, Integrations, Docs, Pricing
   const navLinks = [
-    { label: 'Product', href: '/product', active: currentPath.startsWith('/product') },
+    { label: 'Features', href: '/product', active: currentPath.startsWith('/product') },
     { label: 'Integrations', href: '/integrations', active: currentPath.startsWith('/integrations') },
-    { label: 'Security', href: '/security', active: currentPath.startsWith('/security') },
-    { label: 'Pricing', href: '/pricing', active: currentPath.startsWith('/pricing') },
     { label: 'Docs', href: '/docs', active: currentPath.startsWith('/docs') },
-    { label: 'FAQ', href: '/faq', active: currentPath.startsWith('/faq') },
+    { label: 'Pricing', href: '/pricing', active: currentPath.startsWith('/pricing') },
   ];
 
   const handleSignOut = async () => {
@@ -64,10 +74,10 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ currentPath }) => {
         top: 0,
         zIndex: 100,
         height: 'var(--header-height)',
-        backgroundColor: 'rgba(11, 13, 15, 0.88)',
-        backdropFilter: 'blur(16px)',
-        WebkitBackdropFilter: 'blur(16px)',
-        borderBottom: '1px solid var(--border)',
+        backgroundColor: 'rgba(8, 9, 11, 0.85)',
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.07)',
       }}
     >
       <div
@@ -80,7 +90,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ currentPath }) => {
         }}
       >
         {/* Left: Brand Mark */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '32px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '36px' }}>
           <Link href="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }} aria-label="Syntaflow Home">
             <BrandMark variant="full" size="md" />
           </Link>
@@ -91,7 +101,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ currentPath }) => {
             style={{
               display: 'none',
               alignItems: 'center',
-              gap: '24px',
+              gap: '28px',
             }}
             className="desktop-nav"
           >
@@ -100,9 +110,9 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ currentPath }) => {
                 key={item.label}
                 href={item.href}
                 style={{
-                  fontSize: '13.5px',
+                  fontSize: '14px',
                   fontWeight: 500,
-                  color: item.active ? 'var(--cyan)' : 'var(--text-muted)',
+                  color: item.active ? '#00f2fe' : 'var(--text-secondary)',
                   textDecoration: 'none',
                   transition: 'color 0.15s ease',
                 }}
@@ -113,7 +123,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ currentPath }) => {
           </nav>
         </div>
 
-        {/* Right Actions */}
+        {/* Right Actions: ONE Dominant Action */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
           <div style={{ display: 'none', alignItems: 'center', gap: '16px' }} className="desktop-actions">
             {isAuthenticated ? (
@@ -124,15 +134,16 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ currentPath }) => {
                   style={{
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '8px',
-                    padding: '5px 12px 5px 6px',
-                    borderRadius: '20px',
-                    backgroundColor: 'var(--surface-raised)',
-                    border: '1px solid var(--border)',
+                    gap: '10px',
+                    padding: '6px 14px 6px 8px',
+                    borderRadius: '24px',
+                    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
                     cursor: 'pointer',
-                    color: 'var(--text)',
-                    fontSize: '13px',
+                    color: 'var(--text-primary)',
+                    fontSize: '13.5px',
                     fontWeight: 500,
+                    transition: 'all 0.15s ease',
                   }}
                   aria-expanded={dropdownOpen}
                   aria-haspopup="true"
@@ -142,20 +153,20 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ currentPath }) => {
                       width: '24px',
                       height: '24px',
                       borderRadius: '50%',
-                      backgroundColor: 'rgba(6, 182, 212, 0.2)',
-                      border: '1px solid rgba(6, 182, 212, 0.4)',
-                      color: 'var(--cyan)',
+                      backgroundColor: 'rgba(0, 242, 254, 0.15)',
+                      border: '1px solid rgba(0, 242, 254, 0.4)',
+                      color: '#00f2fe',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
                       fontSize: '11px',
-                      fontWeight: 600,
+                      fontWeight: 700,
                     }}
                   >
                     {userInitial}
                   </div>
                   <span>{displayName}</span>
-                  <span style={{ fontSize: '10px', color: 'var(--text-muted)', marginLeft: '2px' }}>▼</span>
+                  <span style={{ fontSize: '10px', color: 'var(--text-tertiary)', marginLeft: '2px' }}>▾</span>
                 </button>
 
                 {/* Dropdown Menu */}
@@ -165,20 +176,21 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ currentPath }) => {
                       position: 'absolute',
                       top: 'calc(100% + 8px)',
                       right: 0,
-                      width: '220px',
+                      width: '230px',
                       backgroundColor: 'var(--surface-raised)',
-                      border: '1px solid var(--border)',
-                      borderRadius: '8px',
-                      boxShadow: '0 16px 36px rgba(0, 0, 0, 0.6)',
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      borderRadius: '12px',
+                      boxShadow: '0 20px 40px rgba(0, 0, 0, 0.7)',
                       padding: '8px 0',
                       zIndex: 110,
+                      animation: 'fadeIn 0.15s ease',
                     }}
                   >
-                    <div style={{ padding: '8px 16px', borderBottom: '1px solid var(--border)', marginBottom: '4px' }}>
-                      <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    <div style={{ padding: '8px 16px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', marginBottom: '4px' }}>
+                      <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                         {user?.name || 'Syntaflow Operator'}
                       </div>
-                      <div style={{ fontSize: '11px', color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                         {user?.email}
                       </div>
                     </div>
@@ -187,33 +199,37 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ currentPath }) => {
                       href="/account"
                       onClick={() => setDropdownOpen(false)}
                       style={{
-                        display: 'block',
-                        padding: '8px 16px',
-                        fontSize: '13px',
-                        color: 'var(--text)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        padding: '10px 16px',
+                        fontSize: '13.5px',
+                        color: 'var(--text-primary)',
                         textDecoration: 'none',
                       }}
                       className="nav-dropdown-item"
                     >
-                      Account & Settings
+                      <span>Open Account Portal</span>
                     </Link>
 
                     <Link
-                      href="/download"
+                      href="/account/downloads"
                       onClick={() => setDropdownOpen(false)}
                       style={{
-                        display: 'block',
-                        padding: '8px 16px',
-                        fontSize: '13px',
-                        color: 'var(--text)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        padding: '10px 16px',
+                        fontSize: '13.5px',
+                        color: 'var(--text-secondary)',
                         textDecoration: 'none',
                       }}
                       className="nav-dropdown-item"
                     >
-                      Downloads & Desktop
+                      <span>Downloads & Desktop</span>
                     </Link>
 
-                    <div style={{ height: '1px', backgroundColor: 'var(--border)', margin: '4px 0' }} />
+                    <div style={{ height: '1px', backgroundColor: 'rgba(255, 255, 255, 0.08)', margin: '6px 0' }} />
 
                     <button
                       type="button"
@@ -223,9 +239,9 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ currentPath }) => {
                         textAlign: 'left',
                         background: 'none',
                         border: 'none',
-                        padding: '8px 16px',
-                        fontSize: '13px',
-                        color: '#F87171',
+                        padding: '10px 16px',
+                        fontSize: '13.5px',
+                        color: '#f87171',
                         cursor: 'pointer',
                       }}
                       className="nav-dropdown-item"
@@ -236,135 +252,181 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ currentPath }) => {
                 )}
               </div>
             ) : (
-              <>
-                <Link
-                  href="/login"
-                  style={{
-                    fontSize: '13.5px',
-                    fontWeight: 500,
-                    color: currentPath === '/login' ? 'var(--cyan)' : 'var(--text-muted)',
-                    textDecoration: 'none',
-                  }}
-                >
-                  Log in
-                </Link>
-                <Link
-                  href="/download"
-                  style={{
-                    fontSize: '13.5px',
-                    fontWeight: 500,
-                    color: currentPath === '/download' ? 'var(--cyan)' : 'var(--text-muted)',
-                    textDecoration: 'none',
-                  }}
-                >
-                  Download
-                </Link>
-                <Button variant="primary" href="/download" style={{ padding: '8px 16px', fontSize: '13px' }}>
-                  Get Syntaflow
-                </Button>
-              </>
+              /* Single Dominant Sign In Action */
+              <Link
+                href="/login"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  padding: '7px 18px',
+                  borderRadius: '20px',
+                  backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                  border: '1px solid rgba(255, 255, 255, 0.15)',
+                  fontSize: '13.5px',
+                  fontWeight: 500,
+                  color: 'var(--text-primary)',
+                  textDecoration: 'none',
+                  transition: 'all 0.15s ease',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.14)';
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.08)';
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.15)';
+                }}
+              >
+                Sign in
+              </Link>
             )}
           </div>
 
-          {/* Mobile Hamburger Toggle */}
+          {/* Mobile Menu Toggle Button */}
           <button
             type="button"
+            className="mobile-nav-toggle"
             onClick={() => setMobileOpen(!mobileOpen)}
-            aria-expanded={mobileOpen}
-            aria-controls="mobile-navigation"
             aria-label={mobileOpen ? 'Close navigation menu' : 'Open navigation menu'}
+            aria-expanded={mobileOpen}
+            aria-controls="mobile-nav-drawer"
             style={{
               display: 'flex',
-              flexDirection: 'column',
+              alignItems: 'center',
               justifyContent: 'center',
-              gap: '5px',
-              width: '36px',
-              height: '36px',
+              width: '40px',
+              height: '40px',
               background: 'none',
-              border: '1px solid var(--border)',
-              borderRadius: '6px',
-              padding: '8px',
+              border: 'none',
+              color: 'var(--text-primary)',
               cursor: 'pointer',
+              padding: 0,
             }}
-            className="mobile-toggle"
           >
-            <span style={{ width: '100%', height: '1.5px', backgroundColor: 'var(--text)', transition: 'all 0.2s ease' }} />
-            <span style={{ width: '100%', height: '1.5px', backgroundColor: 'var(--text)', transition: 'all 0.2s ease' }} />
-            <span style={{ width: '100%', height: '1.5px', backgroundColor: 'var(--text)', transition: 'all 0.2s ease' }} />
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              {mobileOpen ? (
+                <>
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </>
+              ) : (
+                <>
+                  <line x1="4" y1="8" x2="20" y2="8" />
+                  <line x1="4" y1="16" x2="20" y2="16" />
+                </>
+              )}
+            </svg>
           </button>
         </div>
       </div>
 
-      {/* Mobile Menu Slide-down */}
+      {/* Mobile Nav Drawer */}
       {mobileOpen && (
         <div
-          id="mobile-navigation"
-          role="navigation"
-          aria-label="Mobile Navigation"
+          id="mobile-nav-drawer"
           style={{
-            position: 'absolute',
+            position: 'fixed',
             top: 'var(--header-height)',
             left: 0,
             right: 0,
-            backgroundColor: 'var(--canvas)',
-            borderBottom: '1px solid var(--border)',
-            padding: '24px',
+            bottom: 0,
+            backgroundColor: 'rgba(8, 9, 11, 0.98)',
+            backdropFilter: 'blur(20px)',
             display: 'flex',
             flexDirection: 'column',
-            gap: '16px',
-            boxShadow: '0 16px 32px rgba(0, 0, 0, 0.5)',
+            padding: '24px',
+            zIndex: 99,
+            animation: 'fadeIn 0.2s ease',
           }}
         >
-          {navLinks.map((item) => (
-            <Link
-              key={item.label}
-              href={item.href}
-              onClick={() => setMobileOpen(false)}
-              style={{
-                fontSize: '16px',
-                fontWeight: 500,
-                color: item.active ? 'var(--cyan)' : 'var(--text)',
-                textDecoration: 'none',
-                padding: '8px 0',
-                borderBottom: '1px solid var(--surface-sunken)',
-              }}
-            >
-              {item.label}
-            </Link>
-          ))}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '8px' }}>
+          <nav style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '32px' }}>
+            {navLinks.map((item) => (
+              <Link
+                key={item.label}
+                href={item.href}
+                onClick={() => setMobileOpen(false)}
+                style={{
+                  fontSize: '18px',
+                  fontWeight: 500,
+                  color: item.active ? '#00f2fe' : 'var(--text-primary)',
+                  textDecoration: 'none',
+                  padding: '8px 0',
+                }}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+
+          <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '12px' }}>
             {isAuthenticated ? (
               <>
-                <Button variant="secondary" href="/account" onClick={() => setMobileOpen(false)} style={{ width: '100%', textAlign: 'center' }}>
-                  Account & Settings
-                </Button>
-                <Button variant="secondary" onClick={handleSignOut} style={{ width: '100%', textAlign: 'center', color: '#F87171' }}>
+                <Link
+                  href="/account"
+                  onClick={() => setMobileOpen(false)}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '12px',
+                    borderRadius: '8px',
+                    backgroundColor: 'var(--cobalt)',
+                    color: '#fff',
+                    textDecoration: 'none',
+                    fontWeight: 600,
+                  }}
+                >
+                  Open Account Portal
+                </Link>
+                <button
+                  type="button"
+                  onClick={handleSignOut}
+                  style={{
+                    padding: '12px',
+                    borderRadius: '8px',
+                    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    color: '#f87171',
+                    fontWeight: 500,
+                    cursor: 'pointer',
+                  }}
+                >
                   Sign out
-                </Button>
+                </button>
               </>
             ) : (
-              <>
-                <Button variant="secondary" href="/login" onClick={() => setMobileOpen(false)} style={{ width: '100%', textAlign: 'center' }}>
-                  Log in
-                </Button>
-                <Button variant="primary" href="/download" onClick={() => setMobileOpen(false)} style={{ width: '100%', textAlign: 'center' }}>
-                  Get Syntaflow
-                </Button>
-              </>
+              <Link
+                href="/login"
+                onClick={() => setMobileOpen(false)}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  padding: '12px',
+                  borderRadius: '8px',
+                  backgroundColor: 'var(--cobalt)',
+                  color: '#fff',
+                  textDecoration: 'none',
+                  fontWeight: 600,
+                }}
+              >
+                Sign in
+              </Link>
             )}
           </div>
         </div>
       )}
 
-      {/* Responsive Inline Media Queries */}
+      {/* Responsive media query styles */}
       <style>{`
-        @media (min-width: 860px) {
+        @media (min-width: 769px) {
           .desktop-nav { display: flex !important; }
           .desktop-actions { display: flex !important; }
-          .mobile-toggle { display: none !important; }
+          .mobile-nav-toggle { display: none !important; }
         }
         .nav-dropdown-item:hover {
-          background-color: var(--surface-sunken);
+          background-color: rgba(255, 255, 255, 0.06);
         }
       `}</style>
     </header>

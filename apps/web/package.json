@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "verify": "node verify-web.mjs",
     "verify:seo": "node --experimental-strip-types ./scripts/verify-seo.mjs",
-    "verify:live": "node ./scripts/verify-production-live.mjs"
+    "verify:live": "node ./scripts/verify-production-live.mjs",
+    "capture:screenshots": "node ./scripts/capture_screenshots.mjs"
   },
   "dependencies": {
     "appwrite": "^27.0.0",

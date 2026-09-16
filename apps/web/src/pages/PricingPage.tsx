@@ -1,152 +1,182 @@
 import React from 'react';
 import { SEOHead } from '../components/ui/SEOHead';
-import { Card } from '../components/ui/Card';
-import { Button } from '../components/ui/Button';
-import { PRICING_PLANS, PRICING_FAQS } from '../content/pricing';
+import { Link } from '../components/ui/Link';
+import { PRICING_TIERS, PRICING_FAQ } from '../content/pricingConfig';
 
 export const PricingPage: React.FC = () => {
   return (
-    <div style={{ paddingBottom: 'var(--space-64)' }}>
+    <div style={{ paddingBottom: '5rem', fontFamily: 'var(--font-sans, -apple-system, sans-serif)' }}>
       <SEOHead path="/pricing" />
 
       {/* Header */}
-      <section className="section" style={{ paddingTop: 'var(--space-48)', paddingBottom: 'var(--space-24)', textAlign: 'center' }}>
+      <section style={{ paddingTop: '4rem', paddingBottom: '2.5rem', textAlign: 'center' }}>
         <div className="container" style={{ maxWidth: '800px' }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '4px 12px', borderRadius: '100px', backgroundColor: 'rgba(6, 182, 212, 0.08)', border: '1px solid rgba(6, 182, 212, 0.25)', marginBottom: 'var(--space-16)' }}>
-            <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--cyan)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+          <div
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '4px 14px',
+              borderRadius: '9999px',
+              backgroundColor: 'rgba(0, 242, 254, 0.08)',
+              border: '1px solid rgba(0, 242, 254, 0.25)',
+              marginBottom: '1.25rem',
+            }}
+          >
+            <span style={{ fontSize: '11px', fontFamily: 'monospace', color: '#00f2fe', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 600 }}>
               TRANSPARENT COMMERCIAL STRUCTURE
             </span>
           </div>
 
-          <h1 className="heading-1" style={{ fontSize: 'clamp(32px, 5vw, 46px)', color: 'var(--text)', marginBottom: 'var(--space-16)' }}>
+          <h1 style={{ fontSize: 'clamp(2.25rem, 4.5vw, 3.25rem)', fontWeight: 700, letterSpacing: '-0.03em', color: '#ffffff', marginBottom: '1rem' }}>
             Simple, honest pricing.
           </h1>
 
-          <p style={{ fontSize: '17px', color: 'var(--text-muted)', lineHeight: 1.6, maxWidth: '640px', margin: '0 auto' }}>
+          <p style={{ fontSize: '1.1rem', color: 'var(--text-secondary)', lineHeight: 1.6, maxWidth: '640px', margin: '0 auto' }}>
             Syntaflow is currently <strong>100% free during the Desktop Preview</strong>. No forced subscriptions, no artificial lock-in, and your data stays on your machine forever.
           </p>
         </div>
       </section>
 
       {/* Pricing Cards Grid */}
-      <section className="section" style={{ paddingTop: 'var(--space-24)', paddingBottom: 'var(--space-48)' }}>
+      <section style={{ paddingBottom: '4rem' }}>
         <div className="container" style={{ maxWidth: '1120px' }}>
           <div
             style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-              gap: 'var(--space-24)',
+              gap: '1.5rem',
               alignItems: 'stretch',
+              marginBottom: '4rem',
             }}
           >
-            {PRICING_PLANS.map((plan) => {
-              const isHighlight = plan.highlighted;
+            {PRICING_TIERS.map((tier) => {
+              const isPreview = tier.id === 'preview';
               return (
-                <Card
-                  key={plan.id}
-                  variant={isHighlight ? 'raised' : 'default'}
+                <div
+                  key={tier.id}
                   style={{
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'space-between',
-                    padding: 'var(--space-32)',
+                    padding: '2.25rem',
+                    borderRadius: '16px',
+                    backgroundColor: isPreview ? 'rgba(17, 20, 26, 0.95)' : 'rgba(17, 20, 26, 0.6)',
+                    border: isPreview ? '1px solid rgba(0, 242, 254, 0.4)' : '1px solid rgba(255, 255, 255, 0.08)',
+                    boxShadow: isPreview ? '0 16px 40px rgba(0, 242, 254, 0.08)' : 'none',
                     position: 'relative',
-                    borderColor: isHighlight ? 'var(--cyan)' : 'var(--border)',
-                    boxShadow: isHighlight ? '0 0 24px -6px rgba(6, 182, 212, 0.15)' : 'none',
                   }}
                 >
                   <div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-12)' }}>
-                      <h3 style={{ fontSize: '20px', fontWeight: 600, color: 'var(--text)' }}>
-                        {plan.name}
-                      </h3>
-                      {plan.badge && (
-                        <span
-                          style={{
-                            fontSize: '11px',
-                            fontFamily: 'var(--font-mono)',
-                            fontWeight: 600,
-                            padding: '2px 8px',
-                            borderRadius: '4px',
-                            backgroundColor: isHighlight ? 'rgba(6, 182, 212, 0.15)' : 'var(--surface-sunken)',
-                            color: isHighlight ? 'var(--cyan)' : 'var(--text-muted)',
-                            border: `1px solid ${isHighlight ? 'rgba(6, 182, 212, 0.3)' : 'var(--border)'}`,
-                          }}
-                        >
-                          {plan.badge}
-                        </span>
-                      )}
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                      <span
+                        style={{
+                          padding: '3px 10px',
+                          borderRadius: '12px',
+                          backgroundColor: isPreview ? 'rgba(0, 242, 254, 0.15)' : 'rgba(255, 255, 255, 0.06)',
+                          color: isPreview ? '#00f2fe' : 'var(--text-tertiary)',
+                          fontSize: '11px',
+                          fontWeight: 600,
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.05em',
+                        }}
+                      >
+                        {tier.badge}
+                      </span>
                     </div>
 
-                    <p style={{ fontSize: '13.5px', color: 'var(--text-muted)', marginBottom: 'var(--space-20)', minHeight: '38px', lineHeight: 1.5 }}>
-                      {plan.tagline}
+                    <h2 style={{ fontSize: '1.35rem', fontWeight: 700, color: '#ffffff', margin: '0 0 0.5rem 0' }}>
+                      {tier.name}
+                    </h2>
+
+                    <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', marginBottom: '1rem' }}>
+                      <span style={{ fontSize: '2.5rem', fontWeight: 800, color: '#ffffff' }}>{tier.priceLabel}</span>
+                      <span style={{ fontSize: '13px', color: 'var(--text-tertiary)' }}>/ {tier.periodLabel}</span>
+                    </div>
+
+                    <p style={{ fontSize: '13.5px', color: 'var(--text-secondary)', lineHeight: 1.5, marginBottom: '1.75rem' }}>
+                      {tier.description}
                     </p>
 
-                    <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginBottom: 'var(--space-24)', paddingBottom: 'var(--space-20)', borderBottom: '1px solid var(--border)' }}>
-                      <span style={{ fontSize: '36px', fontWeight: 700, color: 'var(--text)', fontFamily: 'var(--font-display)' }}>
-                        {plan.price}
-                      </span>
-                      {plan.period && (
-                        <span style={{ fontSize: '13px', color: 'var(--text-muted)' }}>
-                          / {plan.period}
-                        </span>
-                      )}
-                    </div>
-
-                    <div style={{ marginBottom: 'var(--space-24)' }}>
-                      <div style={{ fontSize: '12px', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', color: 'var(--text)', marginBottom: 'var(--space-12)', letterSpacing: '0.04em' }}>
+                    <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.08)', paddingTop: '1.25rem', marginBottom: '1.75rem' }}>
+                      <div style={{ fontSize: '11.5px', fontWeight: 600, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.75rem' }}>
                         Includes:
                       </div>
-                      <ul style={{ display: 'flex', flexDirection: 'column', gap: '10px', padding: 0, margin: 0, listStyle: 'none' }}>
-                        {plan.features.map((feat) => (
-                          <li key={feat} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: '13.5px', color: 'var(--text-muted)' }}>
-                            <span style={{ color: isHighlight ? 'var(--cyan)' : 'var(--text-muted)', fontSize: '14px', lineHeight: 1.2 }}>✓</span>
-                            <span>{feat}</span>
-                          </li>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        {tier.features.map((feature, idx) => (
+                          <div key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: '13px', color: 'var(--text-secondary)', lineHeight: 1.4 }}>
+                            <span style={{ color: isPreview ? '#00f2fe' : 'var(--text-tertiary)' }}>✓</span>
+                            <span>{feature}</span>
+                          </div>
                         ))}
-                      </ul>
+                      </div>
                     </div>
                   </div>
 
-                  <div style={{ marginTop: 'var(--space-16)' }}>
-                    <Button
-                      variant={isHighlight ? 'primary' : 'secondary'}
-                      href={plan.ctaHref}
-                      style={{ width: '100%', textAlign: 'center' }}
-                    >
-                      {plan.ctaLabel}
-                    </Button>
+                  <div>
+                    {isPreview ? (
+                      <Link
+                        href="/login"
+                        style={{
+                          display: 'block',
+                          textAlign: 'center',
+                          padding: '12px',
+                          borderRadius: '8px',
+                          backgroundColor: 'var(--cobalt)',
+                          color: '#ffffff',
+                          fontSize: '14px',
+                          fontWeight: 600,
+                          textDecoration: 'none',
+                        }}
+                      >
+                        Get Free Preview →
+                      </Link>
+                    ) : (
+                      <div
+                        style={{
+                          textAlign: 'center',
+                          padding: '12px',
+                          borderRadius: '8px',
+                          backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                          color: 'var(--text-tertiary)',
+                          fontSize: '13px',
+                        }}
+                      >
+                        Announced before GA
+                      </div>
+                    )}
                   </div>
-                </Card>
+                </div>
               );
             })}
           </div>
-        </div>
-      </section>
 
-      {/* Pricing FAQ */}
-      <section className="section" style={{ borderTop: '1px solid var(--border)', paddingTop: 'var(--space-48)' }}>
-        <div className="container" style={{ maxWidth: '800px' }}>
-          <div style={{ textAlign: 'center', marginBottom: 'var(--space-36)' }}>
-            <h2 className="heading-2" style={{ fontSize: '26px', color: 'var(--text)', marginBottom: 'var(--space-8)' }}>
-              Frequently Asked Questions About Pricing
+          {/* Pricing FAQ */}
+          <div style={{ maxWidth: '850px', margin: '0 auto' }}>
+            <h2 style={{ fontSize: '1.75rem', fontWeight: 700, color: '#ffffff', textAlign: 'center', marginBottom: '2rem' }}>
+              Pricing FAQ
             </h2>
-            <p style={{ fontSize: '15px', color: 'var(--text-muted)' }}>
-              Direct answers to questions regarding our preview model and future licensing.
-            </p>
-          </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-16)' }}>
-            {PRICING_FAQS.map((faq) => (
-              <Card key={faq.question} variant="default" style={{ padding: 'var(--space-24)' }}>
-                <h3 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--text)', marginBottom: 'var(--space-8)' }}>
-                  {faq.question}
-                </h3>
-                <p style={{ fontSize: '14px', color: 'var(--text-muted)', lineHeight: 1.6, margin: 0 }}>
-                  {faq.answer}
-                </p>
-              </Card>
-            ))}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              {PRICING_FAQ.map((faq, idx) => (
+                <div
+                  key={idx}
+                  style={{
+                    padding: '1.5rem',
+                    borderRadius: '12px',
+                    backgroundColor: 'rgba(17, 20, 26, 0.65)',
+                    border: '1px solid rgba(255, 255, 255, 0.08)',
+                  }}
+                >
+                  <div style={{ fontSize: '15px', fontWeight: 600, color: '#ffffff', marginBottom: '0.5rem' }}>
+                    {faq.question}
+                  </div>
+                  <div style={{ fontSize: '13.5px', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+                    {faq.answer}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>

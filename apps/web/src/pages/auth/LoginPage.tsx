@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { SEOHead } from '../../components/ui/SEOHead';
-import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
-import { BrandMark } from '../../components/brand/BrandMark';
 import { Link } from '../../components/ui/Link';
 import { useAuth } from '../../services/auth/AuthContext';
 import { sanitizeInternalRedirect } from '../../utils/urlSecurity';
+import { AuthLayout } from './AuthLayout';
 
 export const LoginPage: React.FC = () => {
   const { login, loginWithGoogle, isAuthenticated, isLoading: authLoading } = useAuth();
@@ -29,7 +28,7 @@ export const LoginPage: React.FC = () => {
     if (typeof window !== 'undefined') {
       const searchParams = new URLSearchParams(window.location.search);
       if (searchParams.get('error') === 'oauth') {
-        setErrorMessage('Google Sign-In could not be completed. Please try again or sign in with your email.');
+        setErrorMessage('Google Sign-In could not be completed. Please try again or sign in with email.');
       }
     }
   }, []);
@@ -53,7 +52,7 @@ export const LoginPage: React.FC = () => {
     if (result.success) {
       window.location.href = returnTo;
     } else {
-      setErrorMessage(result.error || 'Invalid credentials. Please verify your email and password.');
+      setErrorMessage(result.error || 'Invalid email or password.');
     }
   };
 
@@ -69,240 +68,196 @@ export const LoginPage: React.FC = () => {
   };
 
   return (
-    <div
-      style={{
-        position: 'relative',
-        minHeight: '85vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingTop: 'var(--space-48)',
-        paddingBottom: 'var(--space-64)',
-        overflow: 'hidden',
-      }}
+    <AuthLayout
+      title="Welcome back"
+      subtitle="Sign in to your Syntaflow workspace account."
     >
-      <SEOHead path="/login" />
-
-      {/* Ambient Lighting Backdrop */}
-      <div
-        style={{
-          position: 'absolute',
-          top: '-120px',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          width: '1000px',
-          height: '500px',
-          background: 'radial-gradient(ellipse at 50% 20%, rgba(37, 99, 235, 0.14) 0%, rgba(6, 182, 212, 0.06) 40%, transparent 70%)',
-          pointerEvents: 'none',
-          zIndex: 0,
-        }}
+      <SEOHead
+        title="Log In | Syntaflow"
+        description="Sign in to your Syntaflow account to access your workspace, downloads, and active desktop sessions."
+        path="/login"
+        indexable={false}
       />
 
-      <div className="container" style={{ maxWidth: '440px', position: 'relative', zIndex: 1 }}>
-        <div style={{ textAlign: 'center', marginBottom: 'var(--space-28)' }}>
-          <div style={{ display: 'inline-block', marginBottom: 'var(--space-16)' }}>
-            <Link href="/" aria-label="Syntaflow Home">
-              <BrandMark variant="full" size="lg" />
-            </Link>
-          </div>
-          <h1
-            className="heading-1"
-            style={{
-              fontSize: '26px',
-              color: 'var(--text)',
-              marginBottom: '6px',
-              letterSpacing: '-0.02em',
-            }}
-          >
-            Sign in to Syntaflow
-          </h1>
-          <p style={{ fontSize: '13.5px', color: 'var(--text-muted)', margin: 0 }}>
-            Access your unified workspace and active desktop sessions.
-          </p>
-        </div>
-
-        <Card
-          variant="raised"
+      {errorMessage && (
+        <div
+          role="alert"
           style={{
-            padding: 'var(--space-32)',
-            backgroundColor: 'var(--surface-raised)',
-            border: '1px solid rgba(255, 255, 255, 0.08)',
-            boxShadow: '0 24px 60px -12px rgba(0, 0, 0, 0.8), 0 0 28px -6px rgba(6, 182, 212, 0.1)',
-            borderRadius: '12px',
+            padding: '12px 14px',
+            backgroundColor: 'rgba(239, 68, 68, 0.1)',
+            border: '1px solid rgba(239, 68, 68, 0.3)',
+            borderRadius: '8px',
+            color: '#f87171',
+            fontSize: '13px',
+            marginBottom: '1.25rem',
+            lineHeight: 1.4,
           }}
         >
-          {errorMessage && (
-            <div
-              style={{
-                padding: '10px 14px',
-                backgroundColor: 'rgba(239, 68, 68, 0.1)',
-                border: '1px solid rgba(239, 68, 68, 0.3)',
-                borderRadius: '6px',
-                color: '#F87171',
-                fontSize: '13px',
-                marginBottom: 'var(--space-20)',
-                lineHeight: 1.45,
-              }}
-              role="alert"
-            >
-              {errorMessage}
-            </div>
-          )}
+          {errorMessage}
+        </div>
+      )}
 
-          {/* Google Sign-In Button */}
-          <button
-            type="button"
-            onClick={handleGoogleSignIn}
+      {/* Google OAuth Button */}
+      <button
+        type="button"
+        onClick={handleGoogleSignIn}
+        style={{
+          width: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '10px',
+          padding: '11px 16px',
+          borderRadius: '8px',
+          backgroundColor: 'rgba(255, 255, 255, 0.05)',
+          border: '1px solid rgba(255, 255, 255, 0.12)',
+          color: 'var(--text-primary)',
+          fontSize: '14px',
+          fontWeight: 500,
+          cursor: 'pointer',
+          transition: 'all 0.15s ease',
+          marginBottom: '1.5rem',
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.09)';
+          e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.25)';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
+          e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.12)';
+        }}
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            fill="#4285F4"
+            d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+          />
+          <path
+            fill="#34A853"
+            d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+          />
+          <path
+            fill="#FBBC05"
+            d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
+          />
+          <path
+            fill="#EA4335"
+            d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
+          />
+        </svg>
+        <span>Continue with Google</span>
+      </button>
+
+      {/* Divider */}
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px',
+          marginBottom: '1.5rem',
+        }}
+      >
+        <div style={{ flex: 1, height: '1px', backgroundColor: 'rgba(255, 255, 255, 0.08)' }} />
+        <span style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--text-tertiary)' }}>
+          or with email
+        </span>
+        <div style={{ flex: 1, height: '1px', backgroundColor: 'rgba(255, 255, 255, 0.08)' }} />
+      </div>
+
+      {/* Form */}
+      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+        <div>
+          <label
+            htmlFor="login-email"
+            style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: 'var(--text-secondary)', marginBottom: '6px' }}
+          >
+            Work Email
+          </label>
+          <input
+            id="login-email"
+            type="email"
+            required
+            autoComplete="email"
+            placeholder="operator@studio.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            disabled={isLoading}
             style={{
               width: '100%',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '12px',
-              padding: '11px 18px',
-              borderRadius: '6px',
-              backgroundColor: '#131314',
-              color: '#E3E3E3',
-              border: '1px solid #8E918F',
+              padding: '10px 14px',
+              borderRadius: '8px',
+              backgroundColor: 'rgba(0, 0, 0, 0.3)',
+              border: '1px solid rgba(255, 255, 255, 0.12)',
+              color: 'var(--text-primary)',
               fontSize: '14px',
-              fontWeight: 500,
-              fontFamily: 'var(--font-body)',
-              cursor: 'pointer',
-              marginBottom: 'var(--space-20)',
-              transition: 'background-color 0.15s ease, border-color 0.15s ease',
+              outline: 'none',
+              transition: 'border-color 0.15s ease',
+              boxSizing: 'border-box',
             }}
-            className="interactive-lift"
-          >
-            <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
-              <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.616z" fill="#4285F4" />
-              <path d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z" fill="#34A853" />
-              <path d="M3.964 10.707c-.18-.54-.282-1.117-.282-1.707s.102-1.167.282-1.707V4.961H.957C.347 6.175 0 7.55 0 9s.347 2.825.957 4.039l3.007-2.332z" fill="#FBBC05" />
-              <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.961L3.964 7.293C4.672 5.166 6.656 3.58 9 3.58z" fill="#EA4335" />
-            </svg>
-            <span>Continue with Google</span>
-          </button>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: 'var(--space-20)' }}>
-            <div style={{ flex: 1, height: '1px', backgroundColor: 'var(--border)' }} />
-            <span style={{ fontSize: '11px', color: 'var(--text-metadata)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-              or continue with email
-            </span>
-            <div style={{ flex: 1, height: '1px', backgroundColor: 'var(--border)' }} />
-          </div>
-
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <div>
-              <label htmlFor="login-email" style={{ display: 'block', fontSize: '12.5px', color: 'var(--text)', marginBottom: '6px', fontWeight: 500 }}>
-                Work Email
-              </label>
-              <input
-                id="login-email"
-                type="email"
-                placeholder="name@company.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                autoComplete="email"
-                style={{
-                  width: '100%',
-                  padding: '10px 12px',
-                  fontSize: '14px',
-                  backgroundColor: 'var(--surface-sunken)',
-                  border: '1px solid var(--border)',
-                  borderRadius: '6px',
-                  color: 'var(--text)',
-                  outline: 'none',
-                  boxSizing: 'border-box',
-                }}
-              />
-            </div>
-
-            <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
-                <label htmlFor="login-password" style={{ fontSize: '12.5px', color: 'var(--text)', fontWeight: 500 }}>
-                  Password
-                </label>
-                <Link
-                  href="/forgot-password"
-                  style={{ fontSize: '12px', color: 'var(--cyan)', textDecoration: 'none' }}
-                >
-                  Forgot?
-                </Link>
-              </div>
-              <input
-                id="login-password"
-                type="password"
-                placeholder="••••••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                autoComplete="current-password"
-                style={{
-                  width: '100%',
-                  padding: '10px 12px',
-                  fontSize: '14px',
-                  backgroundColor: 'var(--surface-sunken)',
-                  border: '1px solid var(--border)',
-                  borderRadius: '6px',
-                  color: 'var(--text)',
-                  outline: 'none',
-                  boxSizing: 'border-box',
-                }}
-              />
-            </div>
-
-            <Button
-              type="submit"
-              variant="primary"
-              disabled={isLoading || !email || !password}
-              style={{ width: '100%', textAlign: 'center', marginTop: '4px', padding: '11px' }}
-            >
-              {isLoading ? 'Signing in...' : 'Sign in'}
-            </Button>
-          </form>
-
-          {/* Switch to Sign Up */}
-          <div
-            style={{
-              marginTop: 'var(--space-20)',
-              paddingTop: 'var(--space-16)',
-              borderTop: '1px solid var(--border)',
-              textAlign: 'center',
-              fontSize: '13px',
-              color: 'var(--text-muted)',
-            }}
-          >
-            Don’t have an account?{' '}
-            <Link
-              href={returnTo ? `/signup?returnTo=${encodeURIComponent(returnTo)}` : '/signup'}
-              style={{ color: 'var(--cyan)', fontWeight: 500, textDecoration: 'none' }}
-            >
-              Create account
-            </Link>
-          </div>
-
-          {/* Desktop Auth Link */}
-          <div
-            style={{
-              marginTop: 'var(--space-12)',
-              textAlign: 'center',
-              fontSize: '12px',
-              color: 'var(--text-metadata)',
-            }}
-          >
-            Authorizing desktop runtime?{' '}
-            <Link href="/auth/desktop" style={{ color: 'var(--cyan)', textDecoration: 'underline' }}>
-              Authorize Desktop Client &rarr;
-            </Link>
-          </div>
-        </Card>
-
-        <div style={{ marginTop: 'var(--space-20)', textAlign: 'center', fontSize: '11.5px', color: 'var(--text-metadata)', lineHeight: 1.5 }}>
-          By signing in, you agree to our{' '}
-          <Link href="/terms" style={{ color: 'var(--text-muted)', textDecoration: 'underline' }}>Terms</Link> and{' '}
-          <Link href="/privacy" style={{ color: 'var(--text-muted)', textDecoration: 'underline' }}>Privacy Policy</Link>.
+            onFocus={(e) => (e.target.style.borderColor = '#00f2fe')}
+            onBlur={(e) => (e.target.style.borderColor = 'rgba(255, 255, 255, 0.12)')}
+          />
         </div>
+
+        <div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+            <label
+              htmlFor="login-password"
+              style={{ fontSize: '13px', fontWeight: 500, color: 'var(--text-secondary)' }}
+            >
+              Password
+            </label>
+            <Link
+              href="/forgot-password"
+              style={{ fontSize: '12px', color: '#00f2fe', textDecoration: 'none' }}
+            >
+              Forgot?
+            </Link>
+          </div>
+          <input
+            id="login-password"
+            type="password"
+            required
+            autoComplete="current-password"
+            placeholder="••••••••••••"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            disabled={isLoading}
+            style={{
+              width: '100%',
+              padding: '10px 14px',
+              borderRadius: '8px',
+              backgroundColor: 'rgba(0, 0, 0, 0.3)',
+              border: '1px solid rgba(255, 255, 255, 0.12)',
+              color: 'var(--text-primary)',
+              fontSize: '14px',
+              outline: 'none',
+              transition: 'border-color 0.15s ease',
+              boxSizing: 'border-box',
+            }}
+            onFocus={(e) => (e.target.style.borderColor = '#00f2fe')}
+            onBlur={(e) => (e.target.style.borderColor = 'rgba(255, 255, 255, 0.12)')}
+          />
+        </div>
+
+        <Button
+          type="submit"
+          variant="primary"
+          size="lg"
+          disabled={isLoading}
+          style={{ width: '100%', marginTop: '0.5rem', backgroundColor: 'var(--cobalt)', borderRadius: '8px' }}
+        >
+          {isLoading ? 'Signing in...' : 'Sign in'}
+        </Button>
+      </form>
+
+      {/* Footer link to Signup */}
+      <div style={{ marginTop: '1.5rem', textAlign: 'center', fontSize: '13px', color: 'var(--text-secondary)' }}>
+        New to Syntaflow?{' '}
+        <Link href="/signup" style={{ color: '#00f2fe', textDecoration: 'none', fontWeight: 500 }}>
+          Create account
+        </Link>
       </div>
-    </div>
+    </AuthLayout>
   );
 };
