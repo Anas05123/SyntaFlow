@@ -82,11 +82,11 @@ export const PrivacyPage: React.FC = () => {
           </div>
 
           <h1 className="heading-1" style={{ fontSize: 'clamp(28px, 4vw, 42px)', color: 'var(--text)', marginBottom: 'var(--space-12)', letterSpacing: '-0.02em' }}>
-            Syntaflow Privacy Policy
+            SyntaFlow (Syntaflow Desktop) Privacy Policy
           </h1>
 
           <p style={{ fontSize: '16px', color: 'var(--text-muted)', lineHeight: 1.6, maxWidth: '820px', margin: 0 }}>
-            This Privacy Policy explains how <strong>Syntaflow</strong> (&ldquo;we&rdquo;, &ldquo;us&rdquo;, or &ldquo;our&rdquo;) accesses, collects, uses, stores, shares, and protects information when you visit our website at <a href="https://syntaflow.tech" style={{ color: 'var(--cyan)' }}>https://syntaflow.tech</a> or use the Syntaflow desktop software and connected integration services.
+            This Privacy Policy explains how <strong>SyntaFlow</strong> (and the <strong>Syntaflow Desktop</strong> native application, collectively &ldquo;we&rdquo;, &ldquo;us&rdquo;, or &ldquo;our&rdquo;) accesses, collects, uses, stores, shares, and protects information when you visit our website at <a href="https://syntaflow.tech" style={{ color: 'var(--cyan)' }}>https://syntaflow.tech</a> or use the Syntaflow Desktop software and connected Google Workspace integration services.
           </p>
         </div>
       </section>
@@ -198,14 +198,17 @@ export const PrivacyPage: React.FC = () => {
               {/* Executive Summary / In Short Box */}
               <Card variant="raised" style={{ padding: 'var(--space-24)', borderLeft: '4px solid var(--cyan)', backgroundColor: 'var(--surface-raised)', marginBottom: 'var(--space-36)' }}>
                 <h2 style={{ fontSize: '13px', fontWeight: 650, fontFamily: 'var(--font-mono)', color: 'var(--cyan)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 'var(--space-12)' }}>
-                  In Short — Executive Privacy Summary
+                  In Short — Executive Privacy Summary & Google User Data Disclosures
                 </h2>
-                <ul style={{ display: 'flex', flexDirection: 'column', gap: '8px', paddingLeft: '18px', margin: 0, fontSize: '14px', color: 'var(--text-muted)', lineHeight: 1.6 }}>
-                  <li><strong>Local-First Canonical Storage:</strong> Your client engagements, proposals, documents, task lists, and notes are stored physically in an isolated SQLite database on your local computer. We do not operate a centralized cloud database of your work.</li>
-                  <li><strong>Narrow Permission Scopes:</strong> When you connect external services like Google Workspace, Syntaflow requests only the minimum granular scopes needed for features you explicitly activate.</li>
-                  <li><strong>Google Limited Use Compliance:</strong> We strictly adhere to the Google API Services User Data Policy. We <strong>never sell Google user data</strong>, never use it for advertising, and <strong>never use it to train generalized AI/ML models</strong>.</li>
-                  <li><strong>Zero Behavioral Tracking:</strong> Our public website and software do not use third-party tracking pixels, advertising beacons, or surveillance telemetry.</li>
-                  <li><strong>Complete Revocation Control:</strong> You can disconnect any integration with a single click in application settings or revoke access at any time via your Google Account security dashboard.</li>
+                <ul style={{ display: 'flex', flexDirection: 'column', gap: '10px', paddingLeft: '18px', margin: 0, fontSize: '14px', color: 'var(--text-muted)', lineHeight: 1.6 }}>
+                  <li><strong>Application Identity:</strong> This policy explicitly applies to <strong>SyntaFlow</strong>, also distributed and identified as <strong>Syntaflow Desktop</strong> (&ldquo;the application&rdquo;).</li>
+                  <li><strong>Google User Data Accessed:</strong> Our application accesses the data you explicitly authorize via Google OAuth: user identity (name, email address, profile picture), Gmail correspondence and draft composition, Google Calendar event details and availability, Google Drive files specifically selected or created through the app, and Google Docs/Sheets for draft export.</li>
+                  <li><strong>How Google User Data is Used:</strong> We use your Google user data exclusively to provide requested in-app workstation features: correlating client email correspondence with active local workspaces, composing review notice drafts upon your command, synchronizing milestone deadlines onto your Google Calendar, and attaching deliverable assets. We do NOT use Google user data for profiling, data enrichment, or advertising.</li>
+                  <li><strong>Data Sharing & Zero Data Sales:</strong> We do NOT sell, rent, trade, or monetize Google user data. We do NOT share, transfer, or disclose Google user data with third-party data brokers, advertising platforms, or information resellers.</li>
+                  <li><strong>Data Protection & Encryption:</strong> All sensitive credentials, including Google OAuth access and refresh tokens, are encrypted at rest using OS-level cryptographic vaults (Windows DPAPI via Electron safeStorage, Apple Keychain, or Linux Secret Service). All API transit is encrypted via TLS 1.3.</li>
+                  <li><strong>Data Retention & Deletion:</strong> Workspace data is stored locally in your physical on-device SQLite database (<code>%APPDATA%\Syntaflow\storage\syntaflow.db</code>). Gmail and Calendar entries are held only in transient memory during your session. Disconnecting in <em>Settings &rarr; Integrations</em> permanently purges all tokens. Access can also be revoked anytime via <a href="https://myaccount.google.com/permissions" target="_blank" rel="noreferrer" style={{ color: 'var(--cyan)' }}>Google Security Permissions</a>.</li>
+                  <li><strong>AI / ML Model Training Affirmation:</strong> Syntaflow Desktop explicitly affirms that Google Workspace APIs and Google user data are <strong>NOT used to develop, improve, or train non-personalized, generalized machine learning (ML) or artificial intelligence (AI) models</strong>.</li>
+                  <li><strong>Google Limited Use Compliance:</strong> Syntaflow Desktop&rsquo;s use and transfer to any other app of information received from Google APIs will adhere to the <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank" rel="noreferrer" style={{ color: 'var(--cyan)', textDecoration: 'underline' }}>Google API Services User Data Policy</a>, including the Limited Use requirements.</li>
                 </ul>
               </Card>
 
@@ -459,14 +462,14 @@ export const PrivacyPage: React.FC = () => {
                     19. Google API Services User Data Policy & Limited Use Compliance
                   </h2>
                   <p style={{ fontWeight: 500, color: 'var(--text)' }}>
-                    Syntaflow&rsquo;s use and transfer of information received from Google APIs to any other app will adhere to the <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank" rel="noreferrer" style={{ color: 'var(--cyan)', textDecoration: 'underline' }}>Google API Services User Data Policy</a>, including the Limited Use requirements:
+                    Syntaflow Desktop&rsquo;s use and transfer to any other app of information received from Google APIs will adhere to the <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank" rel="noreferrer" style={{ color: 'var(--cyan)', textDecoration: 'underline' }}>Google API Services User Data Policy</a>, including the Limited Use requirements:
                   </p>
                   <ol style={{ paddingLeft: '20px', marginTop: '10px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                    <li>We only use Google user data to provide or improve user-facing features that are prominent in Syntaflow&rsquo;s user interface.</li>
+                    <li>We only use Google user data to provide or improve user-facing features that are prominent in Syntaflow Desktop&rsquo;s user interface.</li>
                     <li>We do not transfer Google user data to third parties unless necessary to provide or improve user-facing features, comply with applicable law, or as part of a merger, acquisition, or asset sale with user consent.</li>
                     <li>We do not use or transfer Google user data for serving advertisements, including retargeting, personalized, or interest-based advertising.</li>
                     <li>We do not allow humans to read Google user data unless: (a) we have obtained your affirmative agreement for specific messages; (b) it is necessary for security purposes (such as investigating a bug or abuse); (c) it is required to comply with applicable law; or (d) the data is aggregated and anonymized for internal operations.</li>
-                    <li>We do not use Google user data to train generalized machine learning or artificial intelligence models.</li>
+                    <li>We do not use Google user data to train non-personalized or generalized machine learning (ML) or artificial intelligence (AI) models.</li>
                   </ol>
                 </div>
 
@@ -506,7 +509,7 @@ export const PrivacyPage: React.FC = () => {
                     22. Data Deletion Rights & Procedures
                   </h2>
                   <p>
-                    You have the right to request deletion of any personal data we hold. To delete your local application data, you can delete the Syntaflow data directory from your workstation at any time. To request deletion of any inquiry communications or account records, email <a href="mailto:privacy@privacy@syntaflow.tech" style={{ color: 'var(--cyan)' }}>privacy@syntaflow.tech</a> with the subject &ldquo;Data Deletion Request&rdquo;. We fulfill verified deletion requests within 30 days.
+                    You have the right to request deletion of any personal data we hold. To delete your local application data, you can delete the Syntaflow data directory from your workstation at any time. To request deletion of any inquiry communications or account records, email <a href="mailto:privacy@syntaflow.tech" style={{ color: 'var(--cyan)' }}>privacy@syntaflow.tech</a> with the subject &ldquo;Data Deletion Request&rdquo;. We fulfill verified deletion requests within 30 days.
                   </p>
                 </div>
 
