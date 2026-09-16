@@ -1,113 +1,82 @@
-# CoreDesk — Authentication System & Session Lifecycle
+# Syntaflow — Unified Authentication System & Session Lifecycle
 
-> **Status:** IMPLEMENTED (LocalAuthProvider) / SPECIFIED (WebAuthProvider)  
-> **Last verified:** 2026-09-14  
-> **Relevant source areas:** `apps/desktop/electron/auth/`, `apps/desktop/src/app/authService.ts`, `apps/desktop/src/screens/AuthScreen.tsx`, `tests/unit/auth-service.spec.ts`  
-> **Owner domain:** Desktop Security & Authentication  
+> **Status:** IMPLEMENTED (Unified Appwrite Auth + RFC 8252 Desktop Loopback + LocalAuthProvider)  
+> **Last verified:** 2026-09-16  
+> **Relevant source areas:**
+> - Web: `apps/web/src/services/auth/`, `apps/web/src/pages/auth/`, `apps/web/src/pages/AccountPage.tsx`
+> - Desktop: `apps/desktop/electron/auth/`, `apps/desktop/src/app/authService.ts`, `apps/desktop/src/screens/AuthScreen.tsx`
+> - Shared Contracts: `packages/contracts/src/auth.ts`, `tests/security/urlSecurity.test.ts`
+> **Owner domain:** Identity, Access Control & Security Architecture  
 
 ---
 
 ## 1. System Purpose & Architecture
 
-CoreDesk employs a decoupled authentication architecture ensuring that the React renderer remains agnostic of whether credentials and sessions are handled locally or via cloud services.
+Syntaflow employs a unified authentication architecture that connects identity seamlessly across:
+1. **Web Platform (`https://syntaflow.tech`):** Appwrite Cloud identity backend, Google OAuth 2.0 PKCE, Email/Password, Account Center (`/account`), Password Recovery (`/forgot-password`), and Desktop Handshake (`/auth/desktop`).
+2. **Desktop Client (Syntaflow Desktop on Windows/Electron):** RFC 8252 loopback receiver (`http://127.0.0.1:<port>/callback`), state token CSRF validation, OS `safeStorage` token encryption (DPAPI/Keychain), and offline continuity with preserved local accounts.
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│ React Renderer (Unprivileged Sandbox)                   │
-│                                                         │
-│  AuthScreen.tsx / AccountMenu.tsx                       │
-│        │                                                │
-│        ▼                                                │
-│  authService.ts (Client Abstraction)                    │
-└────────┼────────────────────────────────────────────────┘
-         │ window.coreDeskDesktop.auth (Preload Bridge)
+┌────────────────────────────────────────────────────────────────────────┐
+│ Web Platform (syntaflow.tech)                                          │
+│                                                                        │
+│  /signup  /login  /forgot-password  /account  /auth/desktop            │
+│        │                                                               │
+│        ▼                                                               │
+│  AuthContext.tsx ──► appwriteClient.ts ──► Appwrite Cloud Auth API     │
+└────────┬───────────────────────────────────────────────────────────────┘
+         │ (RFC 8252 BCP-212 Loopback Handshake on 127.0.0.1:<port>/callback)
          ▼
-┌─────────────────────────────────────────────────────────┐
-│ Electron Main Process (Privileged Node.js)              │
-│                                                         │
-│  AuthService (Backend Coordinator & Input Validation)   │
-│        │                                                │
-│        ▼                                                │
-│  AuthProvider (Abstract Interface)                      │
-│        ├── LocalAuthProvider    [CURRENT: Desktop-Only] │
-│        └── WebAuthProvider      [FUTURE: Cloud/API]     │
-└─────────────────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────────────────┐
+│ Desktop Runtime (Electron Main Process)                                │
+│                                                                        │
+│  AuthScreen.tsx ──► authService.ts ──► preload.cjs (contextBridge)    │
+│                                              │                         │
+│                                              ▼                         │
+│  main.cjs ──► AuthService ──► LocalAuthProvider (with loopback server) │
+│                                      │                                 │
+│                                      ▼                                 │
+│                   safeStorage DPAPI encrypted auth-store.json          │
+└────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 2. Current Implementation: `LocalAuthProvider`
+## 2. Core Architectural & Security Rules
 
-For the desktop-only operational phase, email and password authentication is fully functional, secure, and self-contained on the operator's machine.
-
-### Security Invariants:
-1. **Zero Plaintext Passwords:** Passwords are never written to disk or logged. They are hashed using Node.js `crypto.scrypt` with a cryptographically secure 16-byte random salt (`N=16384, r=8, p=1`).
-2. **Timing-Safe Verification:** Password verification uses `crypto.timingSafeEqual` over fixed-length hash buffers to prevent timing side-channel attacks.
-3. **Encrypted Session Material:** Active session tokens (`cd_sess_...`) are persisted in `userData/auth-store.json`. The token is encrypted using Electron's OS-backed `safeStorage` (Windows DPAPI, macOS Keychain, Linux Secret Service).
-4. **Data Preservation on Sign-Out:** Signing out clears the active session record in `auth-store.json` but never deletes or resets local workspace SQLite or relational store data.
-5. **Session Expiry:** Sessions have an enforced 30-day lifespan. Expired sessions are automatically cleared upon startup resolution.
-
-### Local Auth Data Model (`userData/auth-store.json`)
-```json
-{
-  "version": 1,
-  "users": [
-    {
-      "id": "usr_owner_default",
-      "email": "anas@northlight.studio",
-      "name": "Anas Ayari",
-      "workspaceName": "Northlight Studio",
-      "salt": "<16_BYTE_HEX_SALT>",
-      "passwordHash": "<64_BYTE_SCRYPT_HEX_HASH>",
-      "createdAt": "2026-09-14T00:00:00.000Z"
-    }
-  ],
-  "activeSession": {
-    "userId": "usr_owner_default",
-    "tokenEnvelope": {
-      "encrypted": true,
-      "ciphertext": "<BASE64_SAFESTORAGE_BLOB>"
-    },
-    "createdAt": "2026-09-14T00:00:00.000Z",
-    "expiresAt": "2026-10-14T00:00:00.000Z"
-  }
-}
-```
+1. **Google Identity Scope Isolation (Non-Negotiable):**
+   - Google Sign-In requests **STRICTLY** identity scopes: `['openid', 'email', 'profile']`.
+   - Never request Workspace permissions (`gmail.modify`, `calendar`, `drive.file`) during identity login. Workspace integrations are connected separately inside the desktop Settings panel.
+2. **RFC 8252 BCP-212 Compliance:**
+   - Desktop launches an ephemeral HTTP server on `127.0.0.1:<port>/callback` with an unprivileged port ($ge 1024$).
+   - Cryptographically random single-use state token prevents CSRF.
+   - Redirect URIs are strictly validated against `isValidLoopbackRedirect` to prevent open redirect vulnerabilities.
+3. **OS-Backed Credential Encryption:**
+   - Appwrite JWT session tokens and local credentials are encrypted using Electron's OS-backed `safeStorage` (Windows DPAPI, macOS Keychain).
+   - In environments without OS keychain, falls back to AES-256-GCM using hashed machine path keys.
+4. **Offline First & Continuity:**
+   - Cached sessions in `safeStorage` permit instant offline access to local workspaces with zero network dependency.
+   - Local accounts (`usr_owner_default`) are linked and preserved alongside browser-authenticated accounts.
+5. **No Billing / Unrestricted Preview ($0):**
+   - The active account tier is `Desktop Preview` ($0 Active).
+   - Unconstrained access to local-first client management, SQLite sovereignty, and review pipelines.
 
 ---
 
-## 3. UI States & Form Lifecycle
+## 3. Web Pages & Endpoints
 
-The authentication card in `AuthScreen.tsx` provides both **Sign In** and **Create Account** modes while maintaining CoreDesk's graphite aesthetic and lifecycle orbit visual:
-
-| State / Error | Trigger | Displayed Response |
+| Route | Functionality | Security & Features |
 |---|---|---|
-| **Signing in...** | Submitting credentials in Sign In mode | Disabled submit button with spinning status glyph |
-| **Creating account...** | Submitting details in Create Account mode | Disabled submit button with spinning status glyph |
-| **Invalid credentials** | Email not found or scrypt hash mismatch | Inline alert badge: *"Invalid email or password."* |
-| **Account already exists** | Sign-up with pre-existing normalized email | Inline alert badge: *"Account already exists"* |
-| **Passwords do not match** | Password mismatch in sign-up form | Inline alert badge: *"Passwords do not match"* |
-| **Session expired** | Restoring a session where `expiresAt <= Date.now()` | Redirects to Auth screen |
-| **Unexpected local auth error** | IPC or filesystem error in main process | Inline alert badge: *"Unexpected local auth error"* |
+| `/login` | Sign in via Email/Password or Google OAuth | Google branding compliant, `returnTo` validation, auto-redirect if session active |
+| `/signup` | Register new account (Name, Email, Password) | Password minimum 8 chars, terms consent, automatic session setup |
+| `/forgot-password` | Request recovery email & reset token flow | Detects `userId` & `secret` query params; updates password via Appwrite |
+| `/account` | Minimalist developer Account Center | Display name editing, email view, password change, active Preview ($0) plan badge, connected device sessions list with remote revocation, desktop installer download |
+| `/auth/desktop` | Operator approval for desktop client | Handshake visualization, verifies loopback redirect URI, generates Appwrite session code, fallback manual code copy |
 
 ---
 
-## 4. Future Implementation: `WebAuthProvider` (Migration Path)
+## 4. Verification & Status
 
-In future phases where CoreDesk integrates with a hosted marketing website and cloud sync:
-1. `WebAuthProvider` will implement the existing `AuthProvider` interface without modifying `AuthScreen` or `authService.ts`.
-2. Flow:
-   ```
-   User clicks Sign In
-         ↓
-   System opens browser to https://coredesk.app/signin
-         ↓
-   User authorizes account on website
-         ↓
-   Browser redirects to custom protocol: coredesk://auth?token=<JWT>
-         ↓
-   Electron app receives protocol deep link via second-instance / open-url
-         ↓
-   WebAuthProvider validates JWT and encrypts into local safeStorage
-   ```
-3. The local and web providers can coexist or transition seamlessly behind the same IPC contract.
+- **Shared Contracts:** `packages/contracts/src/auth.ts` validates `UserProfile`, `AccountPlan`, `DeviceSession`, and `checkEntitlement()`.
+- **URL Security Tests:** `tests/security/urlSecurity.test.ts` validates open redirect prevention, RFC 8252 loopback validation, and custom protocols.
+- **Production Build:** `npm --prefix apps/web run build` and `npm --prefix apps/desktop run build` pass with 0 errors.
