@@ -33,13 +33,21 @@ The previous web implementation suffered from visual and structural conflation: 
 3. **Gated Download Architecture:**
    - Public `/download` page educates visitors and requires signing in to download (`Sign in to download →`), redirecting to `/account/downloads` where operators receive verified installer links, SHA-256 integrity hashes, system requirements, and installation guides.
 
-4. **Security & OAuth Scoping:**
+4. **Subdomain Infrastructure & Routing (`app.syntaflow.tech`):**
+   - The authenticated account portal is served on a dedicated subdomain: `https://app.syntaflow.tech`.
+   - Hosted on Appwrite Sites (`6aa9e72b0015dc2d9493`) with CNAME alias `app` pointing to `appwrite.network` on Name.com.
+   - Appwrite Web Platform settings configured to accept CORS, session cookies, and OAuth callbacks across both origins.
+   - Unauthenticated visitors hitting `app.syntaflow.tech` are immediately and safely bounced to `https://syntaflow.tech/login?returnTo=...` via `AccountShell` auth guard.
+   - Post-authentication return URL is validated by `sanitizeReturnUrl` in `urlSecurity.ts` to allow trusted Syntaflow hostnames while strictly blocking open redirect vulnerabilities.
+   - All `app.syntaflow.tech` surfaces inject `robots: noindex, nofollow` to isolate private operator data from search indexing.
+
+5. **Security & OAuth Scoping:**
    - Google OAuth is strictly limited to identity scopes (`openid`, `email`, `profile`). Third-party Google Workspace scopes (Drive, Gmail, Calendar) remain managed strictly inside the local desktop app via DPAPI-encrypted credential vaults.
 
 ---
 
 ## Consequences
 
-- Clean separation of concerns between marketing acquisition and operational account management.
+- Clean separation of concerns between marketing acquisition (`syntaflow.tech`) and operational account management (`app.syntaflow.tech`).
 - Complete visual consistency with modern software standards (dark graphite, cyan/cobalt atmospheric glow, responsive across all viewports).
 - Zero regression across 39 routes and 7 viewports verified via Playwright.
