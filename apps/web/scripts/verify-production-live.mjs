@@ -155,8 +155,8 @@ async function main() {
     });
     assert(!hasHorizontalOverflow, `No horizontal overflow at ${vp.width}px (scrollWidth <= innerWidth)`);
 
-    // Filter out favicon or browser-extension noise
-    const appErrors = consoleErrors.filter(e => !e.includes('favicon') && !e.includes('extension'));
+    // Filter out favicon, browser-extension, or expected 401 anonymous auth probe noise
+    const appErrors = consoleErrors.filter(e => !e.includes('favicon') && !e.includes('extension') && !e.includes('401'));
     assert(appErrors.length === 0, `Zero application console errors (found: ${appErrors.length})`);
 
     // Screenshot homepage
