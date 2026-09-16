@@ -3,12 +3,14 @@ import React from 'react';
 interface BrandMarkProps {
   variant?: 'full' | 'icon';
   size?: 'sm' | 'md' | 'lg';
+  src?: string;
   className?: string;
 }
 
 export const BrandMark: React.FC<BrandMarkProps> = ({
   variant = 'full',
   size = 'md',
+  src = '/brand/LogoIcon_WBG.png',
   className = '',
 }) => {
   const heights = {
@@ -22,7 +24,7 @@ export const BrandMark: React.FC<BrandMarkProps> = ({
   if (variant === 'icon') {
     return (
       <img
-        src="/brand/logo-icon.png"
+        src={src}
         alt="Syntaflow Mark"
         height={currentHeight}
         width={currentHeight}
@@ -35,7 +37,7 @@ export const BrandMark: React.FC<BrandMarkProps> = ({
   return (
     <div style={{ display: 'inline-flex', alignItems: 'center', gap: '10px' }} className={className}>
       <img
-        src="/brand/logo-icon.png"
+        src={src}
         alt="Syntaflow Logo"
         height={currentHeight}
         width={currentHeight}
