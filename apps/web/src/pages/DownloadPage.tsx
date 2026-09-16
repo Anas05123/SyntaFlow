@@ -1,19 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { SEOHead } from '../components/ui/SEOHead';
 import { Link } from '../components/ui/Link';
 import { useAuth } from '../services/auth/AuthContext';
 
 export const DownloadPage: React.FC = () => {
   const { isAuthenticated } = useAuth();
-  const [copiedHash, setCopiedHash] = useState(false);
-
-  const SHA256_HASH = '9c8cf98f0ec0f8972071f3fd1b2c62cedd0efcfdbb4249a5b6c31049';
-
-  const copyHash = () => {
-    navigator.clipboard.writeText(SHA256_HASH);
-    setCopiedHash(true);
-    setTimeout(() => setCopiedHash(false), 2000);
-  };
 
   return (
     <div style={{ paddingBottom: '5rem', fontFamily: 'var(--font-sans, -apple-system, sans-serif)', position: 'relative', overflow: 'hidden' }}>
@@ -234,18 +225,6 @@ export const DownloadPage: React.FC = () => {
                     Automated validation preventing package release until prerequisite milestones pass.
                   </p>
                 </div>
-              </div>
-
-              {/* Checksum */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '11px', fontFamily: 'monospace', color: 'var(--text-tertiary)' }}>
-                <span>SHA-256: {SHA256_HASH.slice(0, 20)}...</span>
-                <button
-                  type="button"
-                  onClick={copyHash}
-                  style={{ background: 'none', border: 'none', color: '#00f2fe', cursor: 'pointer', fontSize: '11px', padding: 0 }}
-                >
-                  {copiedHash ? '✓ Copied' : 'Copy Hash'}
-                </button>
               </div>
             </div>
           </div>

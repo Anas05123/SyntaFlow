@@ -248,18 +248,18 @@ export const AccountShell: React.FC<AccountShellProps> = ({ currentSubpath, chil
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '6px',
-                padding: '6px 10px',
-                borderRadius: '6px',
-                backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                color: '#ffffff',
+                padding: '7px 12px',
+                borderRadius: '9999px',
+                backgroundColor: '#ffffff',
+                color: '#000000',
                 fontSize: '12px',
                 fontWeight: 600,
                 textDecoration: 'none',
                 transition: 'all 0.15s ease',
               }}
             >
-              <span>Download</span>
               <span>↓</span>
+              <span>Download</span>
             </Link>
           </div>
         </div>
