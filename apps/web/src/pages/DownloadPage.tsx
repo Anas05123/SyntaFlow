@@ -187,22 +187,6 @@ export const DownloadPage: React.FC = () => {
                   Installation Guide →
                 </Link>
               </div>
-
-              {/* System Specs Grid */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px', fontSize: '12px', fontFamily: 'monospace', color: 'var(--text-tertiary)' }}>
-                <div style={{ padding: '8px 12px', backgroundColor: 'rgba(0, 0, 0, 0.3)', borderRadius: '6px', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
-                  <span>OS:</span> <strong style={{ color: '#ffffff' }}>Windows 10 / 11 (x64)</strong>
-                </div>
-                <div style={{ padding: '8px 12px', backgroundColor: 'rgba(0, 0, 0, 0.3)', borderRadius: '6px', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
-                  <span>MEMORY:</span> <strong style={{ color: '#ffffff' }}>4 GB RAM (8 GB for AI)</strong>
-                </div>
-                <div style={{ padding: '8px 12px', backgroundColor: 'rgba(0, 0, 0, 0.3)', borderRadius: '6px', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
-                  <span>DATABASE:</span> <strong style={{ color: '#10b981' }}>Local SQLite (Offline)</strong>
-                </div>
-                <div style={{ padding: '8px 12px', backgroundColor: 'rgba(0, 0, 0, 0.3)', borderRadius: '6px', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
-                  <span>SECURITY:</span> <strong style={{ color: '#00f2fe' }}>Windows DPAPI Vault</strong>
-                </div>
-              </div>
             </div>
 
             {/* Right Column: Release Highlights */}

@@ -48,7 +48,7 @@ export const DownloadsPage: React.FC = () => {
         {/* Windows Featured Card */}
         <div
           style={{
-            padding: '2.5rem',
+            padding: '2rem 2.25rem',
             borderRadius: '16px',
             backgroundColor: 'rgba(17, 20, 26, 0.95)',
             border: '1px solid rgba(0, 242, 254, 0.35)',
@@ -71,7 +71,7 @@ export const DownloadsPage: React.FC = () => {
             }}
           />
 
-          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.5rem', position: 'relative', zIndex: 1 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1.25rem', position: 'relative', zIndex: 1 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
               <div
                 style={{
@@ -85,6 +85,7 @@ export const DownloadsPage: React.FC = () => {
                   justifyContent: 'center',
                   boxShadow: '0 0 25px rgba(0, 242, 254, 0.25)',
                   position: 'relative',
+                  flexShrink: 0,
                 }}
               >
                 <img
@@ -148,54 +149,16 @@ export const DownloadsPage: React.FC = () => {
             </Button>
           </div>
 
-          <p style={{ fontSize: '14px', color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: '1.75rem', position: 'relative', zIndex: 1 }}>
-            Complete local-first client operating environment featuring the Operator Cockpit, Blueprint Scoping Studio, Typographic Paper Canvas, Dual-Density Task Boards, and native DPAPI Credential Vault.
-          </p>
-
-          {/* Metadata Specs Grid */}
+          {/* Clean minimal SHA-256 checksum row */}
           <div
             style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-              gap: '12px',
-              padding: '1rem',
-              borderRadius: '10px',
-              backgroundColor: 'rgba(0, 0, 0, 0.3)',
-              border: '1px solid rgba(255, 255, 255, 0.06)',
-              marginBottom: '1.5rem',
-              position: 'relative',
-              zIndex: 1,
-            }}
-          >
-            <div>
-              <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', textTransform: 'uppercase' }}>Operating System</div>
-              <div style={{ fontSize: '13px', color: '#ffffff', fontWeight: 500, marginTop: '2px' }}>Windows 10 / 11 x64</div>
-            </div>
-            <div>
-              <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', textTransform: 'uppercase' }}>Database Engine</div>
-              <div style={{ fontSize: '13px', color: '#34d399', fontWeight: 500, marginTop: '2px' }}>Local SQLite (Offline)</div>
-            </div>
-            <div>
-              <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', textTransform: 'uppercase' }}>Memory Footprint</div>
-              <div style={{ fontSize: '13px', color: '#ffffff', fontWeight: 500, marginTop: '2px' }}>4 GB RAM (8 GB for AI)</div>
-            </div>
-            <div>
-              <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', textTransform: 'uppercase' }}>Security Vault</div>
-              <div style={{ fontSize: '13px', color: '#00f2fe', fontWeight: 500, marginTop: '2px' }}>Windows DPAPI Hardware</div>
-            </div>
-          </div>
-
-          {/* SHA-256 Checksum Bar */}
-          <div
-            style={{
+              marginTop: '1.25rem',
+              paddingTop: '0.875rem',
+              borderTop: '1px solid rgba(255, 255, 255, 0.06)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              padding: '8px 12px',
-              borderRadius: '6px',
-              backgroundColor: 'rgba(255, 255, 255, 0.02)',
-              border: '1px solid rgba(255, 255, 255, 0.04)',
-              fontSize: '12px',
+              fontSize: '11.5px',
               color: 'var(--text-tertiary)',
               flexWrap: 'wrap',
               gap: '8px',
@@ -203,8 +166,8 @@ export const DownloadsPage: React.FC = () => {
               zIndex: 1,
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span style={{ fontWeight: 600 }}>SHA-256:</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <span>SHA-256:</span>
               <span style={{ fontFamily: 'monospace', color: 'var(--text-secondary)' }}>
                 {checksum.slice(0, 32)}...
               </span>
@@ -217,7 +180,7 @@ export const DownloadsPage: React.FC = () => {
                 border: 'none',
                 color: '#00f2fe',
                 cursor: 'pointer',
-                fontSize: '12px',
+                fontSize: '11.5px',
                 fontWeight: 500,
                 padding: 0,
               }}
