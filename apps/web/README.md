@@ -127,3 +127,22 @@ npm run preview
   - Strict `prefers-reduced-motion: reduce` CSS override for users requesting reduced motion.
 - **Multi-Viewport Quality**: Verified zero horizontal overflow and flawless responsive reflow across 7 canonical viewports (`375×812`, `390×844`, `430×932`, `768×1024`, `1280×720`, `1440×900`, `1920×1080`).
 
+---
+
+## 6. Live Production Deployment & Continuous Verification (Phase 7 Implemented)
+
+- **Production Host**: `https://syntaflow.tech` (Apex canonical, enforced via HSTS and Appwrite Sites global CDN).
+- **Hosting Platform**: Appwrite Sites (Edge-deployed across global regions with active DDoS protection and automatic SSL).
+- **Deployment Pipeline**: Git VCS integration on `origin/master`. Commits pushed to `master` trigger automatic Appwrite builds and instant atomic deployments.
+- **Verification Harness**: `npm run verify:live` (`scripts/verify-production-live.mjs`) tests:
+  1. Live HTTP 200 responses across all 31 canonical routes and static assets.
+  2. Live `robots.txt` canonical sitemap referencing and crawler rules.
+  3. Live `sitemap.xml` XML validity and canonical domain enforcement (0 non-apex URLs).
+  4. Pre-rendered `privacy.html` and hydrated `/privacy` route compliance with Google API Services User Data Policy and Limited Use requirements.
+  5. Playwright headless browser rendering across 5 viewports (375, 768, 1280, 1440, 1920) checking:
+     - Correct title, canonical URL, OG tags, and Schema.org JSON-LD scripts.
+     - Zero horizontal scroll overflow (`scrollWidth <= innerWidth`).
+     - Zero uncaught application console errors.
+- **Production Status**: **PASS** (116/116 live checks passed, Active deployment `6aaa25d5255d9e587599`).
+
+
