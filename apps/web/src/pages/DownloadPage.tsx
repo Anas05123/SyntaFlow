@@ -85,21 +85,43 @@ export const DownloadPage: React.FC = () => {
           >
             {/* Left Column: Installer Trigger */}
             <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '1rem' }}>
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-                  <rect x="2" y="2" width="9.5" height="9.5" fill="#00A4EF" />
-                  <rect x="12.5" y="2" width="9.5" height="9.5" fill="#00A4EF" />
-                  <rect x="2" y="12.5" width="9.5" height="9.5" fill="#00A4EF" />
-                  <rect x="12.5" y="12.5" width="9.5" height="9.5" fill="#00A4EF" />
-                </svg>
-                <span style={{ fontSize: '11.5px', fontFamily: 'monospace', textTransform: 'uppercase', color: '#10b981', letterSpacing: '0.04em', fontWeight: 600 }}>
-                  WINDOWS 64-BIT // AVAILABLE NOW
-                </span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '1.25rem' }}>
+                <div
+                  style={{
+                    width: '48px',
+                    height: '48px',
+                    borderRadius: '12px',
+                    backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                    border: '1px solid rgba(0, 242, 254, 0.35)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    boxShadow: '0 0 20px rgba(0, 242, 254, 0.2)',
+                    flexShrink: 0,
+                  }}
+                >
+                  <img
+                    src="/brand/LogoIcon_WBG.png"
+                    alt="Syntaflow Logo"
+                    style={{
+                      width: '34px',
+                      height: '34px',
+                      objectFit: 'contain',
+                      filter: 'drop-shadow(0 3px 10px rgba(0, 242, 254, 0.45))',
+                    }}
+                  />
+                </div>
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                    <span style={{ fontSize: '11px', fontFamily: 'monospace', textTransform: 'uppercase', color: '#10b981', letterSpacing: '0.04em', fontWeight: 600 }}>
+                      WINDOWS 64-BIT // AVAILABLE NOW
+                    </span>
+                  </div>
+                  <h2 style={{ fontSize: '1.625rem', fontWeight: 700, color: '#ffffff', margin: 0 }}>
+                    Syntaflow Desktop Preview (Windows)
+                  </h2>
+                </div>
               </div>
-
-              <h2 style={{ fontSize: '1.625rem', fontWeight: 700, color: '#ffffff', marginBottom: '0.75rem' }}>
-                Syntaflow Desktop Preview (Windows)
-              </h2>
 
               <p style={{ fontSize: '14px', color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: '1.75rem' }}>
                 Complete local-first environment with the Operator Cockpit, Blueprint Scoping Studio, Dual-Density Task Boards, Typographic Paper Canvas, and OS-encrypted OAuth Vault.

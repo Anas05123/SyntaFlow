@@ -117,7 +117,34 @@ export const AccountHomePage: React.FC = () => {
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
-            <div style={{ fontSize: '15px', fontWeight: 600, color: '#ffffff' }}>Syntaflow for Windows</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <div
+                style={{
+                  width: '32px',
+                  height: '32px',
+                  borderRadius: '8px',
+                  backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                  border: '1px solid rgba(0, 242, 254, 0.3)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  boxShadow: '0 0 12px rgba(0, 242, 254, 0.2)',
+                  flexShrink: 0,
+                }}
+              >
+                <img
+                  src="/brand/LogoIcon_WBG.png"
+                  alt="Syntaflow Logo"
+                  style={{
+                    width: '22px',
+                    height: '22px',
+                    objectFit: 'contain',
+                    filter: 'drop-shadow(0 2px 6px rgba(0, 242, 254, 0.4))',
+                  }}
+                />
+              </div>
+              <div style={{ fontSize: '15px', fontWeight: 600, color: '#ffffff' }}>Syntaflow for Windows</div>
+            </div>
             <span style={{ fontSize: '11px', color: '#00f2fe', fontWeight: 600 }}>v0.1.0-preview.4</span>
           </div>
           <p style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: 1.5, marginBottom: '1.25rem' }}>

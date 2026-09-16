@@ -471,16 +471,24 @@ export const OnboardingFlow: React.FC = () => {
                         width: '40px',
                         height: '40px',
                         borderRadius: '10px',
-                        backgroundColor: 'rgba(37, 99, 235, 0.2)',
-                        border: '1px solid rgba(37, 99, 235, 0.4)',
+                        backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                        border: '1px solid rgba(0, 242, 254, 0.35)',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
+                        boxShadow: '0 0 15px rgba(0, 242, 254, 0.2)',
                       }}
                     >
-                      <svg width="22" height="22" viewBox="0 0 24 24" fill="#00f2fe">
-                        <path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4h-13.051M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-13.051-1.802" />
-                      </svg>
+                      <img
+                        src="/brand/LogoIcon_WBG.png"
+                        alt="Syntaflow Logo"
+                        style={{
+                          width: '28px',
+                          height: '28px',
+                          objectFit: 'contain',
+                          filter: 'drop-shadow(0 2px 8px rgba(0, 242, 254, 0.45))',
+                        }}
+                      />
                     </div>
                     <div>
                       <div style={{ fontSize: '15px', fontWeight: 600, color: '#ffffff' }}>Syntaflow for Windows</div>

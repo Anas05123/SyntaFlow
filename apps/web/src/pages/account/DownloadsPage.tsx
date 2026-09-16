@@ -78,17 +78,25 @@ export const DownloadsPage: React.FC = () => {
                   width: '56px',
                   height: '56px',
                   borderRadius: '14px',
-                  backgroundColor: 'rgba(37, 99, 235, 0.2)',
-                  border: '1px solid rgba(0, 242, 254, 0.5)',
+                  backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                  border: '1px solid rgba(0, 242, 254, 0.4)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  boxShadow: '0 0 20px rgba(0, 242, 254, 0.2)',
+                  boxShadow: '0 0 25px rgba(0, 242, 254, 0.25)',
+                  position: 'relative',
                 }}
               >
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="#00f2fe">
-                  <path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4h-13.051M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-13.051-1.802" />
-                </svg>
+                <img
+                  src="/brand/LogoIcon_WBG.png"
+                  alt="Syntaflow Logo"
+                  style={{
+                    width: '40px',
+                    height: '40px',
+                    objectFit: 'contain',
+                    filter: 'drop-shadow(0 4px 12px rgba(0, 242, 254, 0.45))',
+                  }}
+                />
               </div>
 
               <div>

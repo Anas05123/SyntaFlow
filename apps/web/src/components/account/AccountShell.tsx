@@ -203,24 +203,43 @@ export const AccountShell: React.FC<AccountShellProps> = ({ currentSubpath, chil
               borderRadius: '10px',
               backgroundColor: 'rgba(255, 255, 255, 0.03)',
               border: '1px solid rgba(255, 255, 255, 0.08)',
+              background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.01) 100%)',
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-              <span
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+              <div
                 style={{
-                  width: '6px',
-                  height: '6px',
-                  borderRadius: '50%',
-                  backgroundColor: '#00f2fe',
-                  boxShadow: '0 0 6px #00f2fe',
+                  width: '32px',
+                  height: '32px',
+                  borderRadius: '8px',
+                  backgroundColor: 'rgba(0, 242, 254, 0.08)',
+                  border: '1px solid rgba(0, 242, 254, 0.25)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0,
+                  boxShadow: '0 0 12px rgba(0, 242, 254, 0.2)',
                 }}
-              />
-              <span style={{ fontSize: '11.5px', fontWeight: 600, color: '#ffffff' }}>
-                Syntaflow Desktop
-              </span>
-            </div>
-            <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', marginBottom: '8px' }}>
-              Windows 10 / 11 Preview
+              >
+                <img
+                  src="/brand/LogoIcon_WBG.png"
+                  alt="Syntaflow Desktop"
+                  style={{
+                    width: '22px',
+                    height: '22px',
+                    objectFit: 'contain',
+                    filter: 'drop-shadow(0 2px 6px rgba(0, 242, 254, 0.4))',
+                  }}
+                />
+              </div>
+              <div style={{ minWidth: 0 }}>
+                <div style={{ fontSize: '12px', fontWeight: 600, color: '#ffffff', lineHeight: 1.2 }}>
+                  Syntaflow Desktop
+                </div>
+                <div style={{ fontSize: '10.5px', color: 'var(--text-tertiary)', marginTop: '2px' }}>
+                  Windows 10 / 11 Preview
+                </div>
+              </div>
             </div>
             <Link
               href="/account/downloads"
@@ -229,13 +248,14 @@ export const AccountShell: React.FC<AccountShellProps> = ({ currentSubpath, chil
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '6px',
-                padding: '6px',
+                padding: '6px 10px',
                 borderRadius: '6px',
                 backgroundColor: 'rgba(255, 255, 255, 0.08)',
                 color: '#ffffff',
                 fontSize: '12px',
                 fontWeight: 600,
                 textDecoration: 'none',
+                transition: 'all 0.15s ease',
               }}
             >
               <span>Download</span>

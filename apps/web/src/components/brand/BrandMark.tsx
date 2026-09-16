@@ -10,7 +10,7 @@ interface BrandMarkProps {
 export const BrandMark: React.FC<BrandMarkProps> = ({
   variant = 'full',
   size = 'md',
-  src = '/brand/syntaflow-mark.webp',
+  src = '/brand/LogoIcon_WBG.png',
   className = '',
 }) => {
   const heights = {
