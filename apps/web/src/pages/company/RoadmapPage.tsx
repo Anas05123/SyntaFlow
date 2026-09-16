@@ -34,7 +34,7 @@ const ROADMAP_ITEMS: RoadmapItem[] = [
     timeline: '2027 Direction',
     description: 'While the desktop app remains the canonical operating environment, a cloud-hosted guest portal will allow clients to review immutable DocVersion snapshots with zero software installation, complete with transactional email notifications.',
     plannedArchitecture: [
-      'Cryptographic deep-link verification protocol (coredesk://auth/callback).',
+      'Cryptographic deep-link verification protocol (syntaflow://auth/callback).',
       'End-to-end encrypted review payloads signed by the desktop application.',
       'Granular client access permissions table with revocable review tokens.',
     ],

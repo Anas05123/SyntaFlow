@@ -69,7 +69,7 @@ const SECURITY_DOMAINS: SecurityDomain[] = [
     description: 'Forward-looking AI integration strictly sandboxed behind the backend TaskRouter.',
     details: [
       'UI components never invoke remote LLM endpoints directly.',
-      'All AI requests route through typed Zod contracts in @coredesk/contracts.',
+      'All AI requests route through typed Zod contracts in @syntaflow/contracts.',
       'Designed for local-first Ollama runtime (http://localhost:11434) with zero cloud model leakage.',
     ],
   },
