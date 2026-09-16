@@ -81,12 +81,17 @@ export const SEOHead: React.FC<SEOHeadProps> = ({
         : '/');
     const config = getRouteMetadata(currentPath);
 
+    const hostname = typeof window !== 'undefined' ? window.location.hostname : '';
+    const isAppHost = hostname === 'app.syntaflow.tech';
+
     const title = titleProp || config.title;
     const fullTitle = SITE_CONFIG.titleTemplate(title);
     const description = descProp || config.description;
     const canonicalPath = config.canonicalPath;
-    const canonicalUrl = `${SITE_CONFIG.canonicalHost}${canonicalPath === '/' ? '/' : canonicalPath}`;
-    const isIndexable = indexableProp !== undefined ? indexableProp : config.indexable;
+    const canonicalUrl = isAppHost
+      ? `https://app.syntaflow.tech${window.location.pathname === '/' ? '/' : window.location.pathname}`
+      : `${SITE_CONFIG.canonicalHost}${canonicalPath === '/' ? '/' : canonicalPath}`;
+    const isIndexable = isAppHost ? false : (indexableProp !== undefined ? indexableProp : config.indexable);
     const ogImage = ogImageProp || config.ogImage || SITE_CONFIG.defaultOgImage;
     const ogType = ogTypeProp || config.ogType || 'website';
     const breadcrumbs = breadcrumbsProp || config.breadcrumbs;

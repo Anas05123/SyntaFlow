@@ -136,33 +136,46 @@ function Rail({
     <aside className="rail">
       {/* Top Header: Syntaflow Brand (with App Menu) & Sidebar Toggle */}
       <div className="rail-head">
-        <button
-          type="button"
-          ref={brandRef}
-          className={`rail-brand-trigger ${isAccountOpen && accountSource === 'brand' ? 'is-active' : ''}`}
-          onClick={() => onToggleAccount('brand')}
-          title="Syntaflow — Workspace & Identity"
-          aria-expanded={isAccountOpen && accountSource === 'brand'}
-        >
-          {collapsed ? (
-            <BrandMark size={24} variant="wbg" className="rail-brand-collapsed" />
-          ) : (
-            <BrandLogo height={30} className="rail-brand-logo" />
-          )}
-          {!collapsed && (
-            <Icon name="chevronDown" size={13} className="rail-brand-chevron" />
-          )}
-        </button>
+        {collapsed ? (
+          <button
+            type="button"
+            className="rail-brand-trigger is-collapsed"
+            onClick={onToggleRail}
+            title="Expand sidebar (hover to reveal)"
+            aria-label="Expand sidebar"
+          >
+            <span className="rail-brand-icon-normal">
+              <BrandMark size={24} variant="wbg" className="rail-brand-collapsed" />
+            </span>
+            <span className="rail-brand-icon-hover" aria-hidden="true">
+              <Icon name="sidebar" size={17} />
+            </span>
+          </button>
+        ) : (
+          <>
+            <button
+              type="button"
+              ref={brandRef}
+              className={`rail-brand-trigger ${isAccountOpen && accountSource === 'brand' ? 'is-active' : ''}`}
+              onClick={() => onToggleAccount('brand')}
+              title="Syntaflow — Workspace & Identity"
+              aria-expanded={isAccountOpen && accountSource === 'brand'}
+            >
+              <BrandLogo height={30} className="rail-brand-logo" />
+              <Icon name="chevronDown" size={13} className="rail-brand-chevron" />
+            </button>
 
-        <button
-          type="button"
-          className="rail-toggle-btn"
-          onClick={onToggleRail}
-          title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-          aria-label="Toggle navigation rail"
-        >
-          <Icon name="sidebar" size={16} />
-        </button>
+            <button
+              type="button"
+              className="rail-toggle-btn"
+              onClick={onToggleRail}
+              title="Collapse sidebar"
+              aria-label="Collapse sidebar"
+            >
+              <Icon name="sidebar" size={16} />
+            </button>
+          </>
+        )}
       </div>
 
       {/* Figma-Style Teams Switcher (Northlight Studio) */}

@@ -12,6 +12,28 @@ export function sanitizeReturnUrl(returnTo?: string | null, fallback: string = '
 
   const trimmed = returnTo.trim();
 
+  // Allow trusted absolute Syntaflow URLs (e.g. cross-domain handshakes between syntaflow.tech and app.syntaflow.tech)
+  if (trimmed.startsWith('https://') || trimmed.startsWith('http://')) {
+    try {
+      const parsed = new URL(trimmed);
+      const isTrustedHost =
+        parsed.hostname === 'syntaflow.tech' ||
+        parsed.hostname === 'app.syntaflow.tech' ||
+        parsed.hostname === 'localhost' ||
+        parsed.hostname === '127.0.0.1';
+
+      if (isTrustedHost) {
+        if (parsed.pathname === '/login' || parsed.pathname === '/signup') {
+          return fallback;
+        }
+        return parsed.toString();
+      }
+      return fallback;
+    } catch {
+      return fallback;
+    }
+  }
+
   // Must begin with a single slash and not protocol-relative double slash
   if (!trimmed.startsWith('/') || trimmed.startsWith('//')) {
     return fallback;

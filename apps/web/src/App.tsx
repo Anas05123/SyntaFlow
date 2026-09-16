@@ -122,16 +122,28 @@ export const App: React.FC = () => {
   const hostname = typeof window !== 'undefined' ? window.location.hostname : '';
   const isAppHost = hostname === 'app.syntaflow.tech';
 
+  const isAuthPath =
+    path === '/login' ||
+    path === '/signup' ||
+    path === '/forgot-password' ||
+    path.startsWith('/auth/desktop');
+
+  // If visiting auth pages on app.syntaflow.tech, redirect to canonical auth on syntaflow.tech
+  useEffect(() => {
+    if (isAppHost && isAuthPath) {
+      const search = typeof window !== 'undefined' ? window.location.search : '';
+      window.location.href = `https://syntaflow.tech${path}${search}`;
+    }
+  }, [isAppHost, isAuthPath, path]);
+
   // Determine application environment
   const isAccountRoute =
-    isAppHost ||
-    path.startsWith('/account') ||
-    path === '/onboarding' ||
-    (isAppHost && (path === '/' || path === '/profile' || path === '/plan' || path === '/sessions' || path === '/downloads' || path === '/desktop' || path === '/tutorials'));
+    !isAuthPath &&
+    (isAppHost ||
+     path.startsWith('/account') ||
+     path === '/onboarding');
 
-  const isAuthRoute =
-    !isAccountRoute &&
-    (path === '/login' || path === '/signup' || path === '/forgot-password' || path.startsWith('/auth/desktop'));
+  const isAuthRoute = isAuthPath && !isAppHost;
 
   // 1. DEDICATED AUTH ROUTE (Split-screen, NO marketing navbar/footer)
   if (isAuthRoute) {

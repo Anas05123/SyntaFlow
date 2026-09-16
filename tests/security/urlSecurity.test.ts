@@ -13,6 +13,16 @@ describe('sanitizeReturnUrl', () => {
     expect(sanitizeReturnUrl('/auth/desktop?state=123')).toBe('/auth/desktop?state=123');
   });
 
+  it('accepts trusted absolute Syntaflow URLs', () => {
+    expect(sanitizeReturnUrl('https://app.syntaflow.tech/downloads')).toBe('https://app.syntaflow.tech/downloads');
+    expect(sanitizeReturnUrl('https://app.syntaflow.tech/')).toBe('https://app.syntaflow.tech/');
+    expect(sanitizeReturnUrl('https://syntaflow.tech/account')).toBe('https://syntaflow.tech/account');
+    expect(sanitizeReturnUrl('http://localhost:5173/account')).toBe('http://localhost:5173/account');
+    // Auth loops on trusted hosts must still fall back
+    expect(sanitizeReturnUrl('https://app.syntaflow.tech/login')).toBe('/account');
+    expect(sanitizeReturnUrl('https://syntaflow.tech/signup')).toBe('/account');
+  });
+
   it('rejects external protocol attacks (open redirect)', () => {
     expect(sanitizeReturnUrl('https://evil.example.com')).toBe('/account');
     expect(sanitizeReturnUrl('http://evil.example.com')).toBe('/account');

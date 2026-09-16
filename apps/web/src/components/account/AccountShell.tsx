@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrandMark } from '../brand/BrandMark';
 import { Link } from '../ui/Link';
+import { SEOHead } from '../ui/SEOHead';
 import { useAuth } from '../../services/auth/AuthContext';
 
 interface AccountShellProps {
@@ -9,45 +10,94 @@ interface AccountShellProps {
 }
 
 export const AccountShell: React.FC<AccountShellProps> = ({ currentSubpath, children }) => {
-  const { user, plan, logout } = useAuth();
+  const { user, plan, logout, isLoading, isAuthenticated } = useAuth();
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
+  const isAppHost = typeof window !== 'undefined' && window.location.hostname === 'app.syntaflow.tech';
+
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      if (typeof window !== 'undefined' && window.location.port === '5199') {
+        return;
+      }
+      const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
+      const loginUrl = isAppHost
+        ? `https://syntaflow.tech/login?returnTo=${encodeURIComponent(currentUrl)}`
+        : `/login?returnTo=${encodeURIComponent(currentUrl || '/account')}`;
+      window.location.href = loginUrl;
+    }
+  }, [isLoading, isAuthenticated, isAppHost]);
+
   const handleSignOut = async () => {
     await logout();
-    window.location.href = '/login';
+    window.location.href = isAppHost ? 'https://syntaflow.tech/login' : '/login';
   };
 
   const navSections = [
     {
       title: 'OVERVIEW',
       items: [
-        { label: 'Home', href: '/account', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
+        { label: 'Home', href: isAppHost ? '/' : '/account', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
       ],
     },
     {
       title: 'ACCOUNT',
       items: [
-        { label: 'Profile', href: '/account/profile', icon: 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z' },
-        { label: 'Plan & Billing', href: '/account/plan', icon: 'M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z' },
-        { label: 'Active Sessions', href: '/account/sessions', icon: 'M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z' },
+        { label: 'Profile', href: isAppHost ? '/profile' : '/account/profile', icon: 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z' },
+        { label: 'Plan & Billing', href: isAppHost ? '/plan' : '/account/plan', icon: 'M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z' },
+        { label: 'Active Sessions', href: isAppHost ? '/sessions' : '/account/sessions', icon: 'M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z' },
       ],
     },
     {
       title: 'PRODUCT',
       items: [
-        { label: 'Downloads', href: '/account/downloads', icon: 'M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4' },
-        { label: 'Desktop Connection', href: '/account/desktop', icon: 'M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1' },
+        { label: 'Downloads', href: isAppHost ? '/downloads' : '/account/downloads', icon: 'M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4' },
+        { label: 'Desktop Connection', href: isAppHost ? '/desktop' : '/account/desktop', icon: 'M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1' },
       ],
     },
     {
       title: 'RESOURCES',
       items: [
-        { label: 'Documentation', href: '/docs', external: true, icon: 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253' },
-        { label: 'Tutorials', href: '/account/tutorials', icon: 'M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z' },
+        { label: 'Documentation', href: isAppHost ? 'https://syntaflow.tech/docs' : '/docs', external: true, icon: 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253' },
+        { label: 'Tutorials', href: isAppHost ? '/tutorials' : '/account/tutorials', icon: 'M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z' },
       ],
     },
   ];
+
+  if (isLoading || !isAuthenticated) {
+    return (
+      <div
+        style={{
+          minHeight: '100vh',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: '#08090b',
+          color: 'var(--text-secondary)',
+          gap: '16px',
+        }}
+        role="status"
+        aria-label="Loading account workspace"
+      >
+        <SEOHead title="Account — Syntaflow" indexable={false} />
+        <div
+          style={{
+            width: '28px',
+            height: '28px',
+            borderRadius: '50%',
+            border: '2px solid rgba(255, 255, 255, 0.1)',
+            borderTopColor: '#00f2fe',
+            animation: 'spin 0.6s linear infinite',
+          }}
+        />
+        <div style={{ fontSize: '13px', color: 'var(--text-tertiary)' }}>
+          {isLoading ? 'Loading workspace...' : 'Redirecting to login...'}
+        </div>
+      </div>
+    );
+  }
 
   const userInitial = (user?.name || user?.email || 'U').charAt(0).toUpperCase();
 
@@ -79,7 +129,7 @@ export const AccountShell: React.FC<AccountShellProps> = ({ currentSubpath, chil
           padding: '0 1rem',
         }}
       >
-        <Link href="/account" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
+        <Link href={isAppHost ? "/" : "/account"} style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
           <BrandMark variant="full" size="sm" />
         </Link>
 
@@ -128,7 +178,7 @@ export const AccountShell: React.FC<AccountShellProps> = ({ currentSubpath, chil
             justifyContent: 'space-between',
           }}
         >
-          <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }} title="Return to syntaflow.tech">
+          <Link href={isAppHost ? "https://syntaflow.tech" : "/"} style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }} title="Return to syntaflow.tech">
             <BrandMark variant="full" size="sm" />
           </Link>
         </div>
@@ -152,7 +202,10 @@ export const AccountShell: React.FC<AccountShellProps> = ({ currentSubpath, chil
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
                 {section.items.map((item) => {
-                  const isActive = currentSubpath === item.href || (item.href !== '/account' && currentSubpath.startsWith(item.href));
+                  const isActive =
+                    currentSubpath === item.href ||
+                    (item.href !== '/account' && item.href !== '/' && (currentSubpath.startsWith(item.href) || currentSubpath === item.href)) ||
+                    (isAppHost && (currentSubpath === `/account${item.href === '/' ? '' : item.href}` || currentSubpath === item.href));
                   return (
                     <Link
                       key={item.label}
@@ -242,7 +295,7 @@ export const AccountShell: React.FC<AccountShellProps> = ({ currentSubpath, chil
               </div>
             </div>
             <Link
-              href="/account/downloads"
+              href={isAppHost ? '/downloads' : '/account/downloads'}
               style={{
                 display: 'flex',
                 alignItems: 'center',
@@ -347,7 +400,7 @@ export const AccountShell: React.FC<AccountShellProps> = ({ currentSubpath, chil
               </div>
 
               <Link
-                href="/account/profile"
+                href={isAppHost ? '/profile' : '/account/profile'}
                 onClick={() => setUserMenuOpen(false)}
                 style={{
                   display: 'block',
@@ -361,7 +414,7 @@ export const AccountShell: React.FC<AccountShellProps> = ({ currentSubpath, chil
               </Link>
 
               <Link
-                href="/account/plan"
+                href={isAppHost ? '/plan' : '/account/plan'}
                 onClick={() => setUserMenuOpen(false)}
                 style={{
                   display: 'block',

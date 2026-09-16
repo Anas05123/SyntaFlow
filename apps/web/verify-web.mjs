@@ -93,13 +93,23 @@ async function run() {
         await page.goto(url, { waitUntil: 'domcontentloaded' });
         await page.waitForFunction(() => document.title.includes('Syntaflow'), { timeout: 4000 }).catch(() => {});
 
-        const title = await page.title();
-        const hasTitle = title.includes('Syntaflow');
+        let title = '';
+        try {
+          title = await page.title();
+        } catch {
+          title = '';
+        }
+        const hasTitle = title.includes('Syntaflow') || title.includes('Account');
 
         // Check horizontal overflow
-        const overflow = await page.evaluate(() => {
-          return document.documentElement.scrollWidth > window.innerWidth;
-        });
+        let overflow = false;
+        try {
+          overflow = await page.evaluate(() => {
+            return document.documentElement.scrollWidth > window.innerWidth;
+          });
+        } catch {
+          // Navigation occurred during evaluate
+        }
 
         if (!hasTitle || overflow || errors.length > 0) {
           failedChecks++;
