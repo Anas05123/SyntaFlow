@@ -119,3 +119,21 @@ When an external client reviews a document:
    `https://review.coredesk.app/#/guest/review?token=<SECURE_TOKEN>&doc=<DOC_ID>&v=<VERSION>`
 2. **Access Confinement**: The token resolves only the designated `DocVersion` and its immediate feedback comments.
 3. **Zero Lateral Movement**: The guest context cannot query other documents, clients, financial totals, or workspace activity feeds.
+
+---
+
+## 6. Google OAuth 2.0 & Limited Use Verification Architecture
+
+### 6.1 Compliance with Google Cloud OAuth Requirements
+In accordance with Google OAuth Verification requirements ([Google Cloud Answer 13806988](https://support.google.com/cloud/answer/13806988)):
+- **Application Identity**: The application is explicitly identified as `SyntaFlow` / `Syntaflow Desktop` across the consent screen, branding settings, and legal policies.
+- **Hosted Domain**: The privacy policy is hosted directly on the authorized domain at `https://syntaflow.tech/privacy` (with matching terms at `https://syntaflow.tech/terms`).
+- **Static Pre-rendering for Crawlers**: To satisfy automated Google OAuth compliance scanners that inspect raw HTTP responses without full JavaScript execution, `apps/web` provides pre-rendered semantic HTML documents (`public/privacy/index.html` and `public/terms/index.html`). Non-JS fetchers receive 100% of all legal disclosures, tables of scopes, and Limited Use clauses immediately.
+
+### 6.2 Data Handling Disclosures & Restrictions
+- **Least-Privilege Scopes**: Granular scopes only (`gmail.readonly`, `gmail.compose`, `calendar.readonly`, `calendar.events`, `drive.file`, `drive.metadata.readonly`, `documents`, `spreadsheets`, `userinfo.email`, `userinfo.profile`).
+- **Storage Boundaries**: Zero cloud database storage. All workspace state is local SQLite (`%APPDATA%\Syntaflow\storage\syntaflow.db`). Gmail messages and calendar items are held in volatile session memory only.
+- **Encryption at Rest**: OAuth tokens are encrypted using OS-level cryptographic vaults (Windows DPAPI via Electron `safeStorage`, macOS Keychain, Linux Secret Service).
+- **Prohibited Uses**: Absolute prohibition on data sales, sharing with data brokers, ad targeting, credit evaluation, or training non-personalized/generalized AI/ML models.
+- **Google Limited Use Verbatim Compliance**: Syntaflow Desktop adheres to the Google API Services User Data Policy, including the Limited Use requirements.
+
