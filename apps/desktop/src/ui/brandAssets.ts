@@ -26,10 +26,15 @@
  * app.
  */
 
-import markUrl from '../assets/coredesk-mark.png';
+import iconUrl from '../assets/syntaflow-icon.png';
+import fullLogoUrl from '../assets/syntaflow-full.png';
 
-/** The CoreDesk symbol. Real artwork, never a substituted glyph. */
-export const BRAND_MARK_SRC: string = markUrl;
+/** The Syntaflow symbol mark (logo icon). Real artwork, never a substituted glyph. */
+export const BRAND_MARK_SRC: string = iconUrl;
+export const BRAND_ICON_SRC: string = iconUrl;
+
+/** The full horizontal Syntaflow logo (logo 4) with symbol and wordmark. */
+export const BRAND_LOGO_FULL_SRC: string = fullLogoUrl;
 
 /**
  * True once the mark has been observed to have non-zero natural dimensions.

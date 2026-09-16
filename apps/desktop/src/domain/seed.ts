@@ -590,7 +590,7 @@ export const seedDeliveries: DeliveryPackage[] = [
     state: 'delivered',
     deliveredOn: '2026-06-19T15:00:00',
     acknowledgedOn: '2026-06-24T09:40:00',
-    method: 'CoreDesk guest link',
+    method: 'Syntaflow guest link',
     notes: 'Installation drawings at 1:20. Fabricator contact details included.',
     fileIds: ['fl-4', 'fl-5'],
   },

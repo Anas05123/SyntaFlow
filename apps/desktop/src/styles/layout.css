@@ -127,9 +127,21 @@
 }
 
 /* ---- Section 29: Operational Surfaces Material Boundaries (Preserve Opacity) ---- */
+:root[data-wallpaper] .cd-doc-workspace,
+:root[data-wallpaper] .cd-share-studio {
+  background: color-mix(in srgb, var(--canvas) 94%, transparent);
+  backdrop-filter: blur(24px);
+}
+
+:root[data-wallpaper] .doc-outline,
+:root[data-wallpaper] .doc-rail,
 :root[data-wallpaper] .doc-page,
-:root[data-wallpaper] .cd-review-document {
-  background: var(--canvas);
+:root[data-wallpaper] .cd-review-document,
+:root[data-wallpaper] .cd-dispatch-step,
+:root[data-wallpaper] .cd-email-preview-card,
+:root[data-wallpaper] .cd-guest-portfolio-card {
+  background: var(--surface);
+  backdrop-filter: none;
 }
 
 :root[data-wallpaper] .cd-section-editor-box,
@@ -161,7 +173,8 @@
   align-items: center;
   border-bottom: 1px solid var(--divider);
   display: flex;
-  height: 38px;
+  height: 44px;
+  min-height: 44px;
   justify-content: space-between;
   margin-bottom: 8px;
   padding: 0 4px 6px;
@@ -179,7 +192,7 @@
   font-size: 13.5px;
   font-weight: 700;
   gap: 8px;
-  height: 32px;
+  height: 38px;
   padding: 0 6px;
   transition: background var(--ease), border-color var(--ease);
 }
@@ -193,6 +206,19 @@
 
 .rail-brand-text {
   letter-spacing: -0.01em;
+}
+
+.rail-brand-logo {
+  display: inline-flex;
+  align-items: center;
+  max-width: 170px;
+}
+
+.rail-brand-logo img {
+  height: 30px;
+  max-height: 32px;
+  width: auto;
+  object-fit: contain;
 }
 
 .rail-brand-chevron {

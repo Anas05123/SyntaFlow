@@ -194,7 +194,7 @@ export function CoreThread({ animate = true }: CoreThreadProps) {
         className="cd-thread-svg"
         viewBox="-1.2 -0.62 2.4 1.24"
         role="img"
-        aria-label="The CoreDesk client thread: Client, Proposal, Agreement, Project, Review, Revision and Delivery, closing back onto the client."
+        aria-label="The Syntaflow client thread: Client, Proposal, Agreement, Project, Review, Revision and Delivery, closing back onto the client."
       >
         <defs>
           {/* Directional light from the upper left, as if from the window. */}

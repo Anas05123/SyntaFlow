@@ -493,6 +493,17 @@
   color: #94a3b8;
 }
 
+.cd-auth-top-logo {
+  display: inline-flex;
+  align-items: center;
+}
+
+.cd-auth-top-logo img {
+  height: 22px;
+  width: auto;
+  object-fit: contain;
+}
+
 .cd-auth-service-status {
   display: inline-flex;
   align-items: center;

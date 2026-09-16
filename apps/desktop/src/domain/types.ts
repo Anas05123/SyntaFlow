@@ -238,6 +238,8 @@ export interface ReviewComment {
   internal: boolean;
 }
 
+export type PresentationTemplate = 'executive' | 'modern-studio' | 'enterprise';
+
 export interface Review {
   id: ReviewId;
   documentId: DocumentId;
@@ -251,6 +253,10 @@ export interface Review {
   closedOn?: string;
   supersededBy?: ReviewId;
   comments: ReviewComment[];
+  template?: PresentationTemplate;
+  includePortfolio?: boolean;
+  portfolioCaseStudyIds?: string[];
+  coverMessage?: string;
 }
 
 export interface ProjectFile {

@@ -16,8 +16,22 @@ const { contextBridge, ipcRenderer } = require('electron');
 
 const WINDOW_CHANNELS = new Set(['coredesk:window-state']);
 
-contextBridge.exposeInMainWorld('coreDeskDesktop', {
-  /** How the renderer can tell it is running as an app rather than a page. */
+const integrationsApi = {
+  listDefinitions: () => ipcRenderer.invoke('syntaflow:integrations:list-definitions'),
+  getConnection: (id) => ipcRenderer.invoke('syntaflow:integrations:get-connection', id),
+  connect: (id, options) => ipcRenderer.invoke('syntaflow:integrations:connect', { id, options }),
+  cancelConnect: (id) => ipcRenderer.invoke('syntaflow:integrations:cancel-connect', id),
+  disconnect: (id) => ipcRenderer.invoke('syntaflow:integrations:disconnect', id),
+  testConnection: (id) => ipcRenderer.invoke('syntaflow:integrations:test-connection', id),
+  checkHealth: (id, forceRefresh) => ipcRenderer.invoke('syntaflow:integrations:check-health', { id, forceRefresh }),
+  reconnect: (id) => ipcRenderer.invoke('syntaflow:integrations:reconnect', id),
+  updateAgentAccess: (id, agentAccess) => ipcRenderer.invoke('syntaflow:integrations:update-agent-access', { id, agentAccess }),
+  executeCapability: (capabilityId, params) => ipcRenderer.invoke('syntaflow:integrations:execute-capability', { capabilityId, params }),
+  connectAll: (options) => ipcRenderer.invoke('syntaflow:integrations:connect-all', options),
+  disconnectAll: () => ipcRenderer.invoke('syntaflow:integrations:disconnect-all'),
+};
+
+const desktopApi = {
   runtime: 'electron',
   electron: process.versions.electron,
   platform: process.platform,
@@ -27,10 +41,6 @@ contextBridge.exposeInMainWorld('coreDeskDesktop', {
     toggleMaximize: () => ipcRenderer.send('coredesk:window', 'maximize'),
     close: () => ipcRenderer.send('coredesk:window', 'close'),
 
-    /**
-     * Subscribes to maximize/focus changes. Returns an unsubscribe function so
-     * a React effect can clean up without leaking a listener per mount.
-     */
     onStateChange: (handler) => {
       if (typeof handler !== 'function') return () => {};
       const listener = (_event, state) => {
@@ -47,4 +57,9 @@ contextBridge.exposeInMainWorld('coreDeskDesktop', {
     signUp: (payload) => ipcRenderer.invoke('coredesk:auth:sign-up', payload),
     signOut: () => ipcRenderer.invoke('coredesk:auth:sign-out'),
   },
-});
+
+  integrations: integrationsApi,
+};
+
+contextBridge.exposeInMainWorld('syntaflowDesktop', desktopApi);
+contextBridge.exposeInMainWorld('coreDeskDesktop', desktopApi);

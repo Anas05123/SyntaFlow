@@ -39,7 +39,7 @@ export interface Appearance {
 }
 
 export const ACCENTS: { id: string; label: string; value: string }[] = [
-  { id: 'cobalt', label: 'CoreDesk Blue', value: '#2F6FEB' },
+  { id: 'cobalt', label: 'Syntaflow Blue', value: '#2F6FEB' },
   { id: 'azure', label: 'Azure', value: '#3D8BFD' },
   { id: 'cyan', label: 'Cyan', value: '#12A5C4' },
   { id: 'teal', label: 'Teal', value: '#0F9E8A' },

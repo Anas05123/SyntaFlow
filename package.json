@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "CoreDesk — The Local-First Operating System for Solo Agency Principals",
+  "description": "Syntaflow — Intelligent Operating Environment for Connected Work",
   "scripts": {
     "desktop": "node apps/desktop/electron/start.mjs",
     "desktop:dev": "node apps/desktop/electron/start.mjs --mode dev",
@@ -15,11 +15,13 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.54.2",
+    "sql.js": "^1.14.2",
     "typescript": "^5.9.2",
     "vite": "5.4.19",
     "vitest": "^3.2.4"
   },
   "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.30.0",
     "electron": "^44.2.0"
   }
 }

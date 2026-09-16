@@ -16,18 +16,46 @@ const path = require('node:path');
 const fs = require('node:fs');
 const { pathToFileURL } = require('node:url');
 
+// Load environment variables from .env files if present
+for (const envCandidate of [
+  path.join(__dirname, '..', '.env'),
+  path.join(__dirname, '..', '..', '..', '.env'),
+]) {
+  try {
+    if (fs.existsSync(envCandidate)) {
+      const content = fs.readFileSync(envCandidate, 'utf8');
+      for (const line of content.split(/\r?\n/)) {
+        const trimmed = line.trim();
+        if (!trimmed || trimmed.startsWith('#')) continue;
+        const eqIdx = trimmed.indexOf('=');
+        if (eqIdx > 0) {
+          const key = trimmed.slice(0, eqIdx).trim();
+          let val = trimmed.slice(eqIdx + 1).trim();
+          if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
+            val = val.slice(1, -1);
+          }
+          if (!process.env[key]) {
+            process.env[key] = val;
+          }
+        }
+      }
+    }
+  } catch (_e) {}
+}
+
 const { WindowStateManager, DEFAULT_BOUNDS } = require('./window-state.cjs');
 const { AuthService } = require('./auth/auth-service.cjs');
+const { IntegrationsService } = require('./integrations/integrations-service.cjs');
 
-app.setName('CoreDesk');
+app.setName('Syntaflow');
 if (process.platform === 'win32') {
-  app.setAppUserModelId('com.coredesk.app');
+  app.setAppUserModelId('com.syntaflow.app');
 }
 try {
-  app.setPath('userData', path.join(app.getPath('appData'), 'CoreDesk'));
+  app.setPath('userData', path.join(app.getPath('appData'), 'Syntaflow'));
 } catch (_e) {}
 
-/** Resolve the canonical CoreDesk application icon (ICO on Windows, high-res PNG fallback) */
+/** Resolve the canonical Syntaflow application icon (ICO on Windows, high-res PNG fallback) */
 const APP_ICON_PATH = (() => {
   const icoCandidate = path.join(__dirname, 'icon.ico');
   const pngCandidate = path.join(__dirname, 'icon.png');
@@ -37,11 +65,11 @@ const APP_ICON_PATH = (() => {
   if (fs.existsSync(pngCandidate)) {
     return pngCandidate;
   }
-  const publicCandidate = path.join(__dirname, '..', 'public', 'coredesk-icon.png');
+  const publicCandidate = path.join(__dirname, '..', 'public', 'syntaflow-icon.png');
   if (fs.existsSync(publicCandidate)) {
     return publicCandidate;
   }
-  return path.join(__dirname, '..', 'src', 'assets', 'coredesk-mark.png');
+  return path.join(__dirname, '..', 'src', 'assets', 'syntaflow-icon.png');
 })();
 
 /* ---- Desktop window contract -------------------------------------------- */
@@ -121,13 +149,13 @@ const PROBE = `(() => {
     insideAppFrame: !!document.querySelector('.cd-app, .shell, .guest'),
     markLoaded: (() => {
       const marks = [...document.querySelectorAll('img')].filter((i) =>
-        /coredesk-mark[^/]*\\.png/.test(i.getAttribute('src') || '')
+        /(syntaflow-icon|syntaflow-full|coredesk-mark)[^/]*\\.png/.test(i.getAttribute('src') || '')
       );
       if (!marks.length) return null;
       return marks.every((i) => i.complete && i.naturalWidth > 0);
     })(),
     markCount: [...document.querySelectorAll('img')].filter((i) =>
-      /coredesk-mark[^/]*\\.png/.test(i.getAttribute('src') || '')
+      /(syntaflow-icon|syntaflow-full|coredesk-mark)[^/]*\\.png/.test(i.getAttribute('src') || '')
     ).length,
     scrollW: document.documentElement.scrollWidth,
     scrollH: document.documentElement.scrollHeight,
@@ -158,6 +186,7 @@ const windowStateManager = new WindowStateManager(app.getPath('userData'), {
   minHeight: 640,
 });
 const authService = AuthService.createDefault(app.getPath('userData'));
+const integrationsService = IntegrationsService.createDefault(app.getPath('userData'));
 
 function createWindow() {
   const displays = screen ? screen.getAllDisplays() : [];
@@ -173,7 +202,7 @@ function createWindow() {
     minHeight: 640,
     show: false, // Hidden until ready-to-show to prevent white flash / layout jumps
     backgroundColor: CANVAS,
-    title: 'CoreDesk',
+    title: 'Syntaflow',
     icon: APP_ICON_PATH,
     frame: false, // Frameless custom desktop chrome
     autoHideMenuBar: true,
@@ -237,12 +266,21 @@ function createWindow() {
      In development (mode === 'dev'), intentional reload is preserved.
      Standard shortcuts (Ctrl+C, Ctrl+V, Ctrl+Z, Ctrl+K) remain unaffected. */
   win.webContents.on('before-input-event', (event, input) => {
-    if (mode !== 'dev' && input.type === 'keyDown') {
-      const isF5 = input.key === 'F5';
+    if (input.type === 'keyDown') {
+      const isShift = input.shift;
       const isR = input.key.toLowerCase() === 'r';
       const isCtrlOrCmd = input.control || input.meta;
-      if (isF5 || (isCtrlOrCmd && isR)) {
+      // Allow intentional hard reload (Ctrl+Shift+R or Ctrl+F5)
+      if ((isCtrlOrCmd && isShift && isR) || (isCtrlOrCmd && input.key === 'F5')) {
+        win.webContents.reloadIgnoringCache();
         event.preventDefault();
+        return;
+      }
+      if (mode !== 'dev') {
+        const isF5 = input.key === 'F5';
+        if (isF5 || (isCtrlOrCmd && isR)) {
+          event.preventDefault();
+        }
       }
     }
   });
@@ -289,6 +327,65 @@ ipcMain.handle('coredesk:auth:sign-up', async (_event, payload) => {
 
 ipcMain.handle('coredesk:auth:sign-out', async () => {
   return await authService.signOut();
+});
+
+/**
+ * Syntaflow Integrations IPC Handlers
+ * Dual-registered for backward compatibility:
+ * Primary: syntaflow:integrations:*
+ * Shim: coredesk:integrations:*
+ */
+const registerIntegrationChannel = (action, handler) => {
+  ipcMain.handle(`syntaflow:integrations:${action}`, handler);
+  ipcMain.handle(`coredesk:integrations:${action}`, handler);
+};
+
+registerIntegrationChannel('list-definitions', async () => {
+  return await integrationsService.listDefinitions();
+});
+
+registerIntegrationChannel('get-connection', async (_event, id) => {
+  return await integrationsService.getConnection(id);
+});
+
+registerIntegrationChannel('connect', async (_event, { id, options }) => {
+  return await integrationsService.connect(id, options);
+});
+
+registerIntegrationChannel('cancel-connect', async (_event, id) => {
+  return await integrationsService.cancelConnect(id);
+});
+
+registerIntegrationChannel('disconnect', async (_event, id) => {
+  return await integrationsService.disconnect(id);
+});
+
+registerIntegrationChannel('test-connection', async (_event, id) => {
+  return await integrationsService.testConnection(id);
+});
+
+registerIntegrationChannel('check-health', async (_event, { id, forceRefresh }) => {
+  return await integrationsService.checkHealth(id, forceRefresh);
+});
+
+registerIntegrationChannel('reconnect', async (_event, id) => {
+  return await integrationsService.reconnect(id);
+});
+
+registerIntegrationChannel('update-agent-access', async (_event, { id, agentAccess }) => {
+  return await integrationsService.updateAgentAccess(id, agentAccess);
+});
+
+registerIntegrationChannel('execute-capability', async (_event, { capabilityId, params }) => {
+  return await integrationsService.executeCapability(capabilityId, params);
+});
+
+registerIntegrationChannel('connect-all', async (_event, options) => {
+  return await integrationsService.connectAll(options);
+});
+
+registerIntegrationChannel('disconnect-all', async () => {
+  return await integrationsService.disconnectAll();
 });
 
 /** Show the window and hand it to the user; nothing is captured or asserted. */

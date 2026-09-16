@@ -58,6 +58,37 @@ interface ScreenResult {
   bare?: boolean;
 }
 
+function getSettingsLabel(sec?: string): string {
+  const s = (sec || 'general').toLowerCase();
+  switch (s) {
+    case 'general':
+    case 'defaults':
+      return 'General';
+    case 'appearance':
+      return 'Appearance';
+    case 'notifications':
+      return 'Notifications';
+    case 'workspace':
+      return 'Workspace';
+    case 'client-access':
+    case 'access':
+      return 'Client Access';
+    case 'integrations':
+      return 'Integrations';
+    case 'ai':
+    case 'models':
+      return 'AI & Models';
+    case 'security':
+      return 'Security';
+    case 'account':
+      return 'Account';
+    case 'advanced':
+      return 'Advanced';
+    default:
+      return 'General';
+  }
+}
+
 function resolve(route: RouteInfo): ScreenResult {
   const { segments, params, query } = route;
   const root = segments[0] ?? 'home';
@@ -130,12 +161,15 @@ function resolve(route: RouteInfo): ScreenResult {
     case 'archive':
       return { active: 'archive', crumbs: [{ label: 'Archive' }], element: <ArchiveScreen /> };
 
-    case 'settings':
+    case 'settings': {
+      const sectionName = getSettingsLabel(params.section);
       return {
         active: 'settings',
-        crumbs: [{ label: 'Settings' }],
-        element: <SettingsScreen section={params.section ?? 'account'} />,
+        crumbs: [{ label: 'Settings', href: '#/settings/general' }, { label: sectionName }],
+        element: <SettingsScreen section={params.section ?? 'general'} />,
+        flush: true,
       };
+    }
 
     case 'new-project':
       return {

@@ -38,9 +38,9 @@ export function AccountMenu({ onClose }: { onClose: () => void }) {
   };
 
   const accountItems: MenuItem[] = [
-    { id: 'profile', label: 'Professional Profile', icon: 'building', href: '#/settings/defaults' },
-    { id: 'workspace', label: 'Workspace Settings', icon: 'settings', href: '#/settings/account' },
-    { id: 'preferences', label: 'Preferences & System', icon: 'settings', href: '#/settings' },
+    { id: 'profile', label: 'User Account', icon: 'user', href: '#/settings/account' },
+    { id: 'workspace', label: 'Workspace Settings', icon: 'building', href: '#/settings/workspace' },
+    { id: 'preferences', label: 'Preferences & System', icon: 'settings', href: '#/settings/general' },
   ];
 
   return (
@@ -58,7 +58,7 @@ export function AccountMenu({ onClose }: { onClose: () => void }) {
       <div className="cd-menu-workspace-box">
         <div className="row-between">
           <span className="cd-menu-workspace-title">{ws.name}</span>
-          <span className="cd-plan-badge">CoreDesk Pro</span>
+          <span className="cd-plan-badge">Syntaflow Pro</span>
         </div>
         <div className="cd-menu-engine-row mt-4">
           <span className="cd-engine-dot" />
@@ -93,7 +93,7 @@ export function AccountMenu({ onClose }: { onClose: () => void }) {
       </div>
 
       <div className="cd-menu-foot">
-        CoreDesk v1.0.0 · Local Engine
+        Syntaflow v1.0.0 · Local Engine
       </div>
     </div>
   );

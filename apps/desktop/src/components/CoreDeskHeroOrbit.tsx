@@ -424,7 +424,7 @@ export function CoreDeskHeroOrbit({
           <div className="cd-hero-center-mark-wrap">
             <img
               src={BRAND_MARK_SRC}
-              alt="CoreDesk"
+              alt="Syntaflow"
               className="cd-hero-mark-img"
               draggable={false}
             />

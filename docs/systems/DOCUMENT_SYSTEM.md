@@ -49,17 +49,45 @@ The distinction between active drafting and formal client submission is an archi
 
 ## 3. Document Studio Interface (`DocumentWorkspaceScreen.tsx`)
 
-The Document Studio provides a focused, distraction-free environment with four integrated views:
-- **Header**: Document title, client & project breadcrumb badges, version metadata (`working vX · submitted vY`), review status indicator, and primary actions ("Submit for Review", "Export PDF", "Request Review").
-- **Write View (`editor`)**: Multi-section markdown/plain-text editor with section outline, live save-state contract indicators (`saved`, `dirty`, `saving`, `failed`), and private operator notes (strictly excluded from guest access).
-- **Preview & Export View (`preview`)**: Paginated print preview simulating page breaks and layout for client PDF export.
+The Document Studio provides a focused, distraction-free environment adhering to the desktop executive paper canvas architecture:
+- **Unified Studio Toolbar**: Pinned header with document title, review status chip, visibility badge, version pill (`Working draft vX · submitted vY`), client & project breadcrumb links, live save-state contract indicator (`● All changes saved` / `Unsaved edits`), and primary actions ("Request review" / "Save draft").
+- **3-Column Studio Layout**:
+  - **Left Outline Panel (`.doc-outline`)**: Numbered section list (`01`, `02`...) with live completion status indicators (completed green dot, dirty amber dot, empty dot), section completion counter (`X/Y written`), live document statistics (Total words, Characters, Reading time, Working version), and keyboard shortcut guidance.
+  - **Center Writing Desk Canvas (`.doc-body-col` & `.doc-page`)**: Elevated executive paper sheet (`max-width: 820px`, surface depth elevation, typographic hierarchy) with editorial eyebrow, title, and metadata. Sections support seamless inline editing: clicking any section or paragraph activates the clean inline editor with live word/char counters, <kbd>Ctrl+S</kbd> hotkey, and save/revert controls.
+  - **Right Inspector Panel (`.doc-rail`)**: Contextual review intelligence card (displaying recent client feedback quotes such as revision requests), open review request banner with one-click "Open guest preview", private internal operator notes (locked with icon, strictly excluded from client review exports), and primary next-step submission triggers.
+- **Preview & Export View (`preview`)**: Paginated paper preview within `.cd-doc-subview`, rendering draft content against selectable templates (`executive`, `modern-studio`, `enterprise`), live template preview selector, portfolio inclusion switch, export toggles, and PDF generation simulator.
 - **Version History View (`history`)**: Full chronological list of immutable submitted versions (`DocVersion`) with status chips, decision badges, client comments, and one-click "Guest preview" inspection.
 - **Guest Preview Workspace (`guest-preview`)**: First-class, in-app workspace preview (`OwnerGuestPreviewWorkspace`) mounting the unified canonical `GuestReviewSurface` with an owner preview toolbar (`Copy guest link`, `Open externally`, `Refresh`, `Close preview`). Keeps the owner inside CoreDesk rather than launching an external shell.
-- **Side Panel (Metadata & Actions)**: Shows document properties, linked project milestone, open review requests with direct "Open guest preview" action, and client feedback.
+- **Material Protection**: Fully protected against wallpaper bleed under `:root[data-wallpaper]`, enforcing solid background opacity, backdrop blur, and crisp contrast across all three panels and canvas sheets.
 
 ---
 
-## 4. PDF Generation Architecture (`PLANNED`)
+## 4. Presentation Templates & Studio Portfolio Integration
+
+To project agency authority, documents and review packages support three distinct presentation templates:
+
+1. **Executive Editorial (`executive`)**:
+   - **Aesthetic**: Traditional bespoke publishing and executive board deck.
+   - **Typography**: Editorial serif headings (`Cormorant Garamond` / `Georgia`), high-legibility sans body (`Inter`), warm ivory reading sheet background (`#FCFBF7` / `#16191D`).
+   - **Accents**: Subtle golden seal badges, understated thin horizontal rules, centered masthead layout.
+2. **Modern Studio Showcase (`modern-studio`)**:
+   - **Aesthetic**: High-end minimalist design atelier and architecture monograph.
+   - **Typography**: Crisp grotesque typography (`Inter Display` / `Helvetica Neue`), tight letter-spacing, stark monochrome contrast.
+   - **Accents**: Monospace classification tags (`[PROPOSAL // v1.0]`), geometric framing, clean left-aligned grid hierarchy.
+3. **Enterprise Formal (`enterprise`)**:
+   - **Aesthetic**: Institutional governance, audited technical report, and management consultancy memo.
+   - **Typography**: Technical grotesques (`IBM Plex Sans` / `Roboto`), structured metadata grids.
+   - **Accents**: Security clearance watermarks, numbered paragraph ledgers, formal audit trail and compliance sign-off blocks.
+
+### 4.1 Studio Portfolio Showcase (`portfolio.ts`)
+Documents and reviews can optionally bind Northlight Studio's canonical portfolio showcase:
+- **Case Studies**: Harbor & Finch (Luxury retail identity), Verity Health (Digital patient intake), and Atlas Logistics (Real-time telemetry platform).
+- **Executive Metrics**: Measurable impact statistics (+38% brand recognition, 5.4M intake users, <200ms latency).
+- **Client Endorsements**: Verifiable quotes and testimonials from client leadership (Marta Velasco, Dr. Aris Thorne, Kaelen Vance).
+
+---
+
+## 5. PDF Generation Architecture (`PLANNED`)
 
 Currently, clicking "Export PDF" opens a simulated export modal. The planned production implementation:
 1. React renderer calls `window.coreDeskDesktop.document.exportPdf(documentId, version)`.

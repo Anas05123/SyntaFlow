@@ -11,6 +11,7 @@ import './styles/auth.css';
 import './styles/appearance.css';
 import './styles/guest-preview.css';
 import './styles/startup.css';
+import './styles/settings.css';
 
 import App from './App';
 import { StoreProvider } from './state/store';

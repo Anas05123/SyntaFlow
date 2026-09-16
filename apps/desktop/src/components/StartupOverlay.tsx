@@ -73,7 +73,7 @@ export function StartupOverlay({ ready, error = null, onRetry, onComplete }: Sta
     <div
       className={`cd-startup-layer ${isExiting ? 'is-exiting' : ''}`}
       role="status"
-      aria-label="CoreDesk workspace startup"
+      aria-label="Syntaflow workspace startup"
       aria-live="polite"
     >
       {error ? (
@@ -81,7 +81,7 @@ export function StartupOverlay({ ready, error = null, onRetry, onComplete }: Sta
           <div className="cd-startup-recovery-icon">
             <Icon name="alert" size={20} />
           </div>
-          <h2 className="cd-startup-recovery-title">CoreDesk couldn't open your workspace</h2>
+          <h2 className="cd-startup-recovery-title">Syntaflow couldn't open your workspace</h2>
           <p className="cd-startup-recovery-sub">
             Your local data has not been deleted.
             {error ? ` (${error})` : ''}
@@ -114,7 +114,7 @@ export function StartupOverlay({ ready, error = null, onRetry, onComplete }: Sta
           <div className="cd-startup-mark-box">
             <img
               src={BRAND_MARK_SRC}
-              alt="CoreDesk"
+              alt="Syntaflow"
               className="cd-startup-mark-img"
               draggable={false}
             />

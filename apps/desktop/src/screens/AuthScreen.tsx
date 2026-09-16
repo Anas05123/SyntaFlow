@@ -15,6 +15,7 @@ import { navigate } from '../app/router';
 import { Icon } from '../ui/Icon';
 import { useOverlay } from '../ui/overlay';
 import { WindowChrome } from '../ui/WindowChrome';
+import { BrandLogo } from '../ui/BrandMark';
 import { CoreDeskHeroOrbit } from '../components/CoreDeskHeroOrbit';
 import { authService } from '../app/authService';
 
@@ -112,13 +113,16 @@ export function AuthScreen({
           {/* LEFT SECTION: Design Showcase (Circular Lifecycle Orbit) */}
           <section className="cd-auth-hero-pane">
             <div className="cd-auth-hero-top">
-              <span className="cd-hero-overline">COREDESK LIFECYCLE</span>
+              <div className="cd-auth-hero-logo-wrap" style={{ marginBottom: 12 }}>
+                <BrandLogo height={28} />
+              </div>
+              <span className="cd-hero-overline">INTELLIGENCE IN FLOW</span>
               <h1 className="cd-hero-headline">
                 <span className="cd-hero-headline-main">Your Client</span>{' '}
                 <span className="cd-hero-headline-accent">Workspace</span>
               </h1>
               <p className="cd-auth-hero-sub">
-                A continuous system from first client relationship to finalized delivery.
+                An intelligent operating environment connecting context, clients, reviews, and delivery.
               </p>
             </div>
 
@@ -130,14 +134,14 @@ export function AuthScreen({
             {/* Left Footer Meta */}
             <div className="cd-auth-hero-foot">
               <span>6 Core Stages</span>
-              <span className="cd-auth-hero-version">Desktop v0.1.0</span>
+              <span className="cd-auth-hero-version">Syntaflow Desktop v0.1.0</span>
             </div>
           </section>
 
           {/* RIGHT SECTION: Dedicated Sign-In / Account Creation */}
           <section className="cd-auth-form-pane">
             <div className="cd-auth-form-top">
-              <span className="cd-auth-top-brand">CoreDesk Authentication</span>
+              <BrandLogo height={22} className="cd-auth-top-logo" />
               <span className="cd-auth-service-status">
                 <span className="cd-sided-pulse-dot" />
                 Service Ready
@@ -193,7 +197,7 @@ export function AuthScreen({
                 <>
                   <div className="cd-auth-form-heading">
                     <h2 className="cd-auth-form-title">
-                      {authMode === 'signup' ? 'Create local account' : 'Sign in to CoreDesk'}
+                      {authMode === 'signup' ? 'Create local account' : 'Sign in to Syntaflow'}
                     </h2>
                     <p className="cd-auth-form-sub">
                       {authMode === 'signup'

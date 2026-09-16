@@ -1,21 +1,15 @@
 /**
- * The CoreDesk mark.
+ * The Syntaflow brand marks.
  *
- * The brand symbol is a four-lobed interwoven ribbon loop — a continuous path
- * that crosses itself. It is the product's central metaphor: client work stays
- * on one thread. The asset is the real mark (a transparent PNG derived from the
- * supplied IconLogo), never a substituted glyph.
- *
- * `plate` supplies environmental light behind the mark. The mark's own lobes
- * are cobalt at the darkest end of the brand ramp, so on a near-black canvas
- * they lose their edge without some light around them. A cobalt/cyan wash
- * restores depth without bloom — glow and glassmorphism are excluded by the
- * Foundations rules.
+ * - BrandMark: Compact symbol mark (`logo icon`), used for app icon, collapsed sidebar,
+ *   window chrome, compact headers, and startup mark.
+ * - BrandLogo: Full horizontal logo (`logo 4`) with symbol and wordmark, used for
+ *   expanded sidebar, auth pages, settings/about header, and branded showcases.
  */
 
 import { useEffect, useRef, useState } from 'react';
 
-import { BRAND_MARK_SRC, isMarkLoaded } from './brandAssets';
+import { BRAND_LOGO_FULL_SRC, BRAND_MARK_SRC, isMarkLoaded } from './brandAssets';
 
 export interface BrandMarkProps {
   /** Rendered size in px. */
@@ -23,15 +17,14 @@ export interface BrandMarkProps {
   /** Paints environmental light behind the mark. Colour identity use. */
   plate?: boolean;
   className?: string;
+  alt?: string;
 }
 
-export function BrandMark({ size = 30, plate = false, className }: BrandMarkProps) {
+export function BrandMark({ size = 30, plate = false, className, alt = 'Syntaflow' }: BrandMarkProps) {
   const ref = useRef<HTMLImageElement | null>(null);
   const [failed, setFailed] = useState(false);
 
-  /* Report a mark that did not load, once. A 404 on an <img> is not an error the
-     page surfaces on its own, so a missing asset would otherwise ship as a broken
-     icon and nothing else. In development this makes the cause immediate. */
+  /* Report a mark that did not load, once. */
   useEffect(() => {
     const img = ref.current;
     if (!img || isMarkLoaded(img)) return;
@@ -40,8 +33,8 @@ export function BrandMark({ size = 30, plate = false, className }: BrandMarkProp
         setFailed(true);
         if (import.meta.env?.DEV) {
           console.error(
-            `[CoreDesk] brand mark failed to load from "${BRAND_MARK_SRC}". ` +
-              'Check that src/assets/coredesk-mark.png exists and is copied into the build.'
+            `[Syntaflow] brand mark failed to load from "${BRAND_MARK_SRC}". ` +
+              'Check that src/assets/syntaflow-icon.png exists and is copied into the build.'
           );
         }
       }
@@ -58,10 +51,45 @@ export function BrandMark({ size = 30, plate = false, className }: BrandMarkProp
       style={{ ['--mark-size' as string]: `${size}px` }}
     >
       <span className="brand-mark-glow" aria-hidden="true" />
-      {/* The URL comes from the bundler via brandAssets, never a literal path:
-          a relative literal is only correct while the document base is the app
-          root, and it silently breaks the day that stops being true. */}
-      <img ref={ref} src={BRAND_MARK_SRC} alt="" draggable={false} decoding="async" />
+      <img ref={ref} src={BRAND_MARK_SRC} alt={alt} draggable={false} decoding="async" />
+    </span>
+  );
+}
+
+export interface BrandLogoProps {
+  /** Rendered height in px. Defaults to 24px. */
+  height?: number;
+  className?: string;
+  alt?: string;
+}
+
+/**
+ * The full Syntaflow logo (logo 4) with symbol mark and wordmark.
+ * Uses object-fit: contain to preserve aspect ratio and avoid any stretching.
+ */
+export function BrandLogo({ height = 24, className, alt = 'Syntaflow' }: BrandLogoProps) {
+  return (
+    <span
+      className={className ? `brand-logo ${className}` : 'brand-logo'}
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        height: `${height}px`,
+        flex: '0 0 auto',
+      }}
+    >
+      <img
+        src={BRAND_LOGO_FULL_SRC}
+        alt={alt}
+        draggable={false}
+        decoding="async"
+        style={{
+          height: '100%',
+          width: 'auto',
+          objectFit: 'contain',
+          display: 'block',
+        }}
+      />
     </span>
   );
 }

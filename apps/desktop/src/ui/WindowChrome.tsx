@@ -91,7 +91,7 @@ export interface WindowChromeProps {
   children?: React.ReactNode;
 }
 
-export function WindowChrome({ label = 'CoreDesk', sub, children }: WindowChromeProps) {
+export function WindowChrome({ label = 'Syntaflow', sub, children }: WindowChromeProps) {
   const win = useDesktopWindow();
 
   return (

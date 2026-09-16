@@ -1,7 +1,7 @@
-# CoreDesk
+# Syntaflow
 
-> **The Local-First Operating System for Solo Agency Principals.**  
-> CoreDesk replaces fragmented agency tool stacks with a single, calm, studio-grade workspace. It manages the complete commercial loop: from proposal to signed agreement, onboarding, scoped work, milestone delivery, client review, and final handoff.
+> **Intelligence in Flow.**  
+> Syntaflow is an intelligent operating environment for connected work. It connects context, people, tools, documents, reviews, and delivery into a calm, continuous workspace.
 
 ---
 

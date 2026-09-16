@@ -150,7 +150,7 @@ class AuthServiceClient {
       user: {
         id: 'usr_preview',
         email,
-        name: name || 'CoreDesk Operator',
+        name: name || 'Syntaflow Operator',
         workspaceName: workspaceName || 'Primary Workspace',
       },
       expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),

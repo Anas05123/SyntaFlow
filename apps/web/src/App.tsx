@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './styles/global.css';
 import { usePath } from './utils/router';
 import { SiteHeader } from './components/navigation/SiteHeader';
@@ -22,17 +22,44 @@ import { AboutPage } from './pages/company/AboutPage';
 import { RoadmapPage } from './pages/company/RoadmapPage';
 import { ContactPage } from './pages/company/ContactPage';
 import { TermsPage } from './pages/legal/TermsPage';
-import { PrivacyPolicyPage } from './pages/legal/PrivacyPolicyPage';
-import { CookiePolicyPage } from './pages/legal/CookiePolicyPage';
-import { AcceptableUsePage } from './pages/legal/AcceptableUsePage';
+
+/* New Core Pages */
+import { PricingPage } from './pages/PricingPage';
+import { DownloadPage } from './pages/DownloadPage';
+import { IntegrationsCatalogPage } from './pages/IntegrationsCatalogPage';
+import { DocsPage } from './pages/DocsPage';
+import { LoginPage } from './pages/auth/LoginPage';
+import { DesktopAuthPage } from './pages/auth/DesktopAuthPage';
+import { AccountPage } from './pages/AccountPage';
 
 export const App: React.FC = () => {
   const [currentPath] = usePath();
 
+  // Scroll to top on route change & handle legacy path alias redirects
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    const path = currentPath.replace(/\/+$/, '') || '/';
+    if (path === '/privacy-policy' || path === '/cookies') {
+      window.location.hash = '#/privacy';
+    } else if (path === '/terms-of-service' || path === '/acceptable-use') {
+      window.location.hash = '#/terms';
+    }
+  }, [currentPath]);
+
   const renderRoute = () => {
-    switch (currentPath) {
+    // Normalization
+    const path = currentPath.replace(/\/+$/, '') || '/';
+
+    // Canonical legal routes (including legacy alias mapping)
+    if (path === '/privacy-policy' || path === '/cookies' || path === '/privacy') {
+      return <PrivacyPage />;
+    }
+    if (path === '/terms-of-service' || path === '/acceptable-use' || path === '/terms') {
+      return <TermsPage />;
+    }
+
+    switch (path) {
       case '/':
-      case '':
         return <HomePage />;
 
       /* Product */
@@ -56,6 +83,23 @@ export const App: React.FC = () => {
         return <ConsultantsPage />;
       case '/solutions/studios':
         return <StudiosPage />;
+
+      /* Core Navigation (Section 5) */
+      case '/integrations':
+        return <IntegrationsCatalogPage />;
+      case '/pricing':
+        return <PricingPage />;
+      case '/docs':
+      case '/docs/getting-started':
+        return <DocsPage />;
+      case '/download':
+        return <DownloadPage />;
+      case '/login':
+        return <LoginPage />;
+      case '/auth/desktop':
+        return <DesktopAuthPage />;
+      case '/account':
+        return <AccountPage />;
 
       /* Trust & Security */
       case '/security':
@@ -82,12 +126,6 @@ export const App: React.FC = () => {
       /* Legal */
       case '/terms':
         return <TermsPage />;
-      case '/privacy-policy':
-        return <PrivacyPolicyPage />;
-      case '/cookies':
-        return <CookiePolicyPage />;
-      case '/acceptable-use':
-        return <AcceptableUsePage />;
 
       default:
         return <HomePage />;

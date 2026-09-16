@@ -3,27 +3,16 @@ import { chromium } from '@playwright/test';
 
 const ROUTES = [
   '/',
-  '/product',
-  '/product/client-ops',
-  '/product/projects-tasks',
-  '/product/documents-reviews',
-  '/product/delivery-approvals',
-  '/solutions/freelancers',
-  '/solutions/agencies',
-  '/solutions/consultants',
-  '/solutions/studios',
+  '/pricing',
+  '/download',
+  '/integrations',
   '/security',
-  '/privacy',
-  '/data-handling',
+  '/docs',
   '/faq',
-  '/changelog',
-  '/about',
-  '/roadmap',
-  '/contact',
+  '/privacy',
   '/terms',
-  '/privacy-policy',
-  '/cookies',
-  '/acceptable-use',
+  '/login',
+  '/auth/desktop',
 ];
 
 const VIEWPORTS = [
@@ -39,6 +28,7 @@ async function run() {
 
   // Start in-process vite preview server
   const server = await preview({
+    root: 'apps/web',
     preview: {
       port: 5199,
       strictPort: true,
@@ -91,26 +81,32 @@ async function run() {
     await page.setViewportSize({ width: 1280, height: 800 });
     await page.goto('http://localhost:5199/#/', { waitUntil: 'domcontentloaded' });
 
-    // Test Hero Product Mockup tabs
-    await page.click('text=Dual-Density Tasks');
-    const tasksVisible = await page.isVisible('text=Sign-off on localized SQLite persistence schema');
-    console.log(`  Hero Mockup Tasks Tab: ${tasksVisible ? 'PASSED' : 'FAILED'}`);
+    // Test Desktop Simulator Tab Switching
+    console.log('  Testing Desktop Simulator tabs...');
+    await page.click('button:has-text("Paper Canvas")');
+    const paperCanvasActive = await page.isVisible('text=Typographic Paper Canvas');
+    console.log(`  Simulator Paper Canvas Tab: ${paperCanvasActive ? 'PASSED' : 'FAILED'}`);
 
-    await page.click('text=Delivery Gate');
-    const gateVisible = await page.isVisible('text=CANONICAL INVARIANT: DELIVERY GATE ENFORCEMENT');
-    console.log(`  Hero Mockup Delivery Gate Tab: ${gateVisible ? 'PASSED' : 'FAILED'}`);
+    await page.click('button:has-text("Dual-Density Tasks")');
+    const tasksActive = await page.isVisible('text=Dual-Density Task Boards');
+    console.log(`  Simulator Tasks Tab: ${tasksActive ? 'PASSED' : 'FAILED'}`);
 
-    // Test Product Workflow stage switching
-    await page.click('[data-stage-id="review"]');
-    const stage5Visible = await page.isVisible('text=STAGE 05 OF 07');
-    console.log(`  Product Workflow Stage 05 Switch: ${stage5Visible ? 'PASSED' : 'FAILED'}`);
+    // Test Stage Pipeline Graph node switching
+    console.log('  Testing Stage Pipeline Graph nodes...');
+    await page.click('button:has-text("STAGE 01")');
+    const stage01Active = await page.isVisible('text=STAGE 01 // CLIENT OPS');
+    console.log(`  Pipeline Stage 01 Switch: ${stage01Active ? 'PASSED' : 'FAILED'}`);
+
+    await page.click('button:has-text("STAGE 04")');
+    const stage04Active = await page.isVisible('text=STAGE 04 // STUDIO DOCS');
+    console.log(`  Pipeline Stage 04 Switch: ${stage04Active ? 'PASSED' : 'FAILED'}`);
 
     console.log(`\n--- Verification Summary ---`);
     console.log(`Total Checks: ${totalChecks}`);
     console.log(`Failed Checks: ${failedChecks}`);
 
-    if (failedChecks === 0 && tasksVisible && gateVisible && stage5Visible) {
-      console.log('✓ ALL 22 ROUTES AND 5 VIEWPORTS VERIFIED CLEANLY WITH ZERO ERRORS.\n');
+    if (failedChecks === 0 && paperCanvasActive && tasksActive && stage01Active && stage04Active) {
+      console.log('✓ ALL ROUTES AND 5 VIEWPORTS VERIFIED CLEANLY WITH ZERO ERRORS.\n');
     } else {
       process.exit(1);
     }

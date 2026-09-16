@@ -70,7 +70,7 @@ export function AppearancePopover({ onClose: _onClose }: AppearancePopoverProps)
           <span className="ap-popover-title">Appearance</span>
           <span className="ap-theme-pill">{resolvedTheme === 'dark' ? 'Dark' : 'Light'}</span>
         </div>
-        <button type="button" className="ap-reset-btn" onClick={reset} title="Reset to CoreDesk defaults">
+        <button type="button" className="ap-reset-btn" onClick={reset} title="Reset to Syntaflow defaults">
           <Icon name="undo" size={13} />
           <span>Reset</span>
         </button>

@@ -17,6 +17,8 @@ import { formatDate, formatShortDate, daysUntil } from '../../domain/dates';
 import { Button, Chip } from '../../ui/primitives';
 import { Icon } from '../../ui/Icon';
 import type { Review, DocumentRecord } from '../../domain/types';
+import { NORTHLIGHT_PORTFOLIO } from '../../domain/portfolio';
+import { INITIAL_SECTION_CONTENT } from '../../screens/DocumentWorkspaceScreen';
 
 export interface GuestReviewSurfaceProps {
   reviewId?: string;
@@ -37,6 +39,7 @@ export function GuestReviewSurface({
   const [comment, setComment] = useState('');
   const [commentError, setCommentError] = useState<string | null>(null);
   const [isInspectorOpen, setIsInspectorOpen] = useState(false);
+  const [showPortfolio, setShowPortfolio] = useState(false);
 
   // 1. Resolve Review and Document records
   let review: Review | null = null;
@@ -210,8 +213,12 @@ export function GuestReviewSurface({
     .join('')
     .toUpperCase();
 
+  const selectedTemplate = review.template || 'executive';
+  const isPortfolioIncluded = review.includePortfolio !== false;
+  const coverNote = review.coverMessage || (doc.type === 'Proposal' ? `Finalized proposal draft submitted for ${client?.name ?? 'client'} review and milestone approval.` : null);
+
   return (
-    <div className="cd-guest-review-surface">
+    <div className={`cd-guest-review-surface cd-template-${selectedTemplate}`}>
       {/* Exact Version Guarantee Banner */}
       <div className="cd-review-banner">
         <div className="cd-review-banner-left">
@@ -246,6 +253,71 @@ export function GuestReviewSurface({
               </p>
             </header>
 
+            {/* Executive Transmission Note */}
+            {coverNote ? (
+              <div
+                className="cd-doc-cover-message"
+                style={{
+                  background: 'var(--canvas-subtle, rgba(0,0,0,0.15))',
+                  border: '1px solid var(--divider)',
+                  borderRadius: 6,
+                  padding: '16px 20px',
+                  margin: '0 0 28px',
+                }}
+              >
+                <div className="row" style={{ gap: 8, marginBottom: 6 }}>
+                  <Icon name="mail" size={13} />
+                  <span
+                    className="meta"
+                    style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}
+                  >
+                    Transmission Note from {state.workspace.ownerName}
+                  </span>
+                </div>
+                <p className="cd-doc-p" style={{ margin: 0, fontStyle: 'italic', fontSize: 14, color: 'var(--text)' }}>
+                  "{coverNote}"
+                </p>
+              </div>
+            ) : null}
+
+            {/* Studio Portfolio Attachment Banner */}
+            {isPortfolioIncluded ? (
+              <div
+                className="cd-portfolio-attachment-banner"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  gap: 12,
+                  padding: '12px 18px',
+                  background: 'rgba(59, 130, 246, 0.08)',
+                  border: '1px solid rgba(59, 130, 246, 0.25)',
+                  borderRadius: 8,
+                  margin: '0 0 28px',
+                }}
+              >
+                <div className="row" style={{ gap: 10 }}>
+                  <Icon name="sparkle" size={16} />
+                  <div>
+                    <span className="strong" style={{ fontSize: 13, color: 'var(--text)' }}>
+                      Studio Portfolio &amp; Track Record Attached
+                    </span>
+                    <div className="meta" style={{ fontSize: 11.5 }}>
+                      Verified case studies, metrics, and endorsements from {state.workspace.ownerName} ({state.workspace.name})
+                    </div>
+                  </div>
+                </div>
+                <Button
+                  size="sm"
+                  variant={showPortfolio ? 'primary' : 'ghost'}
+                  icon="eye"
+                  onClick={() => setShowPortfolio(!showPortfolio)}
+                >
+                  {showPortfolio ? 'Hide Portfolio' : 'Inspect Portfolio (3 Case Studies)'}
+                </Button>
+              </div>
+            ) : null}
+
             {/* Continuous Sections */}
             <div className="cd-doc-content">
               {doc.sections.map((sectionTitle) => (
@@ -255,6 +327,89 @@ export function GuestReviewSurface({
                 </section>
               ))}
             </div>
+
+            {/* Interactive Studio Portfolio Showcase */}
+            {isPortfolioIncluded && showPortfolio ? (
+              <section className="cd-guest-portfolio-section" aria-label="Studio Portfolio">
+                <div className="row-between">
+                  <div>
+                    <span className="cd-portfolio-badge">
+                      <Icon name="sparkle" size={12} /> Verified Agency Track Record
+                    </span>
+                    <h2 className="cd-doc-section-heading mt-8" style={{ margin: '8px 0 4px' }}>
+                      {NORTHLIGHT_PORTFOLIO.studioName} Portfolio &amp; Case Studies
+                    </h2>
+                    <p className="meta" style={{ margin: 0 }}>
+                      {NORTHLIGHT_PORTFOLIO.ownerName} · {NORTHLIGHT_PORTFOLIO.tagline}
+                    </p>
+                  </div>
+                  <span className="chip tone-accent">100% On-Time Delivery</span>
+                </div>
+
+                <div className="cd-guest-portfolio-metric-row mt-16">
+                  {NORTHLIGHT_PORTFOLIO.stats.map((st) => (
+                    <div
+                      key={st.label}
+                      style={{
+                        padding: '10px 14px',
+                        background: 'var(--canvas-subtle, rgba(0,0,0,0.15))',
+                        border: '1px solid var(--divider)',
+                        borderRadius: 6,
+                        flex: 1,
+                        minWidth: 130,
+                      }}
+                    >
+                      <div className="strong" style={{ fontSize: 15, color: 'var(--accent)' }}>{st.value}</div>
+                      <div className="meta" style={{ fontSize: 11 }}>{st.label}</div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="stack mt-20">
+                  {NORTHLIGHT_PORTFOLIO.caseStudies.map((cs) => (
+                    <div className="cd-guest-portfolio-card" key={cs.id}>
+                      <div className="cd-guest-portfolio-header">
+                        <div className="row" style={{ gap: 8 }}>
+                          <span className="strong" style={{ fontSize: 15 }}>{cs.title}</span>
+                          <span className="chip tone-neutral" style={{ fontSize: 11 }}>{cs.industry}</span>
+                        </div>
+                        <span className="meta" style={{ fontSize: 12 }}>{cs.year}</span>
+                      </div>
+
+                      <p className="cd-doc-p" style={{ fontSize: 13, margin: '8px 0 8px', color: 'var(--text)' }}>
+                        <strong>Challenge:</strong> {cs.challenge}
+                      </p>
+                      <p className="cd-doc-p" style={{ fontSize: 13, margin: '0 0 10px', color: 'var(--muted)' }}>
+                        <strong>Solution:</strong> {cs.solution}
+                      </p>
+
+                      <div className="row" style={{ gap: 8, flexWrap: 'wrap' }}>
+                        {cs.deliverables.map((del) => (
+                          <span key={del} className="chip tone-neutral" style={{ fontSize: 11 }}>{del}</span>
+                        ))}
+                      </div>
+
+                      <div className="cd-guest-portfolio-metric-row">
+                        {cs.metrics.map((m) => (
+                          <span className="cd-cs-metric" key={m.label}>
+                            {m.value} · {m.label}
+                          </span>
+                        ))}
+                      </div>
+
+                      {cs.testimonial ? (
+                        <div className="cd-guest-testimonial-quote">
+                          "{cs.testimonial.quote}"
+                          <div className="meta mt-4" style={{ fontStyle: 'normal', fontSize: 11 }}>
+                            — {cs.testimonial.author}, {cs.testimonial.role} ({cs.testimonial.organization})
+                          </div>
+                        </div>
+                      ) : null}
+                    </div>
+                  ))}
+                </div>
+              </section>
+            ) : null}
           </article>
         </div>
 
@@ -463,6 +618,18 @@ export function GuestReviewSurface({
  */
 function renderSectionBody(title: string, clientName?: string) {
   const norm = title.trim().toLowerCase();
+
+  // 1. Check pre-populated agency section content (Proposals, Briefs, Welcome packs)
+  if (INITIAL_SECTION_CONTENT[title]) {
+    const raw = INITIAL_SECTION_CONTENT[title];
+    return (
+      <>
+        {raw.split('\n\n').map((para, idx) => (
+          <p className="cd-doc-p" key={idx} style={{ whiteSpace: 'pre-line' }}>{para}</p>
+        ))}
+      </>
+    );
+  }
 
   if (norm.includes('positioning')) {
     return (

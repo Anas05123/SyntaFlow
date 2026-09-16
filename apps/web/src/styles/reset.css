@@ -8,6 +8,7 @@ html {
   -webkit-text-size-adjust: 100%;
   tab-size: 4;
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
@@ -32,8 +33,9 @@ input, button, textarea, select {
   color: inherit;
 }
 
-p, h1, h2, h3, h4, h5, h6 {
+p, h1, h2, h3, h4, h5, h6, li, code, pre {
   overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 ul, ol {

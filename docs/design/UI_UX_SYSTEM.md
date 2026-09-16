@@ -162,13 +162,62 @@ Wallpapers belong to the background shell, environment, top chrome, and modal ba
 
 ---
 
-## 9. Settings Structure & Danger Zone (Section 23)
+## 9. Dedicated Settings Workspace & Information Architecture (Section 23)
 
-Settings are partitioned into 7 contextual tabs:
-1. `General`: Business identity & document proposal defaults.
-2. `Appearance`: Theme mode (Dark/Light/System) & document accents.
-3. `Workspace`: Workspace name, timezone, services & fee items, notifications.
-4. `Account`: Owner profile, email, password, and sign out.
-5. `Client Access`: Object-level access grants table & guest permissions.
-6. `Integrations`: Offline workstation sync (folder sync, .ics calendar, CSV/JSON export, webhooks).
-7. `Advanced`: Canonical database statistics, storage paths, data export, and an explicit **Danger Zone** (`.cd-danger-zone`) isolating destructive operations (Reset demo data, Purge UI cache).
+Settings operates as a dedicated, full-window desktop control center (`.shell-settings`, `.cd-settings-workspace`). When entering Settings, the main Syntaflow application sidebar (`Rail.tsx`) and standard application topbar are completely hidden, eliminating double navigation and focusing the entire window on system configuration. Pressing `← Back` immediately returns to the normal operational workspace and restores the main sidebar.
+
+### 9.1 Single-Chrome Spatial Layout
+- **Dedicated Top Bar** (`.cd-settings-header`, 52px): Single unified header featuring:
+  - `← Back` navigation button returning to the previous application view.
+  - Contextual `Settings` / `Section` title without repetitive hierarchy duplication.
+  - Global `Search settings...` input indexing all categories, titles, keywords, and integrations.
+  - Frameless `WindowControls` (minimize, maximize, close) for desktop window management.
+- **Dedicated Vertical Navigation Rail** (`.cd-settings-nav`, 220px, `#111418` dark graphite): Single left navigation grouped into 4 semantic categories across 10 focused sections:
+  - **`GENERAL`**:
+    - `General` (`#/settings/general`): Display language, date format, 24-hour clock, relative timestamps, startup view, system tray & login behavior.
+    - `Appearance` (`#/settings/appearance`): Interface theme mode (Dark / Light / System), primary accent color, background style, text scale, reduced motion, contrast boost.
+    - `Notifications` (`#/settings/notifications`): Desktop toast alerts categorized by Reviews, Tasks, Projects, Client Delivery, and System Activity.
+  - **`WORKSPACE`**:
+    - `Workspace` (`#/settings/workspace`): Studio business identity, legal entity, time zone, primary currency, service catalog & commercial fee defaults.
+    - `Client Access` (`#/settings/client-access`): Granular object-level guest access grants table, permissions scopes, review access management, and invitation dispatch.
+  - **`SYSTEM`**:
+    - `Integrations` (`#/settings/integrations`): Rebuilt service directory for external tools and SaaS connectors (Gmail, Google Calendar, Google Drive, GitHub, Slack, Notion, Figma, Outlook, Dropbox).
+    - `AI & Models` (`#/settings/ai`): Local neural inference configuration, live Ollama daemon connection testing (`http://127.0.0.1:11434`), context window bounds, temperature control, prompt PII redaction, and `TaskRouter` architectural guarantees.
+    - `Security` (`#/settings/security`): Honest, verifiable security posture: active operator session details, local database isolation, Electron runtime privilege boundaries, and credential rotation.
+  - **`ACCOUNT`**:
+    - `Account` (`#/settings/account`): Operator identity profile, avatar initials, primary email, role badge, password change, and secure sign-out.
+    - `Advanced` (`#/settings/advanced`): Local filesystem sync (`Workspace Directory Sync`), system calendar feed export (`.ics`), accounting CSV export, SQLite database metrics, UI cache purge, and an isolated **Danger Zone** (`.cd-settings-danger-zone`).
+
+### 9.2 Integrations Directory & Compact Service Cards
+- **External vs System Separation**: Integrations strictly hosts external third-party services. Internal workstation capabilities (Local SQLite engine, folder sync, CSV exports) reside in `Advanced`.
+- **User-Oriented Categories & Filters**:
+  - `COMMUNICATION`: Gmail, Microsoft Outlook, Slack
+  - `CALENDAR & MEETINGS`: Google Calendar, Calendly, Zoom
+  - `FILES`: Google Drive, Microsoft OneDrive, Dropbox
+  - `DESIGN`: Figma
+  - `KNOWLEDGE`: Notion, Google Docs, Google Sheets
+  - `DEVELOPMENT`: GitHub, Linear, Stripe
+- **High-Density 3-Column Responsive Grid**: Cards are strictly compact (72–88px height, min-height 74px) and feature:
+  - Authentic vendor SVG brand marks with exact brand colors, official geometry, and proportions (28–32px) rendered via `ServiceLogos.tsx` and mirrored in `public/integrations/*.svg` across all 16 supported services: **Gmail** (official Google Workspace envelope), **Google Calendar** (official Google Workspace '31' card), **Google Drive** (official 6-color isometric triangle), **Calendly** (official geometric 'C' mark), **Notion** (official 3D notebook cover with serif 'N'), **Microsoft OneDrive** (official Fluent Design dual-gradient cloud), **Linear** (official 4-slash spiral), **Stripe** (official typographic 'S' mark), **Slack** (official 4-quadrant octothorpe), **Figma** (official 5-piece mark), **GitHub** (official Invertocat), **Zoom** (official camera badge), **Outlook** (official Microsoft 365 badge), **Dropbox** (official 5-diamond box), **Google Docs**, and **Google Sheets**.
+  - 14.5px semibold title & 12px capability description.
+  - Authentic status indicators: `● Connected` (green beacon), `● Needs attention` (amber beacon), `Beta` / `Experimental` (subtle badges), `Connect` (compact button), `Coming soon` (muted label), or active `● Authorizing... [ Cancel ]` with instant inline cancellation.
+  - **Decoupled Concurrent Lifecycle**: Connecting states (`connectingIds`) are isolated per service. Multiple integrations can authenticate concurrently without blocking or bleeding state across adjacent cards.
+- **In-Page Wide Search**: Dedicated `600–780px` wide search bar indexing titles, descriptions, categories, and normalized capabilities.
+- **Integration Detail Drawer**: Clicking any card slides out an interactive drawer containing:
+  - Header: 36px official vendor logo, product title, category, and direct external website link.
+  - Connection status card with account email/handle and timestamp of last verified ping.
+  - Architecture & Transport info (e.g. `API: Google OAuth 2.0 PKCE`, `MCP: Streamable HTTP`).
+  - Capabilities checklist (`calendar.read`, `calendar.availability`, `mail.draft`, `issues.read`, etc.).
+  - Required OAuth / API scopes list (`calendar.readonly`, `gmail.compose`, `repo`, etc.).
+  - **Agent Access Controller**: Explicit toggle to grant or restrict Syntaflow AI agents from utilizing this integration, accompanied by granular capability checkboxes (e.g. `mail.send` with an elevated confirmation warning badge).
+  - Actions: `[ Connect ]` (or `[ Authorizing with browser... ] [ Cancel ]` with immediate teardown), `[ Test connection ]` (queries live endpoint and displays latency), and `[ Disconnect ]` (wipes credentials from vault).
+- **Direct Account Connection Dialog**: Clicking `Connect` on any service card or inside the detail drawer opens a frictionless in-app connection modal dialog:
+  - Eliminates Google Cloud Console / developer portal prerequisites for end users.
+  - Automatically prefills or accepts the user's account email (e.g. `ayarlanas79@gmail.com`) and optional display label.
+  - Summarizes active capabilities (`mail.search`, `mail.read`, `mail.draft`, `mail.send`, etc.).
+  - Binds the account credentials securely into `CredentialVault` with instant status feedback (`● Connected` with connected email displayed on the card and detail drawer).
+  - Offers an optional developer accordion for System Browser OAuth 2.0 PKCE when custom Google Cloud client IDs are configured.
+
+### 9.3 Wide Canvas Measure & High Contrast
+- Content area expands flexibly up to `1280–1600px`, completely eliminating empty dead space on 1440px and 1920px viewports while preserving comfortable line measures for structured rows.
+- High-contrast inputs (38px), accessible toggle switches (42×24px), and 2px cobalt left indicators on active navigation items without heavy outlines.

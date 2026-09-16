@@ -2,6 +2,7 @@ import { z } from "zod";
 import type { CoreDeskAiGenerateInput, CoreDeskAiResult, CoreDeskAiStatus } from "./ai";
 export * from "./ai";
 export * from "./redact-secrets";
+export * from "./integrations";
 
 export const healthResponseSchema = z.object({
   status: z.literal("ok"),

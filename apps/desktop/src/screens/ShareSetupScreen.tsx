@@ -1,9 +1,13 @@
 /**
- * D05 · Review & share setup.
+ * D05 · Review & Share Transmission Studio.
  *
- * Four steps, an explicit guard list, and a guest preview. Never share a
- * working draft by accident: the create button stays disabled while any guard
- * is unmet, and it names the unblocking condition.
+ * Executive client review transmission form featuring:
+ * 1. Exact immutable version snapshot freezing.
+ * 2. Recipient authority assignment & SLA presets.
+ * 3. Professional cover message presets.
+ * 4. Distinctive document presentation templates.
+ * 5. Instant Studio Portfolio & Track Record inclusion.
+ * 6. High-fidelity live transactional email and portal preview.
  */
 
 import { useState } from 'react';
@@ -12,8 +16,10 @@ import { useStore, nextId } from '../state/store';
 import { useOverlay } from '../ui/overlay';
 import { navigate } from '../app/router';
 import { formatDate, isoInDays } from '../domain/dates';
-import { Banner, Button, Card, CardBody, CardFoot, CardHead, Check, Field, TextArea, TextInput } from '../ui/primitives';
+import { Banner, Button, Card, CardBody, CardFoot, CardHead, Check, Chip, Field, TextArea, TextInput } from '../ui/primitives';
 import { Icon } from '../ui/Icon';
+import { NORTHLIGHT_PORTFOLIO } from '../domain/portfolio';
+import type { PresentationTemplate } from '../domain/types';
 
 export function ShareSetupScreen({ documentId }: { documentId?: string }) {
   const { state, dispatch, derived } = useStore();
@@ -22,36 +28,38 @@ export function ShareSetupScreen({ documentId }: { documentId?: string }) {
   const [docId] = useState(
     documentId ?? state.documents.find((d) => d.reviewState === 'waiting')?.id ?? state.documents[0]?.id ?? ''
   );
-  const [versionChoice, setVersionChoice] = useState<'draft' | number>('draft');
-  const [recipient, setRecipient] = useState('');
-  const [role, setRole] = useState<'Guest reviewer' | 'Guest viewer'>('Guest reviewer');
-  const [due, setDue] = useState(isoInDays(7));
-  const [note, setNote] = useState('');
-  const [canDownload, setCanDownload] = useState(false);
-  const [saveState, setSaveState] = useState<'saved' | 'dirty'>('saved');
-
   const doc = derived.documentById(docId);
   const client = doc ? derived.clientById(doc.clientId) : null;
+  const project = doc ? derived.projectById(doc.projectId) : null;
   const existing = doc ? derived.activeReviewOfDocument(doc.id) : null;
 
-  const recipientValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(recipient.trim());
-  const unsaved = saveState !== 'saved';
-  const blocked = !recipientValid || Boolean(existing) || unsaved;
+  // Initial contact resolution
+  const primaryContact = client?.contacts.find((c) => c.primary) ?? client?.contacts[0] ?? null;
 
-  const guards: { label: string; bad: boolean }[] = [
-    { label: 'Unsaved or failed-save content cannot be submitted', bad: unsaved },
-    { label: 'One open request per deliverable', bad: Boolean(existing) },
-    { label: 'A verified recipient is required', bad: !recipientValid },
-    { label: 'Approving a stale or withdrawn request is rejected', bad: false },
-  ];
+  const [versionChoice, setVersionChoice] = useState<'draft' | number>('draft');
+  const [recipient, setRecipient] = useState(primaryContact?.email ?? '');
+  const [recipientName, setRecipientName] = useState(primaryContact?.name ?? '');
+  const [role, setRole] = useState<'Guest reviewer' | 'Guest viewer'>('Guest reviewer');
+  const [dueDays, setDueDays] = useState(7);
+  const [due, setDue] = useState(isoInDays(7));
+  const [canDownload, setCanDownload] = useState(true);
+  const [saveState] = useState<'saved' | 'dirty'>('saved');
 
-  const blockerText = !recipientValid
-    ? 'Blocked: add a verified recipient email.'
-    : existing
-      ? 'Blocked: an open request already exists for this document.'
-      : unsaved
-        ? 'Blocked: save the draft first.'
-        : 'Ready to send.';
+  // Presentation Template & Portfolio State
+  const [template, setTemplate] = useState<PresentationTemplate>('executive');
+  const [includePortfolio, setIncludePortfolio] = useState(true);
+  const [selectedCaseStudies, setSelectedCaseStudies] = useState<string[]>(
+    NORTHLIGHT_PORTFOLIO.caseStudies.map((cs) => cs.id)
+  );
+
+  // Message Presets
+  const [messagePreset, setMessagePreset] = useState<'proposal' | 'deliverable' | 'concept' | 'custom'>('proposal');
+  const [note, setNote] = useState(
+    `Please find attached our finalized proposal for ${doc?.title ?? 'the engagement'}. It outlines our strategic approach, deliverables, schedule, and investment terms. We look forward to your review and sign-off.`
+  );
+
+  // Preview Mode Tab ('email' | 'portal')
+  const [previewTab, setPreviewTab] = useState<'email' | 'portal'>('email');
 
   if (!doc) {
     return (
@@ -68,225 +76,747 @@ export function ShareSetupScreen({ documentId }: { documentId?: string }) {
   }
 
   const targetVersion = versionChoice === 'draft' ? doc.workingVersion + 1 : versionChoice;
+  const recipientValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(recipient.trim());
+  const unsaved = saveState !== 'saved';
+  const blocked = !recipientValid || Boolean(existing) || unsaved;
+
+  const guards: { label: string; bad: boolean }[] = [
+    { label: 'Unsaved draft content cannot be submitted (Draft is clean)', bad: unsaved },
+    { label: 'One active review request per deliverable snapshot', bad: Boolean(existing) },
+    { label: 'A verified recipient email address is required', bad: !recipientValid },
+    { label: 'Immutable version guarantee: frozen snapshot cannot be overwritten', bad: false },
+  ];
+
+  const blockerText = !recipientValid
+    ? 'Blocked: enter a valid recipient email.'
+    : existing
+      ? 'Blocked: an open request already exists for this deliverable.'
+      : unsaved
+        ? 'Blocked: save the draft before submitting.'
+        : 'Ready to dispatch.';
+
+  const handleSelectContact = (email: string, name: string) => {
+    setRecipient(email);
+    setRecipientName(name);
+  };
+
+  const handlePresetChange = (preset: 'proposal' | 'deliverable' | 'concept' | 'custom') => {
+    setMessagePreset(preset);
+    if (preset === 'proposal') {
+      setNote(
+        `Please find attached our finalized proposal for ${doc.title} (v${targetVersion}). It outlines our strategic approach, deliverables, schedule, and investment terms. We look forward to your review and sign-off.`
+      );
+    } else if (preset === 'deliverable') {
+      setNote(
+        `We are pleased to submit the milestone deliverables for ${doc.title} (v${targetVersion}) for your formal review and sign-off. Please review the detailed specifications and indicate your approval.`
+      );
+    } else if (preset === 'concept') {
+      setNote(
+        `We have prepared the initial concept exploration and guidelines for ${doc.title} (v${targetVersion}). We welcome your detailed feedback and direction on the options presented.`
+      );
+    }
+  };
+
+  const handleSlaChange = (days: number) => {
+    setDueDays(days);
+    setDue(isoInDays(days));
+  };
+
+  const toggleCaseStudy = (csId: string) => {
+    setSelectedCaseStudies((prev) =>
+      prev.includes(csId) ? prev.filter((id) => id !== csId) : [...prev, csId]
+    );
+  };
+
+  const handleDispatch = () => {
+    if (blocked) return;
+
+    const newVersion = doc.workingVersion + 1;
+    const finalVersion = versionChoice === 'draft' ? newVersion : Number(versionChoice);
+
+    // 1. Submit immutable version snapshot
+    dispatch({
+      type: 'document/submitVersion',
+      id: doc.id,
+      note: note || `Submitted v${finalVersion} for client review.`,
+    });
+
+    // 2. Register review request with presentation template and portfolio
+    const reviewId = nextId('rv');
+    const resolvedName = recipientName.trim() || recipient.split('@')[0];
+
+    dispatch({
+      type: 'review/add',
+      review: {
+        id: reviewId,
+        documentId: doc.id,
+        projectId: doc.projectId,
+        version: finalVersion,
+        reviewer: {
+          name: resolvedName,
+          email: recipient.trim(),
+          role: role === 'Guest reviewer' ? 'Approver' : 'Viewer',
+        },
+        requestedOn: new Date().toISOString(),
+        due,
+        state: 'waiting',
+        outcome: null,
+        comments: [],
+        template,
+        includePortfolio,
+        portfolioCaseStudyIds: includePortfolio ? selectedCaseStudies : [],
+        coverMessage: note,
+      },
+    });
+
+    // 3. Register access grant
+    dispatch({
+      type: 'grant/add',
+      grant: {
+        id: nextId('gr'),
+        recipient: { name: resolvedName, email: recipient.trim() },
+        role,
+        objectLabel: `${doc.title} · v${finalVersion}`,
+        objectType: 'Review request',
+        permissions: [
+          'Read granted version',
+          'Comment on version',
+          ...(role === 'Guest reviewer' ? ['Approve or request changes'] : []),
+          ...(canDownload ? ['Download permitted files'] : []),
+          ...(includePortfolio ? ['Inspect Studio Portfolio & Case Studies'] : []),
+        ],
+        state: 'invited',
+        invited: new Date().toISOString(),
+        lastActivity: null,
+        expires: due,
+      },
+    });
+
+    // 4. Register activity event
+    dispatch({
+      type: 'activity/add',
+      event: {
+        id: nextId('ev'),
+        type: 'review-requested',
+        actor: state.workspace.ownerName,
+        date: new Date().toISOString(),
+        title: `dispatched review package for ${doc.title} v${finalVersion} to ${resolvedName}`,
+        targetLabel: `${doc.title} · v${finalVersion}`,
+        targetHref: `#/documents/${doc.id}`,
+        read: true,
+        resolves: `Waiting on ${resolvedName} (${role === 'Guest reviewer' ? 'Approver' : 'Viewer'}).`,
+      },
+    });
+
+    overlay.toast(
+      'Review package dispatched',
+      `Sent v${finalVersion} to ${resolvedName} with ${template} template${includePortfolio ? ' and Studio Portfolio' : ''}.`,
+      'ok'
+    );
+
+    navigate(`#/documents/${doc.id}`);
+  };
 
   return (
-    <div className="auth-wrap" style={{ maxWidth: 1100, paddingTop: 0 }}>
-      <Button variant="ghost" size="sm" icon="arrowLeft" className="mb-16" onClick={() => navigate(`#/documents/${doc.id}`)}>
-        Back to document
-      </Button>
+    <div className="cd-share-studio">
+      {/* Pinned Toolbar */}
+      <header className="cd-share-toolbar">
+        <div className="cd-share-toolbar-left">
+          <Button
+            variant="ghost"
+            size="sm"
+            icon="arrowLeft"
+            onClick={() => navigate(`#/documents/${doc.id}`)}
+          >
+            Back to Document
+          </Button>
+          <span className="divider-v" style={{ height: 16 }} />
+          <span className="strong" style={{ fontSize: 14 }}>{doc.title}</span>
+          <Chip state={doc.reviewState} />
+          <span className="cd-doc-version-pill">
+            Working draft v{doc.workingVersion} → Freezes as v{targetVersion}
+          </span>
+          <span className="meta">
+            {doc.type} · <a href={`#/clients/${client?.id}`}>{client?.name}</a>
+            {project ? ` · ${project.name}` : ''}
+          </span>
+        </div>
+        <div className="row" style={{ gap: 10 }}>
+          <Button
+            variant="primary"
+            icon="send"
+            disabled={blocked}
+            onClick={handleDispatch}
+          >
+            Dispatch Review Package
+          </Button>
+        </div>
+      </header>
 
-      <div className="eyebrow">Review &amp; share setup · D05</div>
-      <h1>Share one exact version</h1>
-      <p className="page-sub mt-8">
-        The recipient is the only person who can decide. A working draft can never be shared by accident, and
-        previewing is not sharing.
-      </p>
-
-      <div className="split mt-24">
+      {/* Main Studio 2-Column Grid */}
+      <div className="cd-share-layout">
+        {/* Left Column: 5-Step Transmission Form */}
         <div className="stack">
           {existing ? (
             <Banner
               tone="bad"
-              title={<><strong>A review request is already open for this document.</strong></>}
-              sub={`v${existing.version} is with ${existing.reviewer.name}, due ${formatDate(existing.due)}. V1 allows one open request per deliverable — withdraw it, or wait for the decision.`}
+              title={<><strong>An open review request already exists for this deliverable.</strong></>}
+              sub={`v${existing.version} is currently awaiting ${existing.reviewer.name} (due ${formatDate(existing.due)}). Governance permits one open review per deliverable to prevent audit split.`}
               action={
                 <Button
                   size="sm"
                   onClick={() => {
                     dispatch({ type: 'review/withdraw', id: existing.id });
-                    overlay.toast('Review request withdrawn', 'The version is retained.', 'warn');
+                    overlay.toast('Review request withdrawn', 'The prior version was archived.', 'warn');
                   }}
                 >
-                  Withdraw request
+                  Withdraw prior request
                 </Button>
               }
             />
           ) : null}
 
-          {unsaved ? (
-            <Banner
-              tone="bad"
-              title={<><strong>This document has unsaved changes.</strong></>}
-              sub="A version is frozen from a saved draft. Save first, then submit."
-              action={<Button size="sm" onClick={() => setSaveState('saved')}>Save now</Button>}
-            />
-          ) : null}
-
-          <Card>
-            <CardHead title="1 · Choose the exact version" desc="Submitting freezes a numbered version. It is never overwritten afterwards." />
-            <CardBody>
-              <div className="stack-tight">
-                <button
-                  type="button"
-                  className={`option${versionChoice === 'draft' ? ' selected' : ''}`}
-                  onClick={() => setVersionChoice('draft')}
-                >
-                  <span className="radio-mark" />
-                  <span>
-                    <span className="option-title">
-                      Working draft v{doc.workingVersion} <span className="chip tone-accent">New version</span>
-                    </span>
-                    <span className="option-sub">Freezes as v{doc.workingVersion + 1} when you create the request.</span>
-                  </span>
-                </button>
-                {doc.versions.map((v) => (
-                  <button
-                    type="button"
-                    key={v.n}
-                    className={`option${versionChoice === v.n ? ' selected' : ''}`}
-                    onClick={() => setVersionChoice(v.n)}
-                  >
-                    <span className="radio-mark" />
-                    <span>
-                      <span className="option-title">Submitted v{v.n}</span>
-                      <span className="option-sub">
-                        {formatDate(v.date)} · {v.decision === 'approved' ? 'approved' : v.decision === 'changes' ? 'changes requested' : 'open'}
-                      </span>
-                    </span>
-                  </button>
-                ))}
-              </div>
-              <div className="row mt-12">
-                <button
-                  type="button"
-                  className="btn btn-sm btn-ghost"
-                  onClick={() => setSaveState((s) => (s === 'saved' ? 'dirty' : 'saved'))}
-                >
-                  <Icon name="refresh" size={14} /> Toggle save state (demo)
-                </button>
-              </div>
-            </CardBody>
-          </Card>
-
-          <Card>
-            <CardHead title="2 · Recipient and role" desc="Access is granted to a person and an object, never to a whole client." />
-            <CardBody>
-              <div className="grid grid-2">
-                <Field
-                  label="Recipient email"
-                  htmlFor="sh-recipient"
-                  error={recipient.trim() && !recipientValid ? 'That does not look like an email address.' : undefined}
-                >
-                  <TextInput
-                    id="sh-recipient"
-                    value={recipient}
-                    onChange={(e) => setRecipient(e.target.value)}
-                    invalid={recipient.trim().length > 0 && !recipientValid}
-                    placeholder="marta@harborfinch.com"
-                  />
-                </Field>
-                <Field label="Role" htmlFor="sh-role" hint="Only a reviewer can approve or request changes.">
-                  <select
-                    className="select"
-                    id="sh-role"
-                    value={role}
-                    onChange={(e) => setRole(e.target.value as 'Guest reviewer' | 'Guest viewer')}
-                  >
-                    <option value="Guest reviewer">Guest reviewer</option>
-                    <option value="Guest viewer">Guest viewer</option>
-                  </select>
-                </Field>
-              </div>
-
-              <div className="grid grid-2 mt-16">
-                <Field label="Review due date" htmlFor="sh-due">
-                  <TextInput id="sh-due" type="date" value={due} onChange={(e) => setDue(e.target.value)} />
-                </Field>
-                <div className="field">
-                  <span className="field-label">Known contacts at {client?.name}</span>
-                  <div className="stack-tight">
-                    {client?.contacts.map((ct) => (
-                      <button
-                        type="button"
-                        key={ct.id}
-                        className={`option${recipient === ct.email ? ' selected' : ''}`}
-                        onClick={() => setRecipient(ct.email)}
-                      >
-                        <span className="radio-mark" />
-                        <span>
-                          <span className="option-title">{ct.name}</span>
-                          <span className="option-sub">{ct.email}</span>
-                        </span>
-                      </button>
-                    ))}
+          {/* Step 1: Version & Snapshot Confirmation */}
+          <div className="cd-dispatch-step">
+            <div className="cd-step-head">
+              <div className="cd-step-title-wrap">
+                <span className="cd-step-badge">1</span>
+                <div>
+                  <h3 className="cd-step-title">Document Version &amp; Snapshot Freeze</h3>
+                  <div className="cd-step-desc" style={{ marginLeft: 0 }}>
+                    Submitting freezes an immutable snapshot (v{targetVersion}). Edits to future drafts will never overwrite this record.
                   </div>
                 </div>
               </div>
-            </CardBody>
-          </Card>
+              <span className="chip tone-accent">Exact Snapshot</span>
+            </div>
 
-          <Card>
-            <CardHead title="3 · Permissions" />
-            <CardBody>
-              <div className="stack-tight">
-                <Check label="Read the granted version only" defaultChecked disabled />
-                <Check label="Comment on the version" defaultChecked disabled />
-                <Check label="Decide — approve or request changes" defaultChecked disabled={role === 'Guest viewer'} />
-                <Check
-                  label="Download permitted files"
-                  checked={canDownload}
-                  onChange={(e) => setCanDownload(e.target.checked)}
-                />
+            <div className="stack-tight mt-12">
+              <button
+                type="button"
+                className={`option${versionChoice === 'draft' ? ' selected' : ''}`}
+                onClick={() => setVersionChoice('draft')}
+              >
+                <span className="radio-mark" />
+                <div style={{ minWidth: 0, flex: 1 }}>
+                  <div className="row-between">
+                    <span className="option-title">
+                      Working draft v{doc.workingVersion} → Freezes as <strong>v{doc.workingVersion + 1}</strong>
+                    </span>
+                    <span className="chip tone-accent">New Snapshot</span>
+                  </div>
+                  <span className="option-sub">
+                    {doc.sections.length} sections · includes current saved text · author: {state.workspace.ownerName}
+                  </span>
+                </div>
+              </button>
+
+              {doc.versions.map((v) => (
+                <button
+                  type="button"
+                  key={v.n}
+                  className={`option${versionChoice === v.n ? ' selected' : ''}`}
+                  onClick={() => setVersionChoice(v.n)}
+                >
+                  <span className="radio-mark" />
+                  <div style={{ minWidth: 0, flex: 1 }}>
+                    <div className="row-between">
+                      <span className="option-title">Re-dispatch existing snapshot v{v.n}</span>
+                      <Chip
+                        state={v.decision === 'approved' ? 'approved' : v.decision === 'changes' ? 'changes-requested' : 'neutral'}
+                        label={v.decision ?? 'prior snapshot'}
+                      />
+                    </div>
+                    <span className="option-sub">
+                      Frozen {formatDate(v.date)} by {v.author} · {v.note || 'No snapshot note'}
+                    </span>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Step 2: Recipient, Authority Level & Turnaround SLA */}
+          <div className="cd-dispatch-step">
+            <div className="cd-step-head">
+              <div className="cd-step-title-wrap">
+                <span className="cd-step-badge">2</span>
+                <div>
+                  <h3 className="cd-step-title">Recipient &amp; Authority Level</h3>
+                  <div className="cd-step-desc" style={{ marginLeft: 0 }}>
+                    Access is granted to an authorized individual contact, not a generic company alias.
+                  </div>
+                </div>
               </div>
-              <div className="field mt-16">
-                <label className="field-label" htmlFor="sh-note">Optional note in the access email</label>
-                <TextArea
-                  id="sh-note"
-                  style={{ minHeight: 80 }}
-                  value={note}
-                  onChange={(e) => setNote(e.target.value)}
-                  placeholder="One or two lines of context. The email is transactional — there is no general composer in V1."
-                />
+            </div>
+
+            {/* Quick Contacts Pills */}
+            {client && client.contacts.length > 0 ? (
+              <div className="field">
+                <span className="field-label">Known contacts at {client.name}</span>
+                <div className="cd-preset-chips">
+                  {client.contacts.map((ct) => (
+                    <button
+                      key={ct.id}
+                      type="button"
+                      className={`cd-preset-chip${recipient === ct.email ? ' active' : ''}`}
+                      onClick={() => handleSelectContact(ct.email, ct.name)}
+                    >
+                      <Icon name="user" size={13} />
+                      <span>{ct.name}</span>
+                      <span className="meta" style={{ fontSize: 11 }}>({ct.role})</span>
+                    </button>
+                  ))}
+                </div>
               </div>
-            </CardBody>
-          </Card>
+            ) : null}
+
+            <div className="grid grid-2">
+              <Field label="Recipient full name" htmlFor="sh-recipient-name">
+                <TextInput
+                  id="sh-recipient-name"
+                  value={recipientName}
+                  onChange={(e) => setRecipientName(e.target.value)}
+                  placeholder="e.g. Marta Velasco"
+                />
+              </Field>
+
+              <Field
+                label="Recipient verified email"
+                htmlFor="sh-recipient"
+                error={recipient.trim() && !recipientValid ? 'Please enter a valid email address.' : undefined}
+              >
+                <TextInput
+                  id="sh-recipient"
+                  value={recipient}
+                  onChange={(e) => setRecipient(e.target.value)}
+                  invalid={recipient.trim().length > 0 && !recipientValid}
+                  placeholder="marta@harborfinch.com"
+                />
+              </Field>
+            </div>
+
+            {/* Authority Level Selection */}
+            <div className="field mt-12">
+              <span className="field-label">Sign-off Authority Level</span>
+              <div className="cd-authority-grid">
+                <div
+                  className={`cd-authority-card${role === 'Guest reviewer' ? ' selected' : ''}`}
+                  onClick={() => setRole('Guest reviewer')}
+                >
+                  <div className="cd-authority-title">
+                    <span>Designated Approver</span>
+                    <span className="chip tone-accent" style={{ fontSize: 10 }}>Sign-off Authority</span>
+                  </div>
+                  <span className="cd-authority-desc">
+                    Authorized to formally approve v{targetVersion} to unlock downstream milestone deliveries, or request revisions with required feedback.
+                  </span>
+                </div>
+
+                <div
+                  className={`cd-authority-card${role === 'Guest viewer' ? ' selected' : ''}`}
+                  onClick={() => setRole('Guest viewer')}
+                >
+                  <div className="cd-authority-title">
+                    <span>Collaborator / Viewer</span>
+                    <span className="chip tone-neutral" style={{ fontSize: 10 }}>Feedback Only</span>
+                  </div>
+                  <span className="cd-authority-desc">
+                    Permitted to read and comment on v{targetVersion}, but cannot execute final legal/milestone sign-off.
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Turnaround SLA Presets */}
+            <div className="field mt-12">
+              <span className="field-label">Turnaround SLA / Review Due Date</span>
+              <div className="cd-preset-chips mb-12">
+                {[
+                  { days: 3, label: '3 Days (Expedited)' },
+                  { days: 5, label: '5 Days' },
+                  { days: 7, label: '7 Days (Standard)' },
+                  { days: 14, label: '14 Days' },
+                ].map((preset) => (
+                  <button
+                    key={preset.days}
+                    type="button"
+                    className={`cd-preset-chip${dueDays === preset.days ? ' active' : ''}`}
+                    onClick={() => handleSlaChange(preset.days)}
+                  >
+                    <Icon name="clock" size={13} />
+                    <span>{preset.label}</span>
+                  </button>
+                ))}
+              </div>
+
+              <TextInput
+                id="sh-due"
+                type="date"
+                value={due}
+                onChange={(e) => {
+                  setDue(e.target.value);
+                  setDueDays(0);
+                }}
+              />
+            </div>
+          </div>
+
+          {/* Step 3: Executive Cover Message */}
+          <div className="cd-dispatch-step">
+            <div className="cd-step-head">
+              <div className="cd-step-title-wrap">
+                <span className="cd-step-badge">3</span>
+                <div>
+                  <h3 className="cd-step-title">Executive Cover Note</h3>
+                  <div className="cd-step-desc" style={{ marginLeft: 0 }}>
+                    Professional transmission note included in the client's invitation email and review portal banner.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="cd-preset-chips">
+              <button
+                type="button"
+                className={`cd-preset-chip${messagePreset === 'proposal' ? ' active' : ''}`}
+                onClick={() => handlePresetChange('proposal')}
+              >
+                Formal Proposal Transmission
+              </button>
+              <button
+                type="button"
+                className={`cd-preset-chip${messagePreset === 'deliverable' ? ' active' : ''}`}
+                onClick={() => handlePresetChange('deliverable')}
+              >
+                Milestone Deliverable Handover
+              </button>
+              <button
+                type="button"
+                className={`cd-preset-chip${messagePreset === 'concept' ? ' active' : ''}`}
+                onClick={() => handlePresetChange('concept')}
+              >
+                Creative Concept Review
+              </button>
+            </div>
+
+            <TextArea
+              id="sh-note"
+              style={{ minHeight: 90, marginTop: 10 }}
+              value={note}
+              onChange={(e) => {
+                setNote(e.target.value);
+                setMessagePreset('custom');
+              }}
+              placeholder="Write a clear, personalized message to the client..."
+            />
+            <div className="row-between">
+              <span className="meta" style={{ fontSize: 11 }}>
+                Included directly in the secure transactional client email.
+              </span>
+              <span className="meta" style={{ fontSize: 11 }}>{note.length} characters</span>
+            </div>
+          </div>
+
+          {/* Step 4: Professional Presentation Template */}
+          <div className="cd-dispatch-step">
+            <div className="cd-step-head">
+              <div className="cd-step-title-wrap">
+                <span className="cd-step-badge">4</span>
+                <div>
+                  <h3 className="cd-step-title">Presentation Template</h3>
+                  <div className="cd-step-desc" style={{ marginLeft: 0 }}>
+                    Select the styling architecture for the client review sheet and PDF generation.
+                  </div>
+                </div>
+              </div>
+              <span className="chip tone-accent">Bespoke Design</span>
+            </div>
+
+            <div className="cd-template-grid">
+              <div
+                className={`cd-template-picker-card${template === 'executive' ? ' selected' : ''}`}
+                onClick={() => setTemplate('executive')}
+              >
+                <span className="cd-template-picker-badge">Recommended</span>
+                <span className="cd-template-picker-title">Executive Editorial</span>
+                <span className="cd-template-picker-desc">
+                  Serif display typography, high-contrast monochrome with cobalt accents, client &amp; studio seal, and dignified margins. Ideal for commercial proposals.
+                </span>
+              </div>
+
+              <div
+                className={`cd-template-picker-card${template === 'modern-studio' ? ' selected' : ''}`}
+                onClick={() => setTemplate('modern-studio')}
+              >
+                <span className="cd-template-picker-badge">Creative</span>
+                <span className="cd-template-picker-title">Modern Studio Showcase</span>
+                <span className="cd-template-picker-desc">
+                  Accent color gradients, elevated metric callout chips, geometric section badges, and creative agency polish.
+                </span>
+              </div>
+
+              <div
+                className={`cd-template-picker-card${template === 'enterprise' ? ' selected' : ''}`}
+                onClick={() => setTemplate('enterprise')}
+              >
+                <span className="cd-template-picker-badge">Corporate</span>
+                <span className="cd-template-picker-title">Enterprise Formal</span>
+                <span className="cd-template-picker-desc">
+                  Structured header blocks, document control number, revision history audit tables, and compliance notices.
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Step 5: Studio Portfolio & Track Record Inclusion */}
+          <div className="cd-dispatch-step">
+            <div className="cd-step-head">
+              <div className="cd-step-title-wrap">
+                <span className="cd-step-badge">5</span>
+                <div>
+                  <h3 className="cd-step-title">Studio Portfolio &amp; Track Record</h3>
+                  <div className="cd-step-desc" style={{ marginLeft: 0 }}>
+                    Deliver Northlight Studio’s verified case studies and credentials right away alongside the review package.
+                  </div>
+                </div>
+              </div>
+              <Check
+                label="Include Studio Portfolio"
+                checked={includePortfolio}
+                onChange={(e) => setIncludePortfolio(e.target.checked)}
+              />
+            </div>
+
+            {includePortfolio ? (
+              <div className="cd-portfolio-box">
+                <div className="cd-portfolio-box-head">
+                  <div className="row" style={{ gap: 8 }}>
+                    <span className="cd-portfolio-badge">
+                      <Icon name="sparkle" size={12} />
+                      {NORTHLIGHT_PORTFOLIO.studioName} Portfolio
+                    </span>
+                    <span className="meta" style={{ fontSize: 12 }}>
+                      {NORTHLIGHT_PORTFOLIO.ownerName} · {NORTHLIGHT_PORTFOLIO.location}
+                    </span>
+                  </div>
+                  <span className="meta" style={{ fontSize: 11 }}>
+                    {selectedCaseStudies.length} of {NORTHLIGHT_PORTFOLIO.caseStudies.length} Case Studies Attached
+                  </span>
+                </div>
+
+                <p className="meta" style={{ margin: '0 0 12px', lineHeight: 1.5, fontSize: 12 }}>
+                  {NORTHLIGHT_PORTFOLIO.tagline} Clients can review these case studies inside the review portal to verify credentials and project delivery standards.
+                </p>
+
+                <div className="cd-portfolio-cs-list">
+                  {NORTHLIGHT_PORTFOLIO.caseStudies.map((cs) => {
+                    const isChecked = selectedCaseStudies.includes(cs.id);
+                    return (
+                      <div className="cd-portfolio-cs-item" key={cs.id}>
+                        <div className="row" style={{ gap: 10, flex: 1, minWidth: 0 }}>
+                          <input
+                            type="checkbox"
+                            checked={isChecked}
+                            onChange={() => toggleCaseStudy(cs.id)}
+                            id={`cs-${cs.id}`}
+                          />
+                          <label htmlFor={`cs-${cs.id}`} style={{ cursor: 'pointer', minWidth: 0, flex: 1 }}>
+                            <div className="strong" style={{ fontSize: 12.5, color: 'var(--text)' }}>
+                              {cs.title}
+                            </div>
+                            <div className="meta" style={{ fontSize: 11 }}>
+                              {cs.industry} · {cs.year} · {cs.deliverables.slice(0, 2).join(', ')}
+                            </div>
+                          </label>
+                        </div>
+                        <div className="row" style={{ gap: 8 }}>
+                          {cs.metrics[0] ? (
+                            <span className="cd-cs-metric">
+                              {cs.metrics[0].value} {cs.metrics[0].label}
+                            </span>
+                          ) : null}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ) : (
+              <p className="meta" style={{ fontSize: 12, margin: 0 }}>
+                Portfolio inclusion is disabled. The client will only receive the document review sheet.
+              </p>
+            )}
+
+            <div className="divider-h" style={{ margin: '14px 0 6px' }} />
+
+            <div className="row-between">
+              <Check
+                label="Allow client to download document PDF / assets"
+                checked={canDownload}
+                onChange={(e) => setCanDownload(e.target.checked)}
+              />
+              <span className="meta" style={{ fontSize: 11 }}>
+                Internal notes strictly excluded
+              </span>
+            </div>
+          </div>
         </div>
 
-        <div className="stack">
+        {/* Right Column: Live Client Experience Preview */}
+        <div className="stack" style={{ position: 'sticky', top: 24 }}>
           <Card>
-            <CardHead title="What the guest will see" desc="Preview parity: this is the real surface, not a mock." />
-            <CardBody>
-              <div style={{ background: 'var(--canvas)', border: '1px solid var(--divider)', borderRadius: 'var(--r-control)', padding: 14 }}>
-                <div className="row-between">
-                  <span className="strong" style={{ fontSize: 'var(--fs-label)' }}>{doc.title}</span>
-                  <span className="chip tone-accent">v{targetVersion}</span>
+            <CardHead
+              title="Client Experience Preview"
+              desc="Real-time preview of the exact transmission dispatched to the client."
+              action={
+                <div className="cd-preset-chips" style={{ margin: 0 }}>
+                  <button
+                    type="button"
+                    className={`cd-preset-chip${previewTab === 'email' ? ' active' : ''}`}
+                    onClick={() => setPreviewTab('email')}
+                  >
+                    <Icon name="mail" size={12} /> Email
+                  </button>
+                  <button
+                    type="button"
+                    className={`cd-preset-chip${previewTab === 'portal' ? ' active' : ''}`}
+                    onClick={() => setPreviewTab('portal')}
+                  >
+                    <Icon name="eye" size={12} /> Portal
+                  </button>
                 </div>
-                <p className="meta mt-8">
-                  {client?.name} · review requested by {state.workspace.ownerName}
-                </p>
-                <div className="divider-h" style={{ margin: '12px 0' }} />
-                <p className="meta" style={{ lineHeight: 1.6 }}>
-                  Immutable version · comment · {role === 'Guest reviewer' ? 'approve or request changes' : 'read only'}
-                </p>
-                <div className="row mt-12" style={{ gap: 6 }}>
-                  <Icon name="lock" size={13} />
-                  <span className="meta">Internal notes are excluded</span>
+              }
+            />
+            <CardBody flush>
+              {previewTab === 'email' ? (
+                /* Simulated Transactional Email Preview */
+                <div className="cd-email-preview-card">
+                  <div className="cd-email-chrome">
+                    <div className="cd-email-header-row">
+                      <span>From:</span>
+                      <strong>Anas Ayari &lt;anas@northlight.studio&gt;</strong>
+                    </div>
+                    <div className="cd-email-header-row">
+                      <span>To:</span>
+                      <strong>
+                        {recipientName ? `${recipientName} <${recipient || 'client@company.com'}>` : recipient || 'client@company.com'}
+                      </strong>
+                    </div>
+                    <div className="cd-email-header-row">
+                      <span>Subject:</span>
+                      <span>Review Request: {doc.title} (v{targetVersion})</span>
+                    </div>
+                  </div>
+
+                  <div className="cd-email-body">
+                    <div className="cd-email-studio-brand">
+                      NORTHLIGHT STUDIO · DESIGN ARCHITECTURE
+                    </div>
+
+                    <div className="cd-email-salutation">
+                      Dear {recipientName || 'Team'},
+                    </div>
+
+                    <p className="cd-email-copy">
+                      {note}
+                    </p>
+
+                    <div className="cd-email-doc-box">
+                      <div className="row-between">
+                        <span className="eyebrow" style={{ margin: 0, color: '#2563eb' }}>{doc.type}</span>
+                        <span className="meta" style={{ color: '#475569', fontWeight: 600 }}>v{targetVersion} Snapshot</span>
+                      </div>
+                      <h4 className="cd-email-doc-title mt-8">{doc.title}</h4>
+                      <div className="cd-email-doc-meta">
+                        {client?.name} · Prepared by Anas Ayari · Due {formatDate(due)}
+                      </div>
+                      <div className="meta mt-8" style={{ color: '#64748b', fontSize: 11.5 }}>
+                        Template: <strong style={{ color: '#1e293b', textTransform: 'capitalize' }}>{template}</strong> · Authority:{' '}
+                        <strong style={{ color: '#1e293b' }}>{role === 'Guest reviewer' ? 'Sign-off Approver' : 'Viewer'}</strong>
+                      </div>
+                    </div>
+
+                    {includePortfolio ? (
+                      <div className="cd-email-portfolio-attachment">
+                        <Icon name="sparkle" size={14} />
+                        <span>
+                          Attached: <strong>Northlight Studio Track Record</strong> ({selectedCaseStudies.length} Case Studies &amp; Client Endorsements)
+                        </span>
+                      </div>
+                    ) : null}
+
+                    <div>
+                      <span className="cd-email-cta-btn">
+                        Open &amp; Review v{targetVersion} →
+                      </span>
+                    </div>
+
+                    <div className="cd-email-foot">
+                      One-time encrypted review link · Direct access to v{targetVersion} only · Expiring on {formatDate(due)} · Powered by CoreDesk
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <Button
-                block
-                className="mt-12"
-                icon="external"
-                onClick={() => {
-                  const targetReview = existing ?? state.reviews.find((r) => r.documentId === doc.id);
-                  if (targetReview) {
-                    navigate(`#/documents/${doc.id}?view=guest-preview&review=${targetReview.id}`);
-                  } else {
-                    navigate(`#/documents/${doc.id}?view=guest-preview`);
-                  }
-                }}
-              >
-                Open guest preview
-              </Button>
+              ) : (
+                /* Miniature Portal Preview */
+                <div style={{ padding: 18 }}>
+                  <div
+                    className={`cd-template-${template}`}
+                    style={{
+                      background: 'var(--canvas)',
+                      border: '1px solid var(--divider)',
+                      borderRadius: 6,
+                      padding: '24px 20px',
+                    }}
+                  >
+                    <div className="row-between">
+                      <span className="eyebrow" style={{ margin: 0 }}>{doc.type}</span>
+                      <Chip state="neutral" label={`v${targetVersion} preview`} />
+                    </div>
+                    <h3 className="doc-h1 mt-8" style={{ fontSize: 20 }}>{doc.title}</h3>
+                    <p className="cd-doc-sub" style={{ fontSize: 12 }}>
+                      Prepared for {client?.name} · Template: {template}
+                    </p>
+
+                    <div className="divider-h" style={{ margin: '16px 0' }} />
+
+                    <div className="stack-tight">
+                      <div className="strong" style={{ fontSize: 13 }}>{doc.sections[0]}</div>
+                      <p className="meta" style={{ fontSize: 12, lineHeight: 1.5, margin: 0 }}>
+                        Reviewing frozen version {targetVersion}. The client decides whether to approve or request changes.
+                      </p>
+                    </div>
+
+                    {includePortfolio ? (
+                      <div className="cd-portfolio-box mt-16" style={{ padding: 12 }}>
+                        <div className="row" style={{ gap: 6 }}>
+                          <Icon name="sparkle" size={12} />
+                          <span className="strong" style={{ fontSize: 11.5 }}>
+                            Studio Portfolio Embedded
+                          </span>
+                        </div>
+                        <span className="meta" style={{ fontSize: 11 }}>
+                          Client can view {selectedCaseStudies.length} verified case studies.
+                        </span>
+                      </div>
+                    ) : null}
+                  </div>
+                </div>
+              )}
             </CardBody>
           </Card>
 
+          {/* Transition Guards & Dispatch CTA */}
           <Card>
-            <CardHead title="Transition guards" />
+            <CardHead title="Review Governance Guards" desc="All guards must be satisfied before dispatching." />
             <CardBody>
               <div className="stack-tight">
                 {guards.map((g) => (
-                  <div className="row" style={{ gap: 9, color: g.bad ? 'var(--risk)' : 'var(--muted)' }} key={g.label}>
+                  <div
+                    className="row"
+                    style={{ gap: 9, color: g.bad ? 'var(--risk)' : 'var(--muted)' }}
+                    key={g.label}
+                  >
                     <Icon name={g.bad ? 'alert' : 'check'} size={15} />
                     <span style={{ fontSize: 'var(--fs-label)' }}>{g.label}</span>
                   </div>
@@ -299,85 +829,14 @@ export function ShareSetupScreen({ documentId }: { documentId?: string }) {
                 variant="primary"
                 icon="send"
                 disabled={blocked}
-                onClick={() => {
-                  const newVersion = doc.workingVersion + 1;
-                  dispatch({ type: 'document/submitVersion', id: doc.id, note: note || 'Submitted for review.' });
-                  const reviewId = nextId('rv');
-                  dispatch({
-                    type: 'review/add',
-                    review: {
-                      id: reviewId,
-                      documentId: doc.id,
-                      projectId: doc.projectId,
-                      version: versionChoice === 'draft' ? newVersion : Number(versionChoice),
-                      reviewer: { name: recipient.split('@')[0], email: recipient.trim(), role: role === 'Guest reviewer' ? 'Approver' : 'Viewer' },
-                      requestedOn: new Date().toISOString(),
-                      due,
-                      state: 'waiting',
-                      outcome: null,
-                      comments: [],
-                    },
-                  });
-                  dispatch({
-                    type: 'grant/add',
-                    grant: {
-                      id: nextId('gr'),
-                      recipient: { name: recipient.split('@')[0], email: recipient.trim() },
-                      role,
-                      objectLabel: `${doc.title} · v${versionChoice === 'draft' ? newVersion : versionChoice}`,
-                      objectType: 'Review request',
-                      permissions: [
-                        'Read granted version',
-                        'Comment',
-                        ...(role === 'Guest reviewer' ? ['Approve or request changes'] : []),
-                        ...(canDownload ? ['Download permitted files'] : []),
-                      ],
-                      state: 'invited',
-                      invited: new Date().toISOString(),
-                      lastActivity: null,
-                      expires: due,
-                    },
-                  });
-                  dispatch({
-                    type: 'activity/add',
-                    event: {
-                      id: nextId('ev'),
-                      type: 'review-requested',
-                      actor: state.workspace.ownerName,
-                      date: new Date().toISOString(),
-                      title: `requested review on ${doc.title} v${versionChoice === 'draft' ? newVersion : versionChoice}`,
-                      targetLabel: `${doc.title} · v${versionChoice === 'draft' ? newVersion : versionChoice}`,
-                      targetHref: `#/documents/${doc.id}`,
-                      read: true,
-                      resolves: 'Waiting on the designated approver.',
-                    },
-                  });
-                  overlay.toast(
-                    'Review request created',
-                    `Access granted to v${versionChoice === 'draft' ? newVersion : versionChoice} only. The recipient has been emailed a transactional link.`,
-                    'ok'
-                  );
-                  navigate(`#/documents/${doc.id}`);
-                }}
+                onClick={handleDispatch}
               >
-                Create review request
+                Dispatch Review Package to {recipientName || recipient.split('@')[0] || 'Client'}
               </Button>
-              <p className="meta mt-8">
-                {blockerText} {!blocked ? `Access will cover v${targetVersion} only.` : ''}
+              <p className="meta mt-8" style={{ fontSize: 11.5, lineHeight: 1.5 }}>
+                {blockerText} {!blocked ? `Access binds to v${targetVersion} snapshot only.` : ''}
               </p>
             </CardFoot>
-          </Card>
-
-          <Card>
-            <CardBody>
-              <div className="card-title">Sharing rules in force</div>
-              <ul className="doc-list" style={{ marginTop: 12 }}>
-                <li>Previewing a document is not sharing it.</li>
-                <li>Only a designated reviewer can decide.</li>
-                <li>Changes requested requires a comment.</li>
-                <li>The grant covers one object, with its own expiry.</li>
-              </ul>
-            </CardBody>
           </Card>
         </div>
       </div>

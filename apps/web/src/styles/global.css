@@ -91,6 +91,17 @@
   color: var(--text-metadata);
 }
 
+code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background-color: var(--surface-sunken);
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  word-break: break-all;
+  overflow-wrap: anywhere;
+}
+
 .metadata {
   font-size: 12.5px;
   line-height: 1.4;
@@ -141,3 +152,71 @@
   white-space: nowrap;
   border-width: 0;
 }
+
+/* Responsive Grid Overrides */
+@media (max-width: 860px) {
+  .docs-layout-grid,
+  .legal-layout-grid,
+  .login-split-grid,
+  .faq-layout-grid {
+    grid-template-columns: 1fr !important;
+    gap: var(--space-28) !important;
+  }
+
+  .docs-layout-grid aside,
+  .legal-layout-grid aside {
+    position: static !important;
+    top: auto !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .feedback-grid {
+    grid-template-columns: 1fr !important;
+    gap: var(--space-24) !important;
+  }
+
+  .simulator-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .desktop-simulator-root {
+    overflow-x: auto;
+  }
+}
+
+/* Scrollbar and Surface Utilities */
+.hide-scrollbar {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.16);
+  border-radius: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(6, 182, 212, 0.4);
+}
+
+.glass-panel {
+  background-color: rgba(22, 27, 34, 0.72);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.65);
+}
+

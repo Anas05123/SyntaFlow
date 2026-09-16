@@ -17,7 +17,7 @@ import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { useStore } from '../state/store';
 import { navigate, projectUrl, documentUrl, useHistory, type RouteInfo } from './router';
 import { Icon, type IconName } from '../ui/Icon';
-import { BrandMark } from '../ui/BrandMark';
+import { BrandMark, BrandLogo } from '../ui/BrandMark';
 import { WindowControls } from '../ui/WindowChrome';
 import { Button, IconButton } from '../ui/primitives';
 import { Popover, type AnchorRect } from '../ui/Popover';
@@ -134,19 +134,24 @@ function Rail({
 
   return (
     <aside className="rail">
-      {/* Top Header: CoreDesk Brand (with App Menu) & Sidebar Toggle */}
+      {/* Top Header: Syntaflow Brand (with App Menu) & Sidebar Toggle */}
       <div className="rail-head">
         <button
           type="button"
           ref={brandRef}
           className={`rail-brand-trigger ${isAccountOpen && accountSource === 'brand' ? 'is-active' : ''}`}
           onClick={() => onToggleAccount('brand')}
-          title="CoreDesk — Workspace & Identity"
+          title="Syntaflow — Workspace & Identity"
           aria-expanded={isAccountOpen && accountSource === 'brand'}
         >
-          <BrandMark size={22} />
-          <span className="rail-brand-text">CoreDesk</span>
-          <Icon name="chevronDown" size={13} className="rail-brand-chevron" />
+          {collapsed ? (
+            <BrandMark size={22} />
+          ) : (
+            <BrandLogo height={30} className="rail-brand-logo" />
+          )}
+          {!collapsed && (
+            <Icon name="chevronDown" size={13} className="rail-brand-chevron" />
+          )}
         </button>
 
         <button
@@ -459,6 +464,14 @@ export function Shell({
       }
     }
   };
+
+  if (activeId === 'settings') {
+    return (
+      <div className="shell shell-settings">
+        <main className="work-settings">{children}</main>
+      </div>
+    );
+  }
 
   return (
     <div className="shell" data-rail={collapsed ? 'collapsed' : 'full'}>
