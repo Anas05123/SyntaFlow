@@ -44,6 +44,7 @@ export function AuthScreen({
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [authError, setAuthError] = useState<string | null>(null);
+  const [isWaitingForBrowser, setIsWaitingForBrowser] = useState(false);
 
   const view: AuthEntryState = isAuthEntryState(initialState ?? null)
     ? (initialState as AuthEntryState)
@@ -57,6 +58,30 @@ export function AuthScreen({
   const isUnavailable = view === 'unavailable';
   const isReturning = view === 'returning';
   const blocked = isLoading || isUnavailable;
+
+
+  const handleBrowserLogin = async () => {
+    if (blocked || isSubmitting || isWaitingForBrowser) return;
+    setAuthError(null);
+    setIsWaitingForBrowser(true);
+    try {
+      const res = await authService.startBrowserLogin();
+      if (res.success) {
+        navigate('#/home');
+      } else if (res.error && !res.error.includes('cancelled')) {
+        setAuthError(res.error || 'Browser authorization was not completed.');
+      }
+    } catch (_err) {
+      setAuthError('Unexpected error during browser sign in.');
+    } finally {
+      setIsWaitingForBrowser(false);
+    }
+  };
+
+  const handleCancelBrowserLogin = async () => {
+    setIsWaitingForBrowser(false);
+    await authService.cancelBrowserLogin();
+  };
 
   const handleSubmit = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -312,10 +337,61 @@ export function AuthScreen({
                       <span className="cd-auth-divider-text">OR</span>
                     </div>
 
+
+                    {isWaitingForBrowser ? (
+                      <div
+                        style={{
+                          padding: '14px',
+                          borderRadius: '8px',
+                          backgroundColor: 'rgba(6, 182, 212, 0.08)',
+                          border: '1px solid rgba(6, 182, 212, 0.28)',
+                          marginBottom: '14px',
+                          fontSize: '12.5px',
+                        }}
+                      >
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px', color: 'var(--cyan)', fontWeight: 600 }}>
+                          <span className="cd-sided-pulse-dot" />
+                          <span>Waiting for browser authorization...</span>
+                        </div>
+                        <p style={{ margin: '0 0 10px 0', color: 'var(--text-muted)', fontSize: '12px', lineHeight: 1.45 }}>
+                          Complete sign-in in your default browser window. This screen will advance automatically once approved.
+                        </p>
+                        <button
+                          type="button"
+                          className="cd-action cd-action-quiet"
+                          onClick={handleCancelBrowserLogin}
+                          style={{ fontSize: '11.5px', padding: '3px 8px' }}
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        type="button"
+                        className="cd-action cd-action-secondary cd-auth-browser-btn"
+                        disabled={blocked || isSubmitting}
+                        onClick={handleBrowserLogin}
+                        style={{
+                          width: '100%',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          gap: '8px',
+                          padding: '10px 14px',
+                          marginBottom: '10px',
+                          backgroundColor: '#131314',
+                          border: '1px solid rgba(6, 182, 212, 0.35)',
+                          color: '#E3E3E3',
+                        }}
+                      >
+                        <span style={{ color: 'var(--cyan)' }}>⚡</span>
+                        <span>Sign in with browser</span>
+                      </button>
+                    )}
                     <button
                       type="button"
                       className="cd-action cd-action-secondary cd-auth-sso-btn"
-                      disabled={blocked || isSubmitting}
+                      disabled={blocked || isSubmitting || isWaitingForBrowser}
                       onClick={() => handleSubmit()}
                     >
                       Quick Demo Access

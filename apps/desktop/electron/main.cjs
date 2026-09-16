@@ -329,6 +329,22 @@ ipcMain.handle('coredesk:auth:sign-out', async () => {
   return await authService.signOut();
 });
 
+ipcMain.handle('coredesk:auth:start-browser-login', async (_event, options) => {
+  return await authService.startBrowserLogin(options);
+});
+
+ipcMain.handle('coredesk:auth:cancel-browser-login', async () => {
+  return authService.cancelBrowserLogin();
+});
+
+// Parity channels for syntaflow:auth:*
+ipcMain.handle('syntaflow:auth:get-session', async () => authService.getSession());
+ipcMain.handle('syntaflow:auth:sign-in', async (_event, credentials) => authService.signIn(credentials));
+ipcMain.handle('syntaflow:auth:sign-up', async (_event, payload) => authService.signUp(payload));
+ipcMain.handle('syntaflow:auth:sign-out', async () => authService.signOut());
+ipcMain.handle('syntaflow:auth:start-browser-login', async (_event, options) => authService.startBrowserLogin(options));
+ipcMain.handle('syntaflow:auth:cancel-browser-login', async () => authService.cancelBrowserLogin());
+
 /**
  * Syntaflow Integrations IPC Handlers
  * Dual-registered for backward compatibility:

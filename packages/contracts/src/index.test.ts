@@ -61,3 +61,26 @@ describe("jobsResponseSchema", () => {
     expect(jobsResponseSchema.parse({ jobs: [] })).toEqual({ jobs: [] });
   });
 });
+
+describe("auth and entitlements", () => {
+  it("validates UserProfile schema", async () => {
+    const { userProfileSchema } = await import("./auth");
+    const user = userProfileSchema.parse({
+      userId: "usr_12345",
+      name: "Anas Ayari",
+      email: "anas@syntaflow.tech",
+    });
+    expect(user.name).toBe("Anas Ayari");
+    expect(user.email).toBe("anas@syntaflow.tech");
+  });
+
+  it("evaluates preview entitlements correctly", async () => {
+    const { PREVIEW_PLAN, checkEntitlement } = await import("./auth");
+    expect(checkEntitlement(PREVIEW_PLAN, "desktop.download")).toBe(true);
+    expect(checkEntitlement(PREVIEW_PLAN, "integration.gmail")).toBe(true);
+    expect(checkEntitlement(PREVIEW_PLAN, "ai.local")).toBe(true);
+    expect(checkEntitlement(PREVIEW_PLAN, "ai.cloud")).toBe(false);
+    expect(checkEntitlement(PREVIEW_PLAN, "team.members")).toBe(false);
+  });
+});
+

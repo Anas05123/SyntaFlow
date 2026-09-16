@@ -57,6 +57,31 @@ class AuthService {
     }
   }
 
+
+  async startBrowserLogin(options) {
+    try {
+      if (typeof this.provider.startBrowserLogin !== 'function') {
+        return { success: false, error: 'Browser login not supported by provider' };
+      }
+      return await this.provider.startBrowserLogin(options);
+    } catch (err) {
+      console.error('[AuthService] startBrowserLogin failed:', err);
+      return { success: false, error: 'Unexpected browser login error' };
+    }
+  }
+
+  cancelBrowserLogin() {
+    try {
+      if (typeof this.provider.cancelBrowserLogin === 'function') {
+        return this.provider.cancelBrowserLogin();
+      }
+      return { success: true };
+    } catch (err) {
+      console.error('[AuthService] cancelBrowserLogin failed:', err);
+      return { success: false };
+    }
+  }
+
   async signOut() {
     try {
       return await this.provider.signOut();

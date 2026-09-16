@@ -51,6 +51,8 @@ interface DesktopAuthBridge {
   signIn: (credentials: SignInPayload) => Promise<AuthResult>;
   signUp: (payload: SignUpPayload) => Promise<AuthResult>;
   signOut: () => Promise<{ success: boolean; error?: string }>;
+  startBrowserLogin?: (options?: { timeoutMs?: number }) => Promise<AuthResult>;
+  cancelBrowserLogin?: () => Promise<{ success: boolean }>;
 }
 
 function getDesktopBridge(): DesktopAuthBridge | null {
@@ -157,6 +159,22 @@ class AuthServiceClient {
     };
 
     return { success: true, session: browserMockSession };
+  }
+
+  async startBrowserLogin(options?: { timeoutMs?: number }): Promise<AuthResult> {
+    const bridge = getDesktopBridge();
+    if (bridge && typeof bridge.startBrowserLogin === 'function') {
+      return await bridge.startBrowserLogin(options);
+    }
+    return { success: false, error: 'Browser login is only available in the desktop runtime.' };
+  }
+
+  async cancelBrowserLogin(): Promise<{ success: boolean }> {
+    const bridge = getDesktopBridge();
+    if (bridge && typeof bridge.cancelBrowserLogin === 'function') {
+      return await bridge.cancelBrowserLogin();
+    }
+    return { success: true };
   }
 
   async signOut(): Promise<void> {

@@ -56,6 +56,8 @@ const desktopApi = {
     signIn: (credentials) => ipcRenderer.invoke('coredesk:auth:sign-in', credentials),
     signUp: (payload) => ipcRenderer.invoke('coredesk:auth:sign-up', payload),
     signOut: () => ipcRenderer.invoke('coredesk:auth:sign-out'),
+    startBrowserLogin: (options) => ipcRenderer.invoke('coredesk:auth:start-browser-login', options),
+    cancelBrowserLogin: () => ipcRenderer.invoke('coredesk:auth:cancel-browser-login'),
   },
 
   integrations: integrationsApi,

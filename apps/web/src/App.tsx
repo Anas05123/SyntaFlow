@@ -3,6 +3,7 @@ import './styles/global.css';
 import { usePath } from './utils/router';
 import { SiteHeader } from './components/navigation/SiteHeader';
 import { SiteFooter } from './components/navigation/SiteFooter';
+import { AuthProvider } from './services/auth/AuthContext';
 import { HomePage } from './pages/HomePage';
 
 /* Route-Level Code Splitting (Dynamic Imports for All Other Routes) */
@@ -38,6 +39,8 @@ const NotionIntegrationPage = lazy(() => import('./pages/integrations/NotionInte
 const LinearIntegrationPage = lazy(() => import('./pages/integrations/LinearIntegrationPage').then((m) => ({ default: m.LinearIntegrationPage })));
 const DocsPage = lazy(() => import('./pages/DocsPage').then((m) => ({ default: m.DocsPage })));
 const LoginPage = lazy(() => import('./pages/auth/LoginPage').then((m) => ({ default: m.LoginPage })));
+const SignUpPage = lazy(() => import('./pages/auth/SignUpPage').then((m) => ({ default: m.SignUpPage })));
+const ForgotPasswordPage = lazy(() => import('./pages/auth/ForgotPasswordPage').then((m) => ({ default: m.ForgotPasswordPage })));
 const DesktopAuthPage = lazy(() => import('./pages/auth/DesktopAuthPage').then((m) => ({ default: m.DesktopAuthPage })));
 const AccountPage = lazy(() => import('./pages/AccountPage').then((m) => ({ default: m.AccountPage })));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage').then((m) => ({ default: m.NotFoundPage })));
@@ -169,6 +172,10 @@ export const App: React.FC = () => {
         return <DownloadPage />;
       case '/login':
         return <LoginPage />;
+      case '/signup':
+        return <SignUpPage />;
+      case '/forgot-password':
+        return <ForgotPasswordPage />;
       case '/auth/desktop':
         return <DesktopAuthPage />;
       case '/account':
@@ -206,14 +213,16 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: 'var(--canvas)' }}>
-      <SiteHeader currentPath={currentPath} />
-      <main style={{ flex: 1 }}>
-        <Suspense fallback={<RouteLoadingFallback />}>
-          {renderRoute()}
-        </Suspense>
-      </main>
-      <SiteFooter />
-    </div>
+    <AuthProvider>
+      <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: 'var(--canvas)' }}>
+        <SiteHeader currentPath={currentPath} />
+        <main style={{ flex: 1 }}>
+          <Suspense fallback={<RouteLoadingFallback />}>
+            {renderRoute()}
+          </Suspense>
+        </main>
+        <SiteFooter />
+      </div>
+    </AuthProvider>
   );
 };

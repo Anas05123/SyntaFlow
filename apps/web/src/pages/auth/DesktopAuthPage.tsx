@@ -2,55 +2,102 @@ import React, { useState, useEffect } from 'react';
 import { SEOHead } from '../../components/ui/SEOHead';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
+import { Link } from '../../components/ui/Link';
+import { useAuth } from '../../services/auth/AuthContext';
+import { isValidLoopbackRedirect, isSafeCustomProtocol } from '../../utils/urlSecurity';
+import { createDesktopAuthCode } from '../../services/auth/appwriteClient';
 
 export const DesktopAuthPage: React.FC = () => {
+  const { user, isAuthenticated, isLoading: authLoading } = useAuth();
+
   const [params] = useState<{ state: string; redirectUri: string; flowId?: string }>(() => {
-    if (typeof window === 'undefined') {
-      return { state: '', redirectUri: 'syntaflow://auth/callback' };
+    if (typeof window !== 'undefined') {
+      const searchParams = new URLSearchParams(window.location.search);
+      return {
+        state: searchParams.get('state') || '',
+        redirectUri: searchParams.get('redirect_uri') || 'http://127.0.0.1:5173/callback',
+        flowId: searchParams.get('flow_id') || '',
+      };
     }
-    const searchParams = new URLSearchParams(window.location.search);
     return {
-      state: searchParams.get('state') || '',
-      redirectUri: searchParams.get('redirect_uri') || 'syntaflow://auth/callback',
-      flowId: searchParams.get('flow_id') || '',
+      state: '',
+      redirectUri: 'http://127.0.0.1:5173/callback',
+      flowId: '',
     };
   });
 
+  const [isAuthorizing, setIsAuthorizing] = useState(false);
   const [authorized, setAuthorized] = useState(false);
-  const [oneTimeCode] = useState(() => 'sf_auth_' + Math.random().toString(36).substring(2, 10) + '_' + Date.now().toString(36));
+  const [authCode, setAuthCode] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
-  const [secondsRemaining, setSecondsRemaining] = useState(300); // 5 minutes expiry
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
+  // Redirect to login if unauthenticated
   useEffect(() => {
-    const timer = setInterval(() => {
-      setSecondsRemaining((prev) => (prev > 0 ? prev - 1 : 0));
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
+    if (!authLoading && !isAuthenticated) {
+      const currentUrl = typeof window !== 'undefined'
+        ? window.location.pathname + window.location.search
+        : '/auth/desktop';
+      window.location.href = `/login?returnTo=${encodeURIComponent(currentUrl)}`;
+    }
+  }, [authLoading, isAuthenticated]);
 
-  const handleAuthorize = () => {
-    const returnUrl = `${params.redirectUri}?code=${encodeURIComponent(oneTimeCode)}&state=${encodeURIComponent(params.state)}`;
+  const isValidRedirect = isValidLoopbackRedirect(params.redirectUri) || isSafeCustomProtocol(params.redirectUri);
+
+  const handleAuthorize = async () => {
+    if (!isValidRedirect) {
+      setErrorMessage('The requested redirect URI is not a permitted local loopback or custom desktop protocol.');
+      return;
+    }
+
+    setIsAuthorizing(true);
+    setErrorMessage(null);
+
+    const tokenRes = await createDesktopAuthCode();
+    setIsAuthorizing(false);
+
+    if (!tokenRes.success || !tokenRes.code) {
+      setErrorMessage(tokenRes.error || 'Failed to generate desktop session token.');
+      return;
+    }
+
+    const code = tokenRes.code;
+    setAuthCode(code);
     setAuthorized(true);
 
-    // Attempt custom protocol redirect to desktop app
+    // Build return redirect URL
+    const sep = params.redirectUri.includes('?') ? '&' : '?';
+    const returnUrl = `${params.redirectUri}${sep}code=${encodeURIComponent(code)}&state=${encodeURIComponent(params.state)}`;
+
+    // Dispatch redirect to desktop loopback listener
     setTimeout(() => {
       window.location.href = returnUrl;
-    }, 800);
+    }, 600);
   };
 
   const copyCode = () => {
-    navigator.clipboard.writeText(oneTimeCode);
+    if (!authCode) return;
+    navigator.clipboard.writeText(authCode);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const formatTimer = (sec: number) => {
-    const m = Math.floor(sec / 60);
-    const s = sec % 60;
-    return `${m}:${s.toString().padStart(2, '0')}`;
-  };
-
-  const progressPercent = Math.max(0, Math.min(100, (secondsRemaining / 300) * 100));
+  if (authLoading) {
+    return (
+      <div style={{ minHeight: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div
+          style={{
+            width: '24px',
+            height: '24px',
+            borderRadius: '50%',
+            border: '2px solid var(--border)',
+            borderTopColor: 'var(--cyan)',
+            animation: 'spin 0.6s linear infinite',
+          }}
+        />
+      </div>
+    );
+  }
 
   return (
     <div
@@ -82,7 +129,7 @@ export const DesktopAuthPage: React.FC = () => {
         }}
       />
 
-      <div className="container" style={{ maxWidth: '680px', position: 'relative', zIndex: 1 }}>
+      <div className="container" style={{ maxWidth: '640px', position: 'relative', zIndex: 1 }}>
         <Card
           variant="raised"
           style={{
@@ -110,19 +157,37 @@ export const DesktopAuthPage: React.FC = () => {
             >
               <div style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: 'var(--cyan)' }} className="pulse-glow" />
               <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--cyan)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                RFC 8252 BCP-212 // LOCAL LOOPBACK HANDSHAKE
+                RFC 8252 // DESKTOP LOOPBACK HANDSHAKE
               </span>
             </div>
 
-            <h1 className="heading-1" style={{ fontSize: 'clamp(26px, 4vw, 34px)', color: 'var(--text)', marginBottom: '8px', letterSpacing: '-0.02em' }}>
+            <h1 className="heading-1" style={{ fontSize: 'clamp(24px, 4vw, 32px)', color: 'var(--text)', marginBottom: '8px', letterSpacing: '-0.02em' }}>
               Authorize Syntaflow Desktop
             </h1>
             <p style={{ fontSize: '14px', color: 'var(--text-muted)', margin: 0, lineHeight: 1.5, maxWidth: '480px', marginInline: 'auto' }}>
-              A local Syntaflow Desktop runtime on this machine is requesting access to authenticate your workspace.
+              A local Syntaflow Desktop runtime on this machine is requesting authorization for your workspace.
             </p>
           </div>
 
-          {/* Visual Handshake Graphic: Web Browser <---> Local Desktop App */}
+          {errorMessage && (
+            <div
+              style={{
+                padding: '12px 16px',
+                backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                border: '1px solid rgba(239, 68, 68, 0.35)',
+                borderRadius: '8px',
+                color: '#F87171',
+                fontSize: '13px',
+                marginBottom: 'var(--space-24)',
+                lineHeight: 1.45,
+              }}
+              role="alert"
+            >
+              {errorMessage}
+            </div>
+          )}
+
+          {/* Handshake Graphic */}
           <div
             style={{
               padding: '24px',
@@ -137,44 +202,33 @@ export const DesktopAuthPage: React.FC = () => {
               overflow: 'hidden',
             }}
           >
-            {/* Background subtle grid pattern */}
-            <div
-              style={{
-                position: 'absolute',
-                inset: 0,
-                backgroundImage: 'radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px)',
-                backgroundSize: '16px 16px',
-                pointerEvents: 'none',
-              }}
-            />
-
             {/* Left Node: Web Browser */}
             <div style={{ textAlign: 'center', zIndex: 1, minWidth: '110px' }}>
               <div
                 style={{
-                  width: '52px',
-                  height: '52px',
+                  width: '48px',
+                  height: '48px',
                   borderRadius: '50%',
                   backgroundColor: '#181C20',
                   border: '1px solid rgba(255, 255, 255, 0.12)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  fontSize: '22px',
+                  fontSize: '20px',
                   margin: '0 auto 8px auto',
-                  boxShadow: '0 4px 16px rgba(0, 0, 0, 0.4)',
                 }}
               >
                 🌐
               </div>
-              <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text)' }}>Web Account</div>
-              <div style={{ fontSize: '10.5px', fontFamily: 'var(--font-mono)', color: 'var(--text-metadata)' }}>syntaflow.tech</div>
-              <div style={{ display: 'inline-block', marginTop: '4px', padding: '1px 6px', borderRadius: '3px', backgroundColor: 'rgba(16, 185, 129, 0.1)', color: '#34D399', fontSize: '10px', fontFamily: 'var(--font-mono)' }}>
-                SSL VERIFIED
+              <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text)' }}>
+                {user?.name || 'Syntaflow Account'}
+              </div>
+              <div style={{ fontSize: '10.5px', fontFamily: 'var(--font-mono)', color: 'var(--text-metadata)' }}>
+                {user?.email || 'syntaflow.tech'}
               </div>
             </div>
 
-            {/* Center: Connecting Signal Flow */}
+            {/* Signal Flow */}
             <div style={{ flex: 1, margin: '0 20px', textAlign: 'center', zIndex: 1 }}>
               <div style={{ height: '3px', backgroundColor: 'rgba(6, 182, 212, 0.25)', position: 'relative', borderRadius: '2px', overflow: 'hidden' }}>
                 <div
@@ -182,7 +236,7 @@ export const DesktopAuthPage: React.FC = () => {
                     position: 'absolute',
                     top: 0,
                     left: 0,
-                    width: '35%',
+                    width: '40%',
                     height: '100%',
                     backgroundColor: 'var(--cyan)',
                     boxShadow: '0 0 10px var(--cyan)',
@@ -194,7 +248,7 @@ export const DesktopAuthPage: React.FC = () => {
               <div style={{ marginTop: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
                 <div style={{ width: '5px', height: '5px', borderRadius: '50%', backgroundColor: authorized ? '#10B981' : 'var(--cyan)' }} className="pulse-glow" />
                 <span style={{ fontSize: '10.5px', fontFamily: 'var(--font-mono)', color: authorized ? '#34D399' : 'var(--cyan)', letterSpacing: '0.04em' }}>
-                  {authorized ? '✓ PROTOCOL HANDSHAKE DISPATCHED' : 'AWAITING OPERATOR APPROVAL'}
+                  {authorized ? '✓ PROTOCOL HANDSHAKE DISPATCHED' : 'AWAITING APPROVAL'}
                 </span>
               </div>
             </div>
@@ -203,34 +257,29 @@ export const DesktopAuthPage: React.FC = () => {
             <div style={{ textAlign: 'center', zIndex: 1, minWidth: '110px' }}>
               <div
                 style={{
-                  width: '52px',
-                  height: '52px',
+                  width: '48px',
+                  height: '48px',
                   borderRadius: '50%',
                   backgroundColor: '#181C20',
                   border: '1px solid rgba(6, 182, 212, 0.45)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  fontSize: '22px',
+                  fontSize: '20px',
                   margin: '0 auto 8px auto',
-                  boxShadow: '0 0 20px -2px rgba(6, 182, 212, 0.35)',
                 }}
-                className="pulse-glow"
               >
                 💻
               </div>
               <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text)' }}>Desktop Client</div>
-              <div style={{ fontSize: '10.5px', fontFamily: 'var(--font-mono)', color: '#10B981' }}>Loopback 127.0.0.1</div>
-              <div style={{ display: 'inline-block', marginTop: '4px', padding: '1px 6px', borderRadius: '3px', backgroundColor: 'rgba(6, 182, 212, 0.1)', color: 'var(--cyan)', fontSize: '10px', fontFamily: 'var(--font-mono)' }}>
-                LOCAL RUNTIME
-              </div>
+              <div style={{ fontSize: '10.5px', fontFamily: 'var(--font-mono)', color: '#10B981' }}>127.0.0.1 Loopback</div>
             </div>
           </div>
 
           {/* Session Security Details */}
           <div
             style={{
-              padding: '16px 18px',
+              padding: '14px 18px',
               backgroundColor: 'rgba(18, 21, 25, 0.9)',
               borderRadius: '8px',
               border: '1px solid rgba(255, 255, 255, 0.07)',
@@ -241,159 +290,102 @@ export const DesktopAuthPage: React.FC = () => {
             }}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
-              <span>HANDOFF PROTOCOL:</span>
+              <span>CALLBACK TARGET:</span>
               <span style={{ color: 'var(--cyan)' }}>
-                {params.redirectUri.startsWith('syntaflow://') ? 'Custom Protocol (syntaflow://)' : 'Loopback (http://127.0.0.1)'}
+                {params.redirectUri}
               </span>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
-              <span>CSRF STATE PARAMETER:</span>
-              <span style={{ color: '#10B981' }}>{params.state ? 'Cryptographically Validated' : 'Local Preview Bridge'}</span>
+              <span>ACTIVE USER:</span>
+              <span style={{ color: 'var(--text)' }}>{user?.email}</span>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-              <span>SESSION EXPIRY:</span>
-              <span style={{ color: secondsRemaining > 60 ? 'var(--text)' : '#EF4444', fontWeight: 600 }}>
-                {formatTimer(secondsRemaining)} remaining
-              </span>
-            </div>
-
-            {/* Countdown progress line */}
-            <div style={{ height: '3px', backgroundColor: 'rgba(255, 255, 255, 0.06)', borderRadius: '2px', overflow: 'hidden' }}>
-              <div
-                style={{
-                  height: '100%',
-                  width: `${progressPercent}%`,
-                  backgroundColor: secondsRemaining > 60 ? 'var(--cyan)' : '#EF4444',
-                  transition: 'width 1s linear',
-                }}
-              />
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <span>LOCAL ENCRYPTION:</span>
+              <span style={{ color: '#10B981' }}>Electron safeStorage (DPAPI)</span>
             </div>
           </div>
 
-          {/* Authorization Actions */}
-          {authorized ? (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <div
-                style={{
-                  textAlign: 'center',
-                  padding: 'var(--space-20)',
-                  backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                  border: '1px solid rgba(16, 185, 129, 0.35)',
-                  borderRadius: '8px',
-                  color: '#34D399',
-                }}
-              >
-                <div style={{ fontSize: '16px', fontWeight: 600, marginBottom: '6px' }}>
-                  ✓ Handshake Dispatched to Syntaflow Desktop
-                </div>
-                <p style={{ fontSize: '13px', margin: 0, color: '#A7F3D0', lineHeight: 1.5 }}>
-                  Your browser has dispatched the authorization code. If your system displays a security prompt asking to open <strong>Syntaflow</strong>, click <strong>Open</strong>.
-                </p>
-              </div>
-
-              {/* Manual Fallback Token Widget */}
-              <div
-                style={{
-                  padding: '16px',
-                  backgroundColor: 'rgba(11, 13, 15, 0.9)',
-                  borderRadius: '8px',
-                  border: '1px solid var(--border)',
-                }}
-              >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                  <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--text-metadata)', textTransform: 'uppercase' }}>
-                    MANUAL FALLBACK CODE (IF NOT AUTO-REDIRECTED)
-                  </span>
-                  <span style={{ fontSize: '11px', color: 'var(--cyan)' }}>Single-use token</span>
-                </div>
-                <div style={{ display: 'flex', gap: '8px' }}>
-                  <input
-                    type="text"
-                    readOnly
-                    value={oneTimeCode}
-                    style={{
-                      flex: 1,
-                      padding: '8px 12px',
-                      backgroundColor: '#070809',
-                      border: '1px solid var(--border)',
-                      borderRadius: '6px',
-                      color: 'var(--cyan)',
-                      fontSize: '12px',
-                      fontFamily: 'var(--font-mono)',
-                      outline: 'none',
-                    }}
-                  />
-                  <Button variant="secondary" onClick={copyCode} style={{ padding: '8px 16px', fontSize: '12px' }}>
-                    {copied ? '✓ Copied' : 'Copy Code'}
-                  </Button>
-                </div>
-                <div style={{ fontSize: '11px', color: 'var(--text-metadata)', marginTop: '6px' }}>
-                  Paste this token into Syntaflow Desktop under Settings &gt; Authentication.
-                </div>
-              </div>
-            </div>
-          ) : (
+          {!authorized ? (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               <Button
                 variant="primary"
                 onClick={handleAuthorize}
-                style={{ width: '100%', textAlign: 'center', padding: '14px', fontSize: '15px', fontWeight: 600 }}
+                disabled={isAuthorizing || !isValidRedirect}
+                style={{
+                  width: '100%',
+                  padding: '13px',
+                  fontSize: '14.5px',
+                  fontWeight: 600,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                }}
               >
-                Approve Desktop Authorization &rarr;
+                {isAuthorizing ? 'Generating session...' : 'Authorize Desktop Client'}
               </Button>
-              <Button variant="secondary" href="/" style={{ width: '100%', textAlign: 'center', padding: '12px' }}>
-                Cancel & Return Home
-              </Button>
+
+              <div style={{ textAlign: 'center' }}>
+                <Link href="/account" style={{ fontSize: '13px', color: 'var(--text-muted)', textDecoration: 'none' }}>
+                  Cancel and return to Account
+                </Link>
+              </div>
+            </div>
+          ) : (
+            <div>
+              <div
+                style={{
+                  padding: '16px',
+                  backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                  border: '1px solid rgba(16, 185, 129, 0.35)',
+                  borderRadius: '8px',
+                  color: '#34D399',
+                  textAlign: 'center',
+                  marginBottom: 'var(--space-16)',
+                }}
+              >
+                <div style={{ fontSize: '20px', marginBottom: '4px' }}>✓ Handshake Transmitted</div>
+                <div style={{ fontSize: '13px', color: 'var(--text)' }}>
+                  You can now return to Syntaflow Desktop. If the app did not focus automatically, use the code below.
+                </div>
+              </div>
+
+              {authCode && (
+                <div style={{ marginBottom: 'var(--space-16)' }}>
+                  <label style={{ display: 'block', fontSize: '12px', color: 'var(--text-muted)', marginBottom: '6px' }}>
+                    One-Time Authorization Code:
+                  </label>
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <input
+                      type="text"
+                      readOnly
+                      value={authCode}
+                      style={{
+                        flex: 1,
+                        padding: '9px 12px',
+                        backgroundColor: 'var(--surface-sunken)',
+                        border: '1px solid var(--border)',
+                        borderRadius: '6px',
+                        fontFamily: 'var(--font-mono)',
+                        fontSize: '12px',
+                        color: 'var(--text)',
+                      }}
+                    />
+                    <Button variant="secondary" onClick={copyCode} style={{ padding: '8px 16px', fontSize: '12.5px' }}>
+                      {copied ? 'Copied!' : 'Copy'}
+                    </Button>
+                  </div>
+                </div>
+              )}
+
+              <div style={{ textAlign: 'center', marginTop: 'var(--space-16)' }}>
+                <Link href="/account" style={{ fontSize: '13px', color: 'var(--cyan)', textDecoration: 'none' }}>
+                  Go to Account Dashboard &rarr;
+                </Link>
+              </div>
             </div>
           )}
-
-          <div style={{ marginTop: 'var(--space-20)', textAlign: 'center', fontSize: '11.5px', color: 'var(--text-disabled)', lineHeight: 1.5 }}>
-            One-time authorization codes expire in 5 minutes and cannot be reused.
-            <br />
-            Permanent tokens are never passed through URLs and reside strictly in your operating system keychain.
-          </div>
         </Card>
-
-        {/* Informational Security Explainer (3 Cards) */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))', gap: 'var(--space-16)' }}>
-          {[
-            {
-              icon: '🛡',
-              title: 'RFC 8252 Loopback',
-              desc: 'Follows official OAuth 2.0 Best Current Practice for native desktop apps using direct loopback sockets.',
-            },
-            {
-              icon: '🔒',
-              title: 'Zero Relay Servers',
-              desc: 'No cloud server proxies your authorization code. It routes directly from browser to workstation.',
-            },
-            {
-              icon: '🔑',
-              title: 'Windows DPAPI',
-              desc: 'Once received, tokens are encrypted with your user account key via Windows DPAPI before disk write.',
-            },
-          ].map((c, i) => (
-            <div
-              key={i}
-              style={{
-                padding: '16px',
-                borderRadius: '8px',
-                backgroundColor: 'rgba(22, 27, 34, 0.65)',
-                border: '1px solid rgba(255, 255, 255, 0.07)',
-                backdropFilter: 'blur(8px)',
-              }}
-              className="interactive-lift"
-            >
-              <div style={{ fontSize: '16px', marginBottom: '6px' }}>{c.icon}</div>
-              <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text)', marginBottom: '4px' }}>
-                {c.title}
-              </div>
-              <div style={{ fontSize: '12px', color: 'var(--text-muted)', lineHeight: 1.45 }}>
-                {c.desc}
-              </div>
-            </div>
-          ))}
-        </div>
       </div>
     </div>
   );

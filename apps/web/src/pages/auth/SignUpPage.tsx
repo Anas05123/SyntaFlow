@@ -7,9 +7,10 @@ import { Link } from '../../components/ui/Link';
 import { useAuth } from '../../services/auth/AuthContext';
 import { sanitizeInternalRedirect } from '../../utils/urlSecurity';
 
-export const LoginPage: React.FC = () => {
-  const { login, loginWithGoogle, isAuthenticated, isLoading: authLoading } = useAuth();
+export const SignUpPage: React.FC = () => {
+  const { signup, loginWithGoogle, isAuthenticated, isLoading: authLoading } = useAuth();
 
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -26,15 +27,6 @@ export const LoginPage: React.FC = () => {
   });
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const searchParams = new URLSearchParams(window.location.search);
-      if (searchParams.get('error') === 'oauth') {
-        setErrorMessage('Google Sign-In could not be completed. Please try again or sign in with your email.');
-      }
-    }
-  }, []);
-
-  useEffect(() => {
     if (isAuthenticated && !authLoading) {
       window.location.href = returnTo;
     }
@@ -42,28 +34,33 @@ export const LoginPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !password) return;
+    if (!name || !email || !password) return;
+
+    if (password.length < 8) {
+      setErrorMessage('Password must be at least 8 characters long.');
+      return;
+    }
 
     setIsLoading(true);
     setErrorMessage(null);
 
-    const result = await login(email, password);
+    const result = await signup(email, password, name);
     setIsLoading(false);
 
     if (result.success) {
       window.location.href = returnTo;
     } else {
-      setErrorMessage(result.error || 'Invalid credentials. Please verify your email and password.');
+      setErrorMessage(result.error || 'Registration failed. Please check your information.');
     }
   };
 
-  const handleGoogleSignIn = () => {
+  const handleGoogleSignUp = () => {
     const successUrl = typeof window !== 'undefined'
       ? `${window.location.origin}${returnTo}`
       : 'https://syntaflow.tech/account';
     const failureUrl = typeof window !== 'undefined'
-      ? `${window.location.origin}/login?error=oauth&returnTo=${encodeURIComponent(returnTo)}`
-      : 'https://syntaflow.tech/login?error=oauth';
+      ? `${window.location.origin}/signup?error=oauth&returnTo=${encodeURIComponent(returnTo)}`
+      : 'https://syntaflow.tech/signup?error=oauth';
 
     loginWithGoogle(successUrl, failureUrl);
   };
@@ -81,7 +78,7 @@ export const LoginPage: React.FC = () => {
         overflow: 'hidden',
       }}
     >
-      <SEOHead path="/login" />
+      <SEOHead path="/signup" />
 
       {/* Ambient Lighting Backdrop */}
       <div
@@ -114,10 +111,10 @@ export const LoginPage: React.FC = () => {
               letterSpacing: '-0.02em',
             }}
           >
-            Sign in to Syntaflow
+            Create your account
           </h1>
           <p style={{ fontSize: '13.5px', color: 'var(--text-muted)', margin: 0 }}>
-            Access your unified workspace and active desktop sessions.
+            Start with the Preview plan ($0) for complete local-first client workflows.
           </p>
         </div>
 
@@ -149,10 +146,10 @@ export const LoginPage: React.FC = () => {
             </div>
           )}
 
-          {/* Google Sign-In Button */}
+          {/* Google Sign-Up Button */}
           <button
             type="button"
-            onClick={handleGoogleSignIn}
+            onClick={handleGoogleSignUp}
             style={{
               width: '100%',
               display: 'flex',
@@ -185,18 +182,44 @@ export const LoginPage: React.FC = () => {
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: 'var(--space-20)' }}>
             <div style={{ flex: 1, height: '1px', backgroundColor: 'var(--border)' }} />
             <span style={{ fontSize: '11px', color: 'var(--text-metadata)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-              or continue with email
+              or register with email
             </span>
             <div style={{ flex: 1, height: '1px', backgroundColor: 'var(--border)' }} />
           </div>
 
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <div>
-              <label htmlFor="login-email" style={{ display: 'block', fontSize: '12.5px', color: 'var(--text)', marginBottom: '6px', fontWeight: 500 }}>
+              <label htmlFor="signup-name" style={{ display: 'block', fontSize: '12.5px', color: 'var(--text)', marginBottom: '6px', fontWeight: 500 }}>
+                Full Name
+              </label>
+              <input
+                id="signup-name"
+                type="text"
+                placeholder="Jane Doe"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+                autoComplete="name"
+                style={{
+                  width: '100%',
+                  padding: '10px 12px',
+                  fontSize: '14px',
+                  backgroundColor: 'var(--surface-sunken)',
+                  border: '1px solid var(--border)',
+                  borderRadius: '6px',
+                  color: 'var(--text)',
+                  outline: 'none',
+                  boxSizing: 'border-box',
+                }}
+              />
+            </div>
+
+            <div>
+              <label htmlFor="signup-email" style={{ display: 'block', fontSize: '12.5px', color: 'var(--text)', marginBottom: '6px', fontWeight: 500 }}>
                 Work Email
               </label>
               <input
-                id="login-email"
+                id="signup-email"
                 type="email"
                 placeholder="name@company.com"
                 value={email}
@@ -218,25 +241,18 @@ export const LoginPage: React.FC = () => {
             </div>
 
             <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
-                <label htmlFor="login-password" style={{ fontSize: '12.5px', color: 'var(--text)', fontWeight: 500 }}>
-                  Password
-                </label>
-                <Link
-                  href="/forgot-password"
-                  style={{ fontSize: '12px', color: 'var(--cyan)', textDecoration: 'none' }}
-                >
-                  Forgot?
-                </Link>
-              </div>
+              <label htmlFor="signup-password" style={{ display: 'block', fontSize: '12.5px', color: 'var(--text)', marginBottom: '6px', fontWeight: 500 }}>
+                Password (min. 8 characters)
+              </label>
               <input
-                id="login-password"
+                id="signup-password"
                 type="password"
                 placeholder="••••••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                autoComplete="current-password"
+                minLength={8}
+                autoComplete="new-password"
                 style={{
                   width: '100%',
                   padding: '10px 12px',
@@ -254,14 +270,14 @@ export const LoginPage: React.FC = () => {
             <Button
               type="submit"
               variant="primary"
-              disabled={isLoading || !email || !password}
+              disabled={isLoading || !name || !email || !password}
               style={{ width: '100%', textAlign: 'center', marginTop: '4px', padding: '11px' }}
             >
-              {isLoading ? 'Signing in...' : 'Sign in'}
+              {isLoading ? 'Creating account...' : 'Create Account'}
             </Button>
           </form>
 
-          {/* Switch to Sign Up */}
+          {/* Switch to Sign In */}
           <div
             style={{
               marginTop: 'var(--space-20)',
@@ -272,33 +288,18 @@ export const LoginPage: React.FC = () => {
               color: 'var(--text-muted)',
             }}
           >
-            Don’t have an account?{' '}
+            Already have an account?{' '}
             <Link
-              href={returnTo ? `/signup?returnTo=${encodeURIComponent(returnTo)}` : '/signup'}
+              href={returnTo ? `/login?returnTo=${encodeURIComponent(returnTo)}` : '/login'}
               style={{ color: 'var(--cyan)', fontWeight: 500, textDecoration: 'none' }}
             >
-              Create account
-            </Link>
-          </div>
-
-          {/* Desktop Auth Link */}
-          <div
-            style={{
-              marginTop: 'var(--space-12)',
-              textAlign: 'center',
-              fontSize: '12px',
-              color: 'var(--text-metadata)',
-            }}
-          >
-            Authorizing desktop runtime?{' '}
-            <Link href="/auth/desktop" style={{ color: 'var(--cyan)', textDecoration: 'underline' }}>
-              Authorize Desktop Client &rarr;
+              Sign in
             </Link>
           </div>
         </Card>
 
         <div style={{ marginTop: 'var(--space-20)', textAlign: 'center', fontSize: '11.5px', color: 'var(--text-metadata)', lineHeight: 1.5 }}>
-          By signing in, you agree to our{' '}
+          By creating an account, you agree to our{' '}
           <Link href="/terms" style={{ color: 'var(--text-muted)', textDecoration: 'underline' }}>Terms</Link> and{' '}
           <Link href="/privacy" style={{ color: 'var(--text-muted)', textDecoration: 'underline' }}>Privacy Policy</Link>.
         </div>

@@ -17,7 +17,9 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const crypto = require('node:crypto');
-const { safeStorage } = require('electron');
+const { safeStorage, shell } = require('electron');
+const http = require('node:http');
+const https = require('node:https');
 
 /**
  * Base AuthProvider interface contract
@@ -46,7 +48,221 @@ class LocalAuthProvider extends AuthProvider {
     this.userDataPath = userDataPath;
     this.storePath = path.join(userDataPath, 'auth-store.json');
     this.data = this._loadStore();
+    this.activeBrowserFlow = null;
   }
+
+  cancelBrowserLogin() {
+    if (this.activeBrowserFlow) {
+      if (this.activeBrowserFlow.timer) clearTimeout(this.activeBrowserFlow.timer);
+      if (this.activeBrowserFlow.server) {
+        try { this.activeBrowserFlow.server.close(); } catch (_e) {}
+      }
+      if (typeof this.activeBrowserFlow.resolve === 'function') {
+        this.activeBrowserFlow.resolve({ success: false, error: 'Authorization cancelled' });
+      }
+      this.activeBrowserFlow = null;
+      return { success: true };
+    }
+    return { success: true };
+  }
+
+  async _fetchAppwriteUser(jwt) {
+    return new Promise((resolve) => {
+      const options = {
+        hostname: 'cloud.appwrite.io',
+        port: 443,
+        path: '/v1/account',
+        method: 'GET',
+        headers: {
+          'X-Appwrite-Project': '6aa9e58700101cabaa45',
+          'X-Appwrite-JWT': jwt,
+          'Accept': 'application/json',
+        },
+        timeout: 6000,
+      };
+
+      const req = https.request(options, (res) => {
+        let body = '';
+        res.on('data', (chunk) => { body += chunk; });
+        res.on('end', () => {
+          try {
+            if (res.statusCode >= 200 && res.statusCode < 300) {
+              const data = JSON.parse(body);
+              resolve({ success: true, user: data });
+            } else {
+              resolve({ success: false, status: res.statusCode });
+            }
+          } catch (_e) {
+            resolve({ success: false });
+          }
+        });
+      });
+
+      req.on('error', () => { resolve({ success: false }); });
+      req.on('timeout', () => { req.destroy(); resolve({ success: false }); });
+      req.end();
+    });
+  }
+
+  _decodeJwtPayload(jwt) {
+    try {
+      const parts = jwt.split('.');
+      if (parts.length >= 2) {
+        const payloadJson = Buffer.from(parts[1], 'base64url').toString('utf8');
+        return JSON.parse(payloadJson);
+      }
+    } catch (_e) {}
+    return null;
+  }
+
+  async startBrowserLogin(options = {}) {
+    this.cancelBrowserLogin();
+
+    const flowId = crypto.randomUUID();
+    const stateToken = crypto.randomBytes(32).toString('base64url');
+    const timeoutMs = options.timeoutMs || 300000; // 5 minutes
+
+    return new Promise((resolve) => {
+      const server = http.createServer(async (req, res) => {
+        try {
+          const reqUrl = new URL(req.url, `http://127.0.0.1:${server.address().port}`);
+          if (reqUrl.pathname !== '/callback') {
+            res.writeHead(404, { 'Content-Type': 'text/plain' });
+            res.end('Not found');
+            return;
+          }
+
+          const incomingCode = reqUrl.searchParams.get('code');
+          const incomingState = reqUrl.searchParams.get('state');
+
+          if (!incomingCode || incomingState !== stateToken) {
+            res.writeHead(400, { 'Content-Type': 'text/html' });
+            res.end('<h1>Authorization Error</h1><p>Invalid or expired state parameter.</p>');
+            return;
+          }
+
+          // Send confirmation HTML to browser
+          res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+          res.end(`<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Syntaflow Desktop — Authorization Complete</title>
+  <style>
+    body { background-color: #0B0D0F; color: #E3E3E3; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+    .box { text-align: center; background: #161B22; border: 1px solid rgba(6, 182, 212, 0.35); border-radius: 12px; padding: 40px; max-width: 420px; box-shadow: 0 20px 50px rgba(0,0,0,0.7); }
+    .icon { font-size: 38px; color: #34D399; margin-bottom: 12px; }
+    h1 { font-size: 22px; color: #FFFFFF; margin: 0 0 8px 0; }
+    p { color: #8E918F; font-size: 14px; line-height: 1.5; margin: 0; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <div class="icon">✓</div>
+    <h1>Authorization Successful</h1>
+    <p>Syntaflow Desktop has securely received your session credentials. You can now close this tab and return to the application.</p>
+  </div>
+</body>
+</html>`);
+
+          // Attempt to fetch live Appwrite user or decode payload
+          let userProfile = null;
+          const liveRes = await this._fetchAppwriteUser(incomingCode);
+          if (liveRes.success && liveRes.user) {
+            userProfile = {
+              id: liveRes.user.$id || `usr_${Date.now().toString(36)}`,
+              email: liveRes.user.email,
+              name: liveRes.user.name || liveRes.user.email.split('@')[0],
+            };
+          } else {
+            const decoded = this._decodeJwtPayload(incomingCode);
+            userProfile = {
+              id: (decoded && decoded.userId) || `usr_${Date.now().toString(36)}`,
+              email: (decoded && decoded.email) || 'operator@syntaflow.tech',
+              name: (decoded && decoded.name) || 'Syntaflow Operator',
+            };
+          }
+
+          // Link with or create local user record
+          let user = this.data.users.find((u) => u.email === this.normalizeEmail(userProfile.email));
+          if (!user) {
+            user = {
+              id: userProfile.id,
+              email: this.normalizeEmail(userProfile.email),
+              name: userProfile.name,
+              workspaceName: 'Syntaflow Studio',
+              createdAt: new Date().toISOString(),
+              source: 'browser_oauth',
+            };
+            this.data.users.push(user);
+          } else {
+            user.name = userProfile.name;
+          }
+
+          // Encrypt and persist session
+          const tokenEnvelope = this._encryptToken(incomingCode);
+          const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
+
+          this.data.activeSession = {
+            userId: user.id,
+            tokenEnvelope,
+            createdAt: new Date().toISOString(),
+            expiresAt,
+            source: 'browser_oauth',
+          };
+          this._saveStore();
+
+          // Teardown
+          if (this.activeBrowserFlow && this.activeBrowserFlow.timer) {
+            clearTimeout(this.activeBrowserFlow.timer);
+          }
+          try { server.close(); } catch (_e) {}
+          this.activeBrowserFlow = null;
+
+          resolve({
+            success: true,
+            session: {
+              token: incomingCode,
+              user: {
+                id: user.id,
+                email: user.email,
+                name: user.name,
+                workspaceName: user.workspaceName || 'Syntaflow Studio',
+              },
+              expiresAt,
+            },
+          });
+        } catch (err) {
+          try { server.close(); } catch (_e) {}
+          this.activeBrowserFlow = null;
+          resolve({ success: false, error: err.message || 'Handshake failed' });
+        }
+      });
+
+      server.listen(0, '127.0.0.1', () => {
+        const port = server.address().port;
+        const webBase = (process.env.CD_AUTH_WEB_URL || 'https://syntaflow.tech').replace(/\/+$/, '');
+        const redirectUri = `http://127.0.0.1:${port}/callback`;
+        const authUrl = `${webBase}/auth/desktop?redirect_uri=${encodeURIComponent(redirectUri)}&state=${encodeURIComponent(stateToken)}&flow_id=${encodeURIComponent(flowId)}`;
+
+        const timer = setTimeout(() => {
+          try { server.close(); } catch (_e) {}
+          this.activeBrowserFlow = null;
+          resolve({ success: false, error: 'Authorization timed out.' });
+        }, timeoutMs);
+
+        this.activeBrowserFlow = { server, timer, resolve, flowId };
+
+        // Open in system browser
+        shell.openExternal(authUrl);
+      });
+
+      server.on('error', (err) => {
+        resolve({ success: false, error: `Loopback server error: ${err.message}` });
+      });
+    });
+  }
+
 
   _loadStore() {
     try {
