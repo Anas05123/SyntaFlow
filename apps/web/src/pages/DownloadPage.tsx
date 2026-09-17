@@ -122,7 +122,7 @@ export const DownloadPage: React.FC = () => {
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginBottom: '1.75rem' }}>
                 {isAuthenticated ? (
                   <Link
-                    href="/account/downloads"
+                    href={typeof window !== 'undefined' && window.location.hostname.includes('syntaflow.tech') ? 'https://app.syntaflow.tech/downloads' : '/account/downloads'}
                     style={{
                       display: 'inline-flex',
                       alignItems: 'center',
@@ -141,7 +141,7 @@ export const DownloadPage: React.FC = () => {
                   </Link>
                 ) : (
                   <Link
-                    href="/login?returnTo=/account/downloads"
+                    href={typeof window !== 'undefined' && window.location.hostname.includes('syntaflow.tech') ? '/login?returnTo=https%3A%2F%2Fapp.syntaflow.tech%2Fdownloads' : '/login?returnTo=/account/downloads'}
                     style={{
                       display: 'inline-flex',
                       alignItems: 'center',
@@ -161,7 +161,7 @@ export const DownloadPage: React.FC = () => {
                 )}
 
                 <Link
-                  href="/docs"
+                  href={typeof window !== 'undefined' && window.location.hostname.includes('syntaflow.tech') ? 'https://docs.syntaflow.tech' : '/docs'}
                   style={{
                     display: 'inline-flex',
                     alignItems: 'center',

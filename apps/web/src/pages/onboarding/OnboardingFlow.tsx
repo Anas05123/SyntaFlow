@@ -65,7 +65,9 @@ export const OnboardingFlow: React.FC = () => {
         'syntaflow_workspace_prefs',
         JSON.stringify({ role: selectedRole, types: selectedTypes, workspaceName })
       );
-      window.location.href = '/account';
+      window.location.href = window.location.hostname.includes('syntaflow.tech')
+        ? 'https://app.syntaflow.tech'
+        : '/account';
     }
   };
 
@@ -640,7 +642,7 @@ export const OnboardingFlow: React.FC = () => {
                 </Button>
 
                 <a
-                  href="/docs"
+                  href={typeof window !== 'undefined' && window.location.hostname.includes('syntaflow.tech') ? 'https://docs.syntaflow.tech' : '/docs'}
                   target="_blank"
                   rel="noreferrer"
                   style={{

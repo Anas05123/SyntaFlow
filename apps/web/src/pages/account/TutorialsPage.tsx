@@ -3,6 +3,10 @@ import { SEOHead } from '../../components/ui/SEOHead';
 import { Link } from '../../components/ui/Link';
 
 export const TutorialsPage: React.FC = () => {
+  const docsUrl = typeof window !== 'undefined' && window.location.hostname.includes('syntaflow.tech')
+    ? 'https://docs.syntaflow.tech'
+    : '/docs';
+
   return (
     <div>
       <SEOHead
@@ -66,7 +70,7 @@ export const TutorialsPage: React.FC = () => {
           </div>
 
           <Link
-            href="/docs"
+            href={docsUrl}
             style={{
               display: 'inline-flex',
               alignItems: 'center',
@@ -105,7 +109,7 @@ export const TutorialsPage: React.FC = () => {
             <p style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: 1.5, marginBottom: '1.25rem' }}>
               How to compose proposals and scope deliverables with strict version immutability and AI drafting assistance.
             </p>
-            <Link href="/docs" style={{ fontSize: '13px', color: '#00f2fe', textDecoration: 'none', fontWeight: 500 }}>
+            <Link href={docsUrl} style={{ fontSize: '13px', color: '#00f2fe', textDecoration: 'none', fontWeight: 500 }}>
               Read Tutorial →
             </Link>
           </div>
@@ -128,7 +132,7 @@ export const TutorialsPage: React.FC = () => {
             <p style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: 1.5, marginBottom: '1.25rem' }}>
               Lock milestone deliverables until the client approves the exact immutable review version snapshot.
             </p>
-            <Link href="/docs" style={{ fontSize: '13px', color: '#00f2fe', textDecoration: 'none', fontWeight: 500 }}>
+            <Link href={docsUrl} style={{ fontSize: '13px', color: '#00f2fe', textDecoration: 'none', fontWeight: 500 }}>
               Read Tutorial →
             </Link>
           </div>
@@ -151,7 +155,7 @@ export const TutorialsPage: React.FC = () => {
             <p style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: 1.5, marginBottom: '1.25rem' }}>
               How Windows DPAPI protects your Gmail, Calendar, and GitHub tokens with zero cloud credential leaks.
             </p>
-            <Link href="/docs" style={{ fontSize: '13px', color: '#00f2fe', textDecoration: 'none', fontWeight: 500 }}>
+            <Link href={docsUrl} style={{ fontSize: '13px', color: '#00f2fe', textDecoration: 'none', fontWeight: 500 }}>
               Read Tutorial →
             </Link>
           </div>
@@ -180,7 +184,7 @@ export const TutorialsPage: React.FC = () => {
             </div>
           </div>
           <Link
-            href="/docs"
+            href={docsUrl}
             style={{
               padding: '8px 16px',
               borderRadius: '6px',

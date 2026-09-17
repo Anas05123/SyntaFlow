@@ -50,12 +50,14 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ currentPath }) => {
     };
   }, [mobileOpen]);
 
-  // Clean, minimal IA: Features, Integrations, Docs, Pricing
+  const isDocsHost = typeof window !== 'undefined' && window.location.hostname === 'docs.syntaflow.tech';
+  const mainSiteBase = isDocsHost ? 'https://syntaflow.tech' : '';
+
+  // Clean, minimal IA: Features, Integrations, Pricing
   const navLinks = [
-    { label: 'Features', href: '/product', active: currentPath.startsWith('/product') },
-    { label: 'Integrations', href: '/integrations', active: currentPath.startsWith('/integrations') },
-    { label: 'Docs', href: '/docs', active: currentPath.startsWith('/docs') },
-    { label: 'Pricing', href: '/pricing', active: currentPath.startsWith('/pricing') },
+    { label: 'Features', href: `${mainSiteBase}/product`, active: currentPath.startsWith('/product') },
+    { label: 'Integrations', href: `${mainSiteBase}/integrations`, active: currentPath.startsWith('/integrations') },
+    { label: 'Pricing', href: `${mainSiteBase}/pricing`, active: currentPath.startsWith('/pricing') },
   ];
 
   const handleSignOut = async () => {
@@ -91,7 +93,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ currentPath }) => {
       >
         {/* Left: Brand Mark */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '36px' }}>
-          <Link href="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }} aria-label="Syntaflow Home">
+          <Link href={isDocsHost ? 'https://syntaflow.tech' : '/'} style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }} aria-label="Syntaflow Home">
             <BrandMark variant="full" size="md" />
           </Link>
 
@@ -196,7 +198,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ currentPath }) => {
                     </div>
 
                     <Link
-                      href="/account"
+                      href={typeof window !== 'undefined' && window.location.hostname.includes('syntaflow.tech') ? 'https://app.syntaflow.tech' : '/account'}
                       onClick={() => setDropdownOpen(false)}
                       style={{
                         display: 'flex',
@@ -213,7 +215,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ currentPath }) => {
                     </Link>
 
                     <Link
-                      href="/account/downloads"
+                      href={typeof window !== 'undefined' && window.location.hostname.includes('syntaflow.tech') ? 'https://app.syntaflow.tech/downloads' : '/account/downloads'}
                       onClick={() => setDropdownOpen(false)}
                       style={{
                         display: 'flex',
@@ -254,7 +256,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ currentPath }) => {
             ) : (
               /* Single Dominant Sign In Action */
               <Link
-                href="/login"
+                href={isDocsHost ? 'https://syntaflow.tech/login' : '/login'}
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
@@ -363,7 +365,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ currentPath }) => {
             {isAuthenticated ? (
               <>
                 <Link
-                  href="/account"
+                  href={typeof window !== 'undefined' && window.location.hostname.includes('syntaflow.tech') ? 'https://app.syntaflow.tech' : '/account'}
                   onClick={() => setMobileOpen(false)}
                   style={{
                     display: 'flex',
@@ -397,7 +399,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ currentPath }) => {
               </>
             ) : (
               <Link
-                href="/login"
+                href={isDocsHost ? 'https://syntaflow.tech/login' : '/login'}
                 onClick={() => setMobileOpen(false)}
                 style={{
                   display: 'flex',

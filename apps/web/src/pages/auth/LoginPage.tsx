@@ -17,11 +17,25 @@ export const LoginPage: React.FC = () => {
     if (typeof window !== 'undefined') {
       const searchParams = new URLSearchParams(window.location.search);
       const rawReturnTo = searchParams.get('returnTo');
+      const defaultDest = window.location.hostname.includes('syntaflow.tech')
+        ? 'https://app.syntaflow.tech'
+        : '/account';
+
       if (rawReturnTo) {
-        return sanitizeInternalRedirect(rawReturnTo, '/account');
+        const sanitized = sanitizeInternalRedirect(rawReturnTo, defaultDest);
+        if (window.location.hostname.includes('syntaflow.tech')) {
+          if (sanitized === '/account') {
+            return 'https://app.syntaflow.tech';
+          }
+          if (sanitized.startsWith('/account/')) {
+            return `https://app.syntaflow.tech${sanitized.replace(/^\/account/, '')}`;
+          }
+        }
+        return sanitized;
       }
+      return defaultDest;
     }
-    return '/account';
+    return 'https://app.syntaflow.tech';
   });
 
   useEffect(() => {
@@ -57,9 +71,11 @@ export const LoginPage: React.FC = () => {
   };
 
   const handleGoogleSignIn = () => {
-    const successUrl = typeof window !== 'undefined'
-      ? `${window.location.origin}${returnTo}`
-      : 'https://syntaflow.tech/account';
+    const successUrl = returnTo.startsWith('http')
+      ? returnTo
+      : typeof window !== 'undefined'
+        ? (window.location.hostname.includes('syntaflow.tech') ? `https://app.syntaflow.tech${returnTo === '/account' ? '' : returnTo}` : `${window.location.origin}${returnTo}`)
+        : 'https://app.syntaflow.tech';
     const failureUrl = typeof window !== 'undefined'
       ? `${window.location.origin}/login?error=oauth&returnTo=${encodeURIComponent(returnTo)}`
       : 'https://syntaflow.tech/login?error=oauth';

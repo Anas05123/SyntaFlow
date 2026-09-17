@@ -16,7 +16,9 @@ export const SignUpPage: React.FC = () => {
 
   useEffect(() => {
     if (isAuthenticated && !authLoading) {
-      window.location.href = '/account';
+      window.location.href = typeof window !== 'undefined' && window.location.hostname.includes('syntaflow.tech')
+        ? 'https://app.syntaflow.tech'
+        : '/account';
     }
   }, [isAuthenticated, authLoading]);
 

@@ -121,6 +121,7 @@ export const App: React.FC = () => {
   const path = currentPath.replace(/\/+$/, '') || '/';
   const hostname = typeof window !== 'undefined' ? window.location.hostname : '';
   const isAppHost = hostname === 'app.syntaflow.tech';
+  const isDocsHost = hostname === 'docs.syntaflow.tech';
 
   const isAuthPath =
     path === '/login' ||
@@ -128,13 +129,29 @@ export const App: React.FC = () => {
     path === '/forgot-password' ||
     path.startsWith('/auth/desktop');
 
-  // If visiting auth pages on app.syntaflow.tech, redirect to canonical auth on syntaflow.tech
+  // If visiting auth pages on app.syntaflow.tech or docs.syntaflow.tech, redirect to canonical auth on syntaflow.tech
   useEffect(() => {
-    if (isAppHost && isAuthPath) {
+    if ((isAppHost || isDocsHost) && isAuthPath) {
       const search = typeof window !== 'undefined' ? window.location.search : '';
       window.location.href = `https://syntaflow.tech${path}${search}`;
     }
-  }, [isAppHost, isAuthPath, path]);
+  }, [isAppHost, isDocsHost, isAuthPath, path]);
+
+  // If visiting docs on syntaflow.tech, redirect to canonical docs.syntaflow.tech
+  useEffect(() => {
+    if (typeof window !== 'undefined' && hostname === 'syntaflow.tech' && (path === '/docs' || path.startsWith('/docs/'))) {
+      const subpath = path === '/docs' ? '' : path.replace(/^\/docs/, '');
+      window.location.href = `https://docs.syntaflow.tech${subpath}${window.location.search}${window.location.hash}`;
+    }
+  }, [hostname, path]);
+
+  // If visiting account portal on syntaflow.tech, redirect to canonical app.syntaflow.tech
+  useEffect(() => {
+    if (typeof window !== 'undefined' && hostname === 'syntaflow.tech' && (path === '/account' || path.startsWith('/account/'))) {
+      const subpath = path === '/account' ? '' : path.replace(/^\/account/, '');
+      window.location.href = `https://app.syntaflow.tech${subpath}${window.location.search}${window.location.hash}`;
+    }
+  }, [hostname, path]);
 
   // Determine application environment
   const isAccountRoute =
@@ -143,7 +160,7 @@ export const App: React.FC = () => {
      path.startsWith('/account') ||
      path === '/onboarding');
 
-  const isAuthRoute = isAuthPath && !isAppHost;
+  const isAuthRoute = isAuthPath && !isAppHost && !isDocsHost;
 
   // 1. DEDICATED AUTH ROUTE (Split-screen, NO marketing navbar/footer)
   if (isAuthRoute) {
@@ -170,7 +187,24 @@ export const App: React.FC = () => {
     );
   }
 
-  // 3. AUTHENTICATED ACCOUNT PORTAL (Sidebar shell, NO marketing navbar/footer)
+  // 3. DEDICATED DOCUMENTATION PORTAL (docs.syntaflow.tech)
+  if (isDocsHost) {
+    return (
+      <AuthProvider>
+        <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: 'var(--canvas)' }}>
+          <SiteHeader currentPath="/docs" />
+          <main style={{ flex: 1 }}>
+            <Suspense fallback={<RouteLoadingFallback />}>
+              <DocsPage />
+            </Suspense>
+          </main>
+          <SiteFooter />
+        </div>
+      </AuthProvider>
+    );
+  }
+
+  // 4. AUTHENTICATED ACCOUNT PORTAL (Sidebar shell, NO marketing navbar/footer)
   if (isAccountRoute) {
     const renderAccountModule = () => {
       if (path === '/account/profile' || path === '/profile') {

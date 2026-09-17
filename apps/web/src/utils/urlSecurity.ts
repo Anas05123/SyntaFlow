@@ -19,6 +19,7 @@ export function sanitizeReturnUrl(returnTo?: string | null, fallback: string = '
       const isTrustedHost =
         parsed.hostname === 'syntaflow.tech' ||
         parsed.hostname === 'app.syntaflow.tech' ||
+        parsed.hostname === 'docs.syntaflow.tech' ||
         parsed.hostname === 'localhost' ||
         parsed.hostname === '127.0.0.1';
 

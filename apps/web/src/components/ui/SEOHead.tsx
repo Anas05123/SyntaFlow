@@ -83,14 +83,17 @@ export const SEOHead: React.FC<SEOHeadProps> = ({
 
     const hostname = typeof window !== 'undefined' ? window.location.hostname : '';
     const isAppHost = hostname === 'app.syntaflow.tech';
+    const isDocsHost = hostname === 'docs.syntaflow.tech';
 
-    const title = titleProp || config.title;
+    const title = titleProp || (isDocsHost && (!config.title || config.title === 'Syntaflow') ? 'Documentation' : config.title);
     const fullTitle = SITE_CONFIG.titleTemplate(title);
-    const description = descProp || config.description;
+    const description = descProp || (isDocsHost && !config.description ? 'Syntaflow documentation, guides, architecture, and API reference.' : config.description);
     const canonicalPath = config.canonicalPath;
     const canonicalUrl = isAppHost
       ? `https://app.syntaflow.tech${window.location.pathname === '/' ? '/' : window.location.pathname}`
-      : `${SITE_CONFIG.canonicalHost}${canonicalPath === '/' ? '/' : canonicalPath}`;
+      : isDocsHost
+        ? `https://docs.syntaflow.tech${window.location.pathname === '/' ? '/' : window.location.pathname}`
+        : `${SITE_CONFIG.canonicalHost}${canonicalPath === '/' ? '/' : canonicalPath}`;
     const isIndexable = isAppHost ? false : (indexableProp !== undefined ? indexableProp : config.indexable);
     const ogImage = ogImageProp || config.ogImage || SITE_CONFIG.defaultOgImage;
     const ogType = ogTypeProp || config.ogType || 'website';

@@ -74,7 +74,7 @@ export const SiteFooter: React.FC = () => {
               RESOURCES
             </div>
             <ul style={{ display: 'flex', flexDirection: 'column', gap: '8px', padding: 0, margin: 0, listStyle: 'none', fontSize: '13.5px' }}>
-              <li><Link href="/docs" style={{ color: 'var(--text-muted)', textDecoration: 'none' }}>Docs</Link></li>
+              <li><Link href={typeof window !== 'undefined' && window.location.hostname.includes('syntaflow.tech') ? 'https://docs.syntaflow.tech' : '/docs'} style={{ color: 'var(--text-muted)', textDecoration: 'none' }}>Docs</Link></li>
               <li><Link href="/faq" style={{ color: 'var(--text-muted)', textDecoration: 'none' }}>FAQ</Link></li>
               <li><Link href="/changelog" style={{ color: 'var(--text-muted)', textDecoration: 'none' }}>Changelog</Link></li>
             </ul>
