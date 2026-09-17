@@ -33,13 +33,18 @@ The previous web implementation suffered from visual and structural conflation: 
 3. **Gated Download Architecture:**
    - Public `/download` page educates visitors and requires signing in to download (`Sign in to download →`), redirecting to `/account/downloads` where operators receive verified installer links, SHA-256 integrity hashes, system requirements, and installation guides.
 
-4. **Subdomain Infrastructure & Routing (`app.syntaflow.tech`):**
+4. **Subdomain Infrastructure & Routing (`app.syntaflow.tech` & `docs.syntaflow.tech`):**
    - The authenticated account portal is served on a dedicated subdomain: `https://app.syntaflow.tech`.
-   - Hosted on Appwrite Sites (`6aa9e72b0015dc2d9493`) with CNAME alias `app` pointing to `appwrite.network` on Name.com.
-   - Appwrite Web Platform settings configured to accept CORS, session cookies, and OAuth callbacks across both origins.
-   - Unauthenticated visitors hitting `app.syntaflow.tech` are immediately and safely bounced to `https://syntaflow.tech/login?returnTo=...` via `AccountShell` auth guard.
-   - Post-authentication return URL is validated by `sanitizeReturnUrl` in `urlSecurity.ts` to allow trusted Syntaflow hostnames while strictly blocking open redirect vulnerabilities.
-   - All `app.syntaflow.tech` surfaces inject `robots: noindex, nofollow` to isolate private operator data from search indexing.
+   - The documentation hub is served on a dedicated subdomain: `https://docs.syntaflow.tech`.
+   - Public marketing header is focused and minimal: `Features`, `Integrations`, `Pricing`, and `Sign in` (Docs moved off public header into footer and dedicated `docs.syntaflow.tech` portal).
+   - Hosted on Appwrite Sites (`6aa9e72b0015dc2d9493`) with CNAME aliases `app` and `docs` pointing to `appwrite.network` on Name.com.
+   - Appwrite Web Platform settings configured with wildcard host (`*`) to accept CORS, session cookies, and OAuth callbacks across `syntaflow.tech`, `app.syntaflow.tech`, and `docs.syntaflow.tech`.
+   - Signing in on `syntaflow.tech/login` automatically directs into `https://app.syntaflow.tech`.
+   - Navigating to `/account/*` on `syntaflow.tech` canonically redirects to `https://app.syntaflow.tech/*`.
+   - Navigating to `/docs` on `syntaflow.tech` canonically redirects to `https://docs.syntaflow.tech`.
+   - Unauthenticated visitors hitting `app.syntaflow.tech` are safely bounced to `https://syntaflow.tech/login?returnTo=https%3A%2F%2Fapp.syntaflow.tech...` via `AccountShell` auth guard.
+   - Post-authentication return URL is validated by `sanitizeReturnUrl` in `urlSecurity.ts` to allow trusted Syntaflow hostnames (`syntaflow.tech`, `app.syntaflow.tech`, `docs.syntaflow.tech`) while strictly blocking open redirect vulnerabilities.
+   - All `app.syntaflow.tech` surfaces inject `robots: noindex, nofollow`, while `docs.syntaflow.tech` injects canonical URLs and `robots: index, follow`.
 
 5. **Security & OAuth Scoping:**
    - Google OAuth is strictly limited to identity scopes (`openid`, `email`, `profile`). Third-party Google Workspace scopes (Drive, Gmail, Calendar) remain managed strictly inside the local desktop app via DPAPI-encrypted credential vaults.
