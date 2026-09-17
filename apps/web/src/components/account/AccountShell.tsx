@@ -22,9 +22,12 @@ export const AccountShell: React.FC<AccountShellProps> = ({ currentSubpath, chil
         return;
       }
       const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
-      const loginUrl = isAppHost
-        ? `https://syntaflow.tech/login?returnTo=${encodeURIComponent(currentUrl)}`
-        : `/login?returnTo=${encodeURIComponent(currentUrl || '/account')}`;
+      const targetUrl = typeof window !== 'undefined' && window.location.hostname.includes('syntaflow.tech')
+        ? (isAppHost ? window.location.href : `https://app.syntaflow.tech${window.location.pathname.replace(/^\/account/, '')}${window.location.search}${window.location.hash}`)
+        : (currentUrl || '/account');
+      const loginUrl = typeof window !== 'undefined' && window.location.hostname.includes('syntaflow.tech')
+        ? `https://syntaflow.tech/login?returnTo=${encodeURIComponent(targetUrl)}`
+        : `/login?returnTo=${encodeURIComponent(targetUrl)}`;
       window.location.href = loginUrl;
     }
   }, [isLoading, isAuthenticated, isAppHost]);

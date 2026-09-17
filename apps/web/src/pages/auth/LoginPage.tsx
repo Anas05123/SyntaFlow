@@ -30,6 +30,9 @@ export const LoginPage: React.FC = () => {
           if (sanitized.startsWith('/account/')) {
             return `https://app.syntaflow.tech${sanitized.replace(/^\/account/, '')}`;
           }
+          if (sanitized.startsWith('https://syntaflow.tech/account')) {
+            return sanitized.replace('https://syntaflow.tech/account', 'https://app.syntaflow.tech');
+          }
         }
         return sanitized;
       }

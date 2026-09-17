@@ -157,10 +157,15 @@ export const App: React.FC = () => {
   const isAccountRoute =
     !isAuthPath &&
     (isAppHost ||
-     path.startsWith('/account') ||
+     (hostname !== 'syntaflow.tech' && path.startsWith('/account')) ||
      path === '/onboarding');
 
   const isAuthRoute = isAuthPath && !isAppHost && !isDocsHost;
+
+  // If visiting account portal on syntaflow.tech in production, show fallback while redirecting to app.syntaflow.tech
+  if (hostname === 'syntaflow.tech' && (path === '/account' || path.startsWith('/account/'))) {
+    return <RouteLoadingFallback />;
+  }
 
   // 1. DEDICATED AUTH ROUTE (Split-screen, NO marketing navbar/footer)
   if (isAuthRoute) {
