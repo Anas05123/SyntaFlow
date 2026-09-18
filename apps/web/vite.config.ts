@@ -4,11 +4,13 @@ import { defineConfig, type Plugin } from 'vite';
 function billingApiPlugin(): Plugin {
   return {
     name: 'billing-api-middleware',
+    apply: 'serve',
     configureServer(server) {
       server.middlewares.use(async (req, res, next) => {
         if (req.url && req.url.startsWith('/api/')) {
           try {
-            const { handleApiRequest } = await import('./server/apiRouter.ts');
+            const apiModule = './server/apiRouter.ts';
+            const { handleApiRequest } = await import(/* @vite-ignore */ apiModule);
             const handled = await handleApiRequest(req, res);
             if (!handled) next();
           } catch (err) {
@@ -26,8 +28,8 @@ function billingApiPlugin(): Plugin {
 }
 
 // https://vite.dev/config/
-export default defineConfig({
-  plugins: [react(), billingApiPlugin()],
+export default defineConfig(({ command }) => ({
+  plugins: [react(), ...(command === 'serve' ? [billingApiPlugin()] : [])],
   base: '/',
   server: {
     port: 5174,
@@ -37,4 +39,4 @@ export default defineConfig({
     outDir: 'dist',
     sourcemap: true,
   },
-});
+}));
