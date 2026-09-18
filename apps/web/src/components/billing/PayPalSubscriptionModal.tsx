@@ -79,6 +79,7 @@ export const PayPalSubscriptionModal: React.FC<PayPalSubscriptionModalProps> = (
 
         window.paypal
           .Buttons({
+            fundingSource: window.paypal.FUNDING?.PAYPAL,
             style: {
               shape: 'rect',
               color: 'gold',
@@ -182,7 +183,7 @@ export const PayPalSubscriptionModal: React.FC<PayPalSubscriptionModalProps> = (
         script.id = scriptId;
         script.src = `https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(
           config.clientId
-        )}&currency=USD&components=buttons&disable-funding=paylater,venmo`;
+        )}&currency=USD&components=buttons&disable-funding=card,credit,paylater,venmo`;
         script.async = true;
         script.onload = () => renderButtons();
         script.onerror = () => {
@@ -448,7 +449,7 @@ export const PayPalSubscriptionModal: React.FC<PayPalSubscriptionModalProps> = (
           ref={containerRef}
           style={{
             display: phase === 'ready' ? 'block' : 'none',
-            minHeight: '110px',
+            minHeight: '48px',
           }}
         />
 
