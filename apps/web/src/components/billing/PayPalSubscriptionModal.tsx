@@ -84,6 +84,7 @@ export const PayPalSubscriptionModal: React.FC<PayPalSubscriptionModalProps> = (
               color: 'blue',
               layout: 'vertical',
               label: 'subscribe',
+              height: 48,
             },
             createSubscription: (_data: any, actions: any) => {
               return actions.subscription.create({
@@ -164,7 +165,7 @@ export const PayPalSubscriptionModal: React.FC<PayPalSubscriptionModalProps> = (
         script.id = scriptId;
         script.src = `https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(
           config.clientId
-        )}&vault=true&intent=subscription`;
+        )}&vault=true&intent=subscription&components=buttons&enable-funding=card&disable-funding=paylater,venmo`;
         script.async = true;
         script.onload = () => renderButtons();
         script.onerror = () => {
@@ -362,12 +363,53 @@ export const PayPalSubscriptionModal: React.FC<PayPalSubscriptionModalProps> = (
           </div>
         )}
 
+        {/* Sandbox Guidance Card */}
+        {phase === 'ready' && (
+          <div
+            style={{
+              backgroundColor: '#F8FAFC',
+              border: '1px solid #E2E8F0',
+              borderRadius: '8px',
+              padding: '0.85rem 1rem',
+              marginBottom: '1.25rem',
+              fontSize: '0.82rem',
+              color: '#334155',
+              lineHeight: 1.5,
+            }}
+          >
+            <div style={{ fontWeight: 600, color: '#0F172A', marginBottom: '0.25rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              <span>ℹ️</span>
+              <span>PayPal Sandbox Testing Mode</span>
+            </div>
+            <div>
+              Live PayPal accounts do not exist in Sandbox. To test subscription approval smoothly:
+              <ul style={{ margin: '0.35rem 0 0 1.25rem', padding: 0 }}>
+                <li>
+                  Use a <strong>Sandbox Personal (Buyer) account</strong> from your{' '}
+                  <a
+                    href="https://developer.paypal.com/dashboard/accounts"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ color: 'var(--cobalt)', textDecoration: 'underline' }}
+                  >
+                    PayPal Developer Accounts
+                  </a>{' '}
+                  for 1-click test approval.
+                </li>
+                <li>
+                  Or click <strong>Debit or Credit Card</strong> below to test guest card entry.
+                </li>
+              </ul>
+            </div>
+          </div>
+        )}
+
         {/* PayPal SDK Button Container */}
         <div
           ref={containerRef}
           style={{
             display: phase === 'ready' ? 'block' : 'none',
-            minHeight: '45px',
+            minHeight: '110px',
           }}
         />
 
