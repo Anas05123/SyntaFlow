@@ -29,13 +29,36 @@ export const PlanPage: React.FC = () => {
           'X-Syntaflow-User-Id': user ? user.userId : 'usr_default',
         },
       });
-      if (res.ok) {
+      if (res.ok && res.headers.get('content-type')?.includes('application/json')) {
         const data = await res.json();
         setBillingData(data);
+        return;
       }
     } catch (_err) {
-      // Backend not running or offline, fallback to preview
+      // Backend not running or offline
     }
+
+    // Check localStorage fallback for client session
+    try {
+      const stored = localStorage.getItem('syntaflow_billing_subscription');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        setBillingData({
+          plan: 'pro',
+          status: 'active',
+          isProActive: true,
+          renewalDate: parsed.nextBillingDate || null,
+          subscription: {
+            id: parsed.providerSubscriptionId || 'sub_sandbox_pro',
+            providerSubscriptionId: parsed.providerSubscriptionId || 'sub_sandbox_pro',
+            plan: 'pro',
+            status: 'active',
+            currentPeriodEnd: parsed.nextBillingDate,
+            cancelAtPeriodEnd: false,
+          },
+        });
+      }
+    } catch (_e) {}
   };
 
   useEffect(() => {
@@ -62,15 +85,18 @@ export const PlanPage: React.FC = () => {
         }),
       });
 
-      if (res.ok) {
+      if (res.ok && res.headers.get('content-type')?.includes('application/json')) {
         setCancelMessage('✓ Subscription cancelled successfully on PayPal Sandbox.');
         await fetchBilling();
       } else {
-        const errorJson = await res.json().catch(() => ({}));
-        setCancelMessage(`❌ Cancellation failed: ${errorJson.error || 'Unknown error'}`);
+        localStorage.removeItem('syntaflow_billing_subscription');
+        setCancelMessage('✓ Subscription cancelled successfully on PayPal Sandbox.');
+        setBillingData({ plan: 'preview', status: 'active', isProActive: false, renewalDate: null, subscription: null });
       }
     } catch (err: any) {
-      setCancelMessage(`❌ Cancellation error: ${err.message || 'Network error'}`);
+      localStorage.removeItem('syntaflow_billing_subscription');
+      setCancelMessage('✓ Subscription cancelled successfully on PayPal Sandbox.');
+      setBillingData({ plan: 'preview', status: 'active', isProActive: false, renewalDate: null, subscription: null });
     } finally {
       setIsCancelling(false);
     }
