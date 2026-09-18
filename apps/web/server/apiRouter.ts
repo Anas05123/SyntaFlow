@@ -166,6 +166,33 @@ export async function handleApiRequest(
       return true;
     }
 
+    if (pathname === '/api/billing/paypal/order' && req.method === 'POST') {
+      const rawBody = await readRequestBody(req);
+      const parsed = rawBody ? JSON.parse(rawBody) : {};
+      const orderId = parsed.orderId;
+      const amount = typeof parsed.amount === 'number' ? parsed.amount : 19.0;
+      const currency = parsed.currency || 'USD';
+
+      if (!orderId || typeof orderId !== 'string') {
+        sendJson(res, 400, { error: 'Missing or invalid orderId in request body.' });
+        return true;
+      }
+
+      const subscription = await service.linkOrder(
+        authUser.workspaceId,
+        authUser.userId,
+        orderId.trim(),
+        amount,
+        currency
+      );
+
+      sendJson(res, 200, {
+        success: true,
+        subscription,
+      });
+      return true;
+    }
+
     if (pathname === '/api/billing/subscription/cancel' && req.method === 'POST') {
       const rawBody = await readRequestBody(req);
       const parsed = rawBody ? JSON.parse(rawBody) : {};

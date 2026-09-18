@@ -81,26 +81,40 @@ export const PayPalSubscriptionModal: React.FC<PayPalSubscriptionModalProps> = (
           .Buttons({
             style: {
               shape: 'rect',
-              color: 'blue',
+              color: 'gold',
               layout: 'vertical',
-              label: 'subscribe',
+              label: 'paypal',
               height: 48,
             },
-            createSubscription: (_data: any, actions: any) => {
-              return actions.subscription.create({
-                plan_id: config.proMonthlyPlanId,
+            createOrder: (_data: any, actions: any) => {
+              return actions.order.create({
+                purchase_units: [
+                  {
+                    description: 'Syntaflow Pro Monthly License ($19.00 USD)',
+                    amount: {
+                      currency_code: 'USD',
+                      value: '19.00',
+                    },
+                  },
+                ],
               });
             },
-            onApprove: async (data: any) => {
+            onApprove: async (data: any, actions: any) => {
               setPhase('approving');
-              const subId = data.subscriptionID;
+              const orderId = data.orderID;
+              let captureData: any = null;
+              try {
+                captureData = await actions.order.capture();
+              } catch (e) {
+                console.warn('[PayPal] Capture via actions note:', e);
+              }
 
               // Store client-side subscription for instant edge continuity
               const clientSub = {
                 plan: 'pro',
                 status: 'active',
                 isProActive: true,
-                providerSubscriptionId: subId,
+                providerSubscriptionId: orderId,
                 planName: 'Syntaflow Pro Monthly',
                 amount: '$19.00 USD / month',
                 activatedAt: new Date().toISOString(),
@@ -111,8 +125,8 @@ export const PayPalSubscriptionModal: React.FC<PayPalSubscriptionModalProps> = (
               } catch (_e) {}
 
               try {
-                // Attempt to notify local / staging backend if running
-                const res = await fetch('/api/billing/paypal/subscription', {
+                // Notify backend
+                const res = await fetch('/api/billing/paypal/order', {
                   method: 'POST',
                   headers: {
                     'Content-Type': 'application/json',
@@ -120,13 +134,16 @@ export const PayPalSubscriptionModal: React.FC<PayPalSubscriptionModalProps> = (
                     'X-Syntaflow-User-Id': user ? user.userId : 'usr_default',
                   },
                   body: JSON.stringify({
-                    subscriptionId: subId,
+                    orderId,
+                    amount: 19.0,
+                    currency: 'USD',
+                    details: captureData,
                   }),
                 });
 
                 if (res.ok && res.headers.get('content-type')?.includes('application/json')) {
-                  setPhase('confirming');
-                  checkSubscriptionStatus();
+                  setPhase('active');
+                  if (onSuccess) onSuccess();
                 } else {
                   // Static deployment mode: PayPal approved successfully
                   setPhase('active');
@@ -139,7 +156,7 @@ export const PayPalSubscriptionModal: React.FC<PayPalSubscriptionModalProps> = (
               }
             },
             onCancel: () => {
-              // Buyer closed or pressed cancel; do not update plan
+              // Buyer closed or pressed cancel
               console.log('[PayPal] Buyer cancelled checkout.');
               onClose();
             },
@@ -165,7 +182,7 @@ export const PayPalSubscriptionModal: React.FC<PayPalSubscriptionModalProps> = (
         script.id = scriptId;
         script.src = `https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(
           config.clientId
-        )}&vault=true&intent=subscription&components=buttons&enable-funding=card&disable-funding=paylater,venmo`;
+        )}&currency=USD&components=buttons&disable-funding=paylater,venmo`;
         script.async = true;
         script.onload = () => renderButtons();
         script.onerror = () => {

@@ -84,6 +84,58 @@ export class BillingService {
   }
 
   /**
+   * Record a standard PayPal order / capture payment and activate Pro access.
+   */
+  public async linkOrder(
+    workspaceId: string,
+    userId: string,
+    orderId: string,
+    amount: number = 19.0,
+    currency: string = 'USD'
+  ): Promise<BillingSubscription> {
+    if (!workspaceId || !userId || !orderId) {
+      throw new Error('[BillingService] Missing required parameters to link order.');
+    }
+
+    const now = new Date();
+    const periodEnd = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
+
+    const payment: BillingPayment = {
+      id: crypto.randomUUID(),
+      workspaceId,
+      provider: 'paypal',
+      providerPaymentId: orderId,
+      providerSubscriptionId: orderId,
+      amount,
+      currency,
+      status: 'completed',
+      createdAt: now.toISOString(),
+      paidAt: now.toISOString(),
+    };
+    await this.store.savePayment(payment);
+
+    const existing = await this.store.getSubscriptionByWorkspace(workspaceId);
+    const subscription: BillingSubscription = {
+      id: existing?.id || crypto.randomUUID(),
+      workspaceId,
+      userId,
+      provider: 'paypal',
+      providerSubscriptionId: orderId,
+      providerPlanId: this.proMonthlyPlanId || 'pro_monthly_order',
+      plan: 'pro',
+      status: 'active',
+      currentPeriodStart: now.toISOString(),
+      currentPeriodEnd: periodEnd.toISOString(),
+      cancelAtPeriodEnd: false,
+      createdAt: existing?.createdAt || now.toISOString(),
+      updatedAt: now.toISOString(),
+    };
+
+    await this.store.saveSubscription(subscription);
+    return subscription;
+  }
+
+  /**
    * Get subscription and entitlement overview for a workspace.
    */
   public async getWorkspaceBilling(workspaceId: string): Promise<{
