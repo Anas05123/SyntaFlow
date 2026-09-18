@@ -1,5 +1,5 @@
 import crypto from 'node:crypto';
-import type { BillingSubscription, BillingPayment } from '../../../packages/contracts/src/billing.js';
+import type { BillingSubscription, BillingPayment } from './types.js';
 import { BillingStore, defaultBillingStore } from './db/billingStore.js';
 import { PayPalClient, defaultPayPalClient } from './paypal/paypalClient.js';
 import { mapPayPalSubscriptionStatus } from './paypal/stateMapper.js';

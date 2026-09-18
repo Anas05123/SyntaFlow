@@ -1,4 +1,4 @@
-import type { SubscriptionStatus, PaymentStatus } from '../../../../packages/contracts/src/billing.js';
+import type { SubscriptionStatus, PaymentStatus } from '../types.js';
 
 /**
  * Maps PayPal Subscription status string to internal Syntaflow SubscriptionStatus.

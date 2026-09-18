@@ -9,7 +9,7 @@ import type {
   SubscriptionStatus,
   PaymentStatus,
   BillingPlanId,
-} from '../../../../packages/contracts/src/billing.js';
+} from '../types.js';
 
 export class BillingStore {
   private db: any = null;
