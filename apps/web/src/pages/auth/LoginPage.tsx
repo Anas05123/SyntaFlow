@@ -127,23 +127,24 @@ export const LoginPage: React.FC = () => {
           justifyContent: 'center',
           gap: '10px',
           padding: '11px 16px',
-          borderRadius: '8px',
-          backgroundColor: 'rgba(255, 255, 255, 0.05)',
-          border: '1px solid rgba(255, 255, 255, 0.12)',
-          color: 'var(--text-primary)',
+          borderRadius: 'var(--radius-button)',
+          backgroundColor: 'var(--surface)',
+          border: '1px solid var(--border)',
+          color: 'var(--text)',
           fontSize: '14px',
           fontWeight: 500,
           cursor: 'pointer',
-          transition: 'all 0.15s ease',
+          transition: 'all var(--transition-fast)',
           marginBottom: '1.5rem',
+          boxShadow: 'var(--shadow-sm)',
         }}
         onMouseEnter={(e) => {
-          e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.09)';
-          e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.25)';
+          e.currentTarget.style.backgroundColor = 'var(--surface-subtle)';
+          e.currentTarget.style.borderColor = 'var(--edge-hover)';
         }}
         onMouseLeave={(e) => {
-          e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
-          e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.12)';
+          e.currentTarget.style.backgroundColor = 'var(--surface)';
+          e.currentTarget.style.borderColor = 'var(--border)';
         }}
       >
         <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
@@ -176,11 +177,11 @@ export const LoginPage: React.FC = () => {
           marginBottom: '1.5rem',
         }}
       >
-        <div style={{ flex: 1, height: '1px', backgroundColor: 'rgba(255, 255, 255, 0.08)' }} />
+        <div style={{ flex: 1, height: '1px', backgroundColor: 'var(--divider)' }} />
         <span style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--text-tertiary)' }}>
           or with email
         </span>
-        <div style={{ flex: 1, height: '1px', backgroundColor: 'rgba(255, 255, 255, 0.08)' }} />
+        <div style={{ flex: 1, height: '1px', backgroundColor: 'var(--divider)' }} />
       </div>
 
       {/* Form */}
@@ -188,7 +189,7 @@ export const LoginPage: React.FC = () => {
         <div>
           <label
             htmlFor="login-email"
-            style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: 'var(--text-secondary)', marginBottom: '6px' }}
+            style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: 'var(--text-muted)', marginBottom: '6px' }}
           >
             Work Email
           </label>
@@ -204,17 +205,17 @@ export const LoginPage: React.FC = () => {
             style={{
               width: '100%',
               padding: '10px 14px',
-              borderRadius: '8px',
-              backgroundColor: 'rgba(0, 0, 0, 0.3)',
-              border: '1px solid rgba(255, 255, 255, 0.12)',
-              color: 'var(--text-primary)',
+              borderRadius: 'var(--radius-sm)',
+              backgroundColor: 'var(--surface)',
+              border: '1px solid var(--border)',
+              color: 'var(--text)',
               fontSize: '14px',
               outline: 'none',
-              transition: 'border-color 0.15s ease',
+              transition: 'border-color var(--transition-fast)',
               boxSizing: 'border-box',
             }}
-            onFocus={(e) => (e.target.style.borderColor = '#00f2fe')}
-            onBlur={(e) => (e.target.style.borderColor = 'rgba(255, 255, 255, 0.12)')}
+            onFocus={(e) => (e.target.style.borderColor = 'var(--cobalt)')}
+            onBlur={(e) => (e.target.style.borderColor = 'var(--border)')}
           />
         </div>
 
@@ -222,13 +223,13 @@ export const LoginPage: React.FC = () => {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
             <label
               htmlFor="login-password"
-              style={{ fontSize: '13px', fontWeight: 500, color: 'var(--text-secondary)' }}
+              style={{ fontSize: '13px', fontWeight: 500, color: 'var(--text-muted)' }}
             >
               Password
             </label>
             <Link
               href="/forgot-password"
-              style={{ fontSize: '12px', color: '#00f2fe', textDecoration: 'none' }}
+              style={{ fontSize: '12px', color: 'var(--cobalt)', textDecoration: 'none' }}
             >
               Forgot?
             </Link>
@@ -245,35 +246,37 @@ export const LoginPage: React.FC = () => {
             style={{
               width: '100%',
               padding: '10px 14px',
-              borderRadius: '8px',
-              backgroundColor: 'rgba(0, 0, 0, 0.3)',
-              border: '1px solid rgba(255, 255, 255, 0.12)',
-              color: 'var(--text-primary)',
+              borderRadius: 'var(--radius-sm)',
+              backgroundColor: 'var(--surface)',
+              border: '1px solid var(--border)',
+              color: 'var(--text)',
               fontSize: '14px',
               outline: 'none',
-              transition: 'border-color 0.15s ease',
+              transition: 'border-color var(--transition-fast)',
               boxSizing: 'border-box',
             }}
-            onFocus={(e) => (e.target.style.borderColor = '#00f2fe')}
-            onBlur={(e) => (e.target.style.borderColor = 'rgba(255, 255, 255, 0.12)')}
+            onFocus={(e) => (e.target.style.borderColor = 'var(--cobalt)')}
+            onBlur={(e) => (e.target.style.borderColor = 'var(--border)')}
           />
         </div>
 
         <Button
           type="submit"
           variant="primary"
-          size="lg"
+          size="md"
           disabled={isLoading}
-          style={{ width: '100%', marginTop: '0.5rem', backgroundColor: 'var(--cobalt)', borderRadius: '8px' }}
+          style={{ width: '100%', marginTop: '0.5rem', borderRadius: 'var(--radius-button)' }}
         >
-          {isLoading ? 'Signing in...' : 'Sign in'}
+          {isLoading ? 'Signing in...' : 'Sign In to Workspace'}
         </Button>
       </form>
 
-      {/* Footer link to Signup */}
-      <div style={{ marginTop: '1.5rem', textAlign: 'center', fontSize: '13px', color: 'var(--text-secondary)' }}>
-        New to Syntaflow?{' '}
-        <Link href="/signup" style={{ color: '#00f2fe', textDecoration: 'none', fontWeight: 500 }}>
+      <div style={{ marginTop: '1.5rem', textAlign: 'center', fontSize: '13px', color: 'var(--text-muted)' }}>
+        Don&apos;t have an account yet?{' '}
+        <Link
+          href={`/signup${returnTo !== '/account' && returnTo !== 'https://app.syntaflow.tech' ? `?returnTo=${encodeURIComponent(returnTo)}` : ''}`}
+          style={{ color: 'var(--cobalt)', textDecoration: 'none', fontWeight: 600 }}
+        >
           Create account
         </Link>
       </div>

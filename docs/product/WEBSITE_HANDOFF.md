@@ -30,12 +30,12 @@ The web presence features four structurally decoupled environments:
 
 ## 3. Brand Foundations & Visual Tokens
 
-The website must strictly mirror the CoreDesk desktop visual language:
-- **Background**: Deep graphite canvas (`#0B0D0F`).
-- **Surfaces**: Dark graphite cards (`#121518`) with hair-line borders (`1px solid rgba(255, 255, 255, 0.08)`).
-- **Accents**: CoreDesk Cobalt (`#2563EB`) and Cyan (`#06B6D4`).
-- **Typography**: Inter / system sans-serif. Clean tabular numeric styling for metrics.
-- **No Candy Gradients**: Avoid multi-colored gradients, neon borders, or 3D cartoon illustrations.
+The website features an editorial modular visual system that feels premium, alive, friendly, human-designed, and confident:
+- **Base Surfaces & Light Canvas**: Warm/cool off-white background (`#F7F9FD`) paired with crisp white paper-cards (`#FFFFFF`).
+- **Deep Navy Contrast Stages**: High-impact contrast containers (`#0C1220`) for interactive simulators, terminal previews, and technical showcases.
+- **Accents**: Cobalt (`#2F6BFA`) for primary intent, Cyan (`#29C4E8`) for live activity, Mint (`#5ED6A6`) for gates/success, Amber (`#F5B842`) for review attention, and Coral (`#F06D66`) for blockers.
+- **Typography & Geometry**: Sora geometric display typography for headings, Inter for high-legibility body, tactile 14px buttons (`--radius-button: 14px`), and 20px card rounding (`--radius-card: 20px`).
+- **No AI Clichés or Candy Glow**: 85–90% neutral balance; zero fake automation badges, floating orbs, or generic neon templates.
 
 ---
 

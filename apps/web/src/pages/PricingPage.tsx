@@ -1,39 +1,43 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { SEOHead } from '../components/ui/SEOHead';
 import { Link } from '../components/ui/Link';
 import { PRICING_TIERS, PRICING_FAQ } from '../content/pricingConfig';
 
 export const PricingPage: React.FC = () => {
+  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
+
+  const toggleFaq = (idx: number) => {
+    setOpenFaqIndex(openFaqIndex === idx ? null : idx);
+  };
+
   return (
-    <div style={{ paddingBottom: '5rem', fontFamily: 'var(--font-sans, -apple-system, sans-serif)' }}>
+    <div style={{ paddingBottom: '6rem', fontFamily: 'var(--font-body)', backgroundColor: 'var(--canvas)', color: 'var(--text)' }}>
       <SEOHead path="/pricing" />
 
       {/* Header */}
-      <section style={{ paddingTop: '4rem', paddingBottom: '2.5rem', textAlign: 'center' }}>
-        <div className="container" style={{ maxWidth: '800px' }}>
-          <div
+      <section style={{ paddingTop: 'clamp(3.5rem, 6vw, 5rem)', paddingBottom: 'clamp(2.5rem, 5vw, 3.5rem)', textAlign: 'center' }}>
+        <div className="container" style={{ maxWidth: '840px' }}>
+          <div className="editorial-eyebrow" style={{ marginBottom: '1.5rem' }}>
+            <span className="dot" />
+            <span>TRANSPARENT COMMERCIAL STRUCTURE</span>
+          </div>
+
+          <h1
             style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '8px',
-              padding: '4px 14px',
-              borderRadius: '9999px',
-              backgroundColor: 'rgba(0, 242, 254, 0.08)',
-              border: '1px solid rgba(0, 242, 254, 0.25)',
+              fontFamily: 'var(--font-display)',
+              fontSize: 'clamp(2.5rem, 5vw, 3.75rem)',
+              fontWeight: 700,
+              letterSpacing: '-0.035em',
+              color: 'var(--text)',
+              lineHeight: 1.1,
               marginBottom: '1.25rem',
             }}
           >
-            <span style={{ fontSize: '11px', fontFamily: 'monospace', color: '#00f2fe', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 600 }}>
-              TRANSPARENT COMMERCIAL STRUCTURE
-            </span>
-          </div>
-
-          <h1 style={{ fontSize: 'clamp(2.25rem, 4.5vw, 3.25rem)', fontWeight: 700, letterSpacing: '-0.03em', color: '#ffffff', marginBottom: '1rem' }}>
             Simple, honest pricing.
           </h1>
 
-          <p style={{ fontSize: '1.1rem', color: 'var(--text-secondary)', lineHeight: 1.6, maxWidth: '640px', margin: '0 auto' }}>
-            Syntaflow is currently <strong>100% free during the Desktop Preview</strong>. No forced subscriptions, no artificial lock-in, and your data stays on your machine forever.
+          <p style={{ fontSize: '1.15rem', color: 'var(--text-muted)', lineHeight: 1.62, maxWidth: '680px', margin: '0 auto' }}>
+            Syntaflow is currently <strong>100% free during the Desktop Preview ($0)</strong>. No forced subscriptions, no artificial lock-in, and your client records stay on your physical machine forever.
           </p>
         </div>
       </section>
@@ -45,9 +49,9 @@ export const PricingPage: React.FC = () => {
             style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-              gap: '1.5rem',
+              gap: '24px',
               alignItems: 'stretch',
-              marginBottom: '4rem',
+              marginBottom: '4.5rem',
             }}
           >
             {PRICING_TIERS.map((tier) => {
@@ -55,57 +59,55 @@ export const PricingPage: React.FC = () => {
               return (
                 <div
                   key={tier.id}
+                  className="paper-card"
                   style={{
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'space-between',
-                    padding: '2.25rem',
-                    borderRadius: '16px',
-                    backgroundColor: isPreview ? 'rgba(17, 20, 26, 0.95)' : 'rgba(17, 20, 26, 0.6)',
-                    border: isPreview ? '1px solid rgba(0, 242, 254, 0.4)' : '1px solid rgba(255, 255, 255, 0.08)',
-                    boxShadow: isPreview ? '0 16px 40px rgba(0, 242, 254, 0.08)' : 'none',
+                    padding: '2.5rem 2.25rem',
+                    borderRadius: 'var(--radius-card)',
+                    backgroundColor: 'var(--surface)',
+                    border: isPreview ? '2px solid var(--cobalt)' : '1px solid var(--border)',
+                    boxShadow: isPreview ? 'var(--shadow-lg)' : 'var(--shadow-sm)',
                     position: 'relative',
                   }}
                 >
                   <div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
                       <span
+                        className={isPreview ? 'status-chip status-chip-cobalt' : 'status-chip'}
                         style={{
-                          padding: '3px 10px',
-                          borderRadius: '12px',
-                          backgroundColor: isPreview ? 'rgba(0, 242, 254, 0.15)' : 'rgba(255, 255, 255, 0.06)',
-                          color: isPreview ? '#00f2fe' : 'var(--text-tertiary)',
-                          fontSize: '11px',
-                          fontWeight: 600,
-                          textTransform: 'uppercase',
-                          letterSpacing: '0.05em',
+                          backgroundColor: isPreview ? 'var(--cobalt-subtle)' : 'var(--surface-subtle)',
+                          color: isPreview ? 'var(--cobalt)' : 'var(--text-metadata)',
                         }}
                       >
                         {tier.badge}
                       </span>
                     </div>
 
-                    <h2 style={{ fontSize: '1.35rem', fontWeight: 700, color: '#ffffff', margin: '0 0 0.5rem 0' }}>
+                    <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.45rem', fontWeight: 700, color: 'var(--text)', margin: '0 0 0.5rem 0' }}>
                       {tier.name}
                     </h2>
 
                     <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', marginBottom: '1rem' }}>
-                      <span style={{ fontSize: '2.5rem', fontWeight: 800, color: '#ffffff' }}>{tier.priceLabel}</span>
+                      <span style={{ fontFamily: 'var(--font-display)', fontSize: '2.5rem', fontWeight: 800, color: 'var(--text)' }}>
+                        {tier.priceLabel}
+                      </span>
                       <span style={{ fontSize: '13px', color: 'var(--text-tertiary)' }}>/ {tier.periodLabel}</span>
                     </div>
 
-                    <p style={{ fontSize: '13.5px', color: 'var(--text-secondary)', lineHeight: 1.5, marginBottom: '1.75rem' }}>
+                    <p style={{ fontSize: '13.5px', color: 'var(--text-muted)', lineHeight: 1.55, marginBottom: '1.75rem' }}>
                       {tier.description}
                     </p>
 
-                    <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.08)', paddingTop: '1.25rem', marginBottom: '1.75rem' }}>
-                      <div style={{ fontSize: '11.5px', fontWeight: 600, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.75rem' }}>
+                    <div style={{ borderTop: '1px solid var(--border-subtle)', paddingTop: '1.5rem', marginBottom: '2rem' }}>
+                      <div style={{ fontSize: '11.5px', fontFamily: 'var(--font-mono)', fontWeight: 600, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.75rem' }}>
                         Includes:
                       </div>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                         {tier.features.map((feature, idx) => (
-                          <div key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: '13px', color: 'var(--text-secondary)', lineHeight: 1.4 }}>
-                            <span style={{ color: isPreview ? '#00f2fe' : 'var(--text-tertiary)' }}>✓</span>
+                          <div key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: '13px', color: 'var(--text)', lineHeight: 1.4 }}>
+                            <span style={{ color: isPreview ? 'var(--cobalt)' : 'var(--text-tertiary)', fontWeight: 700 }}>✓</span>
                             <span>{feature}</span>
                           </div>
                         ))}
@@ -121,12 +123,13 @@ export const PricingPage: React.FC = () => {
                           display: 'block',
                           textAlign: 'center',
                           padding: '12px',
-                          borderRadius: '8px',
+                          borderRadius: 'var(--radius-button)',
                           backgroundColor: 'var(--cobalt)',
                           color: '#ffffff',
                           fontSize: '14px',
                           fontWeight: 600,
                           textDecoration: 'none',
+                          boxShadow: '0 2px 8px rgba(47, 107, 250, 0.25)',
                         }}
                       >
                         Get Free Preview →
@@ -136,10 +139,11 @@ export const PricingPage: React.FC = () => {
                         style={{
                           textAlign: 'center',
                           padding: '12px',
-                          borderRadius: '8px',
-                          backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                          borderRadius: 'var(--radius-button)',
+                          backgroundColor: 'var(--surface-subtle)',
                           color: 'var(--text-tertiary)',
                           fontSize: '13px',
+                          border: '1px solid var(--border)',
                         }}
                       >
                         Announced before GA
@@ -152,30 +156,67 @@ export const PricingPage: React.FC = () => {
           </div>
 
           {/* Pricing FAQ */}
-          <div style={{ maxWidth: '850px', margin: '0 auto' }}>
-            <h2 style={{ fontSize: '1.75rem', fontWeight: 700, color: '#ffffff', textAlign: 'center', marginBottom: '2rem' }}>
+          <div style={{ maxWidth: '820px', margin: '0 auto' }}>
+            <h2
+              style={{
+                fontFamily: 'var(--font-display)',
+                fontSize: '1.85rem',
+                fontWeight: 700,
+                color: 'var(--text)',
+                textAlign: 'center',
+                marginBottom: '2rem',
+                letterSpacing: '-0.025em',
+              }}
+            >
               Pricing FAQ
             </h2>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              {PRICING_FAQ.map((faq, idx) => (
-                <div
-                  key={idx}
-                  style={{
-                    padding: '1.5rem',
-                    borderRadius: '12px',
-                    backgroundColor: 'rgba(17, 20, 26, 0.65)',
-                    border: '1px solid rgba(255, 255, 255, 0.08)',
-                  }}
-                >
-                  <div style={{ fontSize: '15px', fontWeight: 600, color: '#ffffff', marginBottom: '0.5rem' }}>
-                    {faq.question}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              {PRICING_FAQ.map((faq, idx) => {
+                const isOpen = openFaqIndex === idx;
+                return (
+                  <div
+                    key={idx}
+                    className="paper-card"
+                    style={{
+                      borderRadius: 'var(--radius-md)',
+                      backgroundColor: 'var(--surface)',
+                      border: '1px solid var(--border)',
+                      overflow: 'hidden',
+                    }}
+                  >
+                    <button
+                      type="button"
+                      onClick={() => toggleFaq(idx)}
+                      style={{
+                        width: '100%',
+                        padding: '1.25rem 1.5rem',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        background: 'none',
+                        border: 'none',
+                        cursor: 'pointer',
+                        color: 'var(--text)',
+                        fontSize: '15px',
+                        fontWeight: 600,
+                        textAlign: 'left',
+                      }}
+                    >
+                      <span>{faq.question}</span>
+                      <span style={{ color: 'var(--cobalt)', fontSize: '18px', marginLeft: '1rem', fontWeight: 700 }}>
+                        {isOpen ? '−' : '+'}
+                      </span>
+                    </button>
+
+                    {isOpen && (
+                      <div style={{ padding: '0 1.5rem 1.25rem', fontSize: '14px', color: 'var(--text-muted)', lineHeight: 1.65 }}>
+                        {faq.answer}
+                      </div>
+                    )}
                   </div>
-                  <div style={{ fontSize: '13.5px', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
-                    {faq.answer}
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </div>

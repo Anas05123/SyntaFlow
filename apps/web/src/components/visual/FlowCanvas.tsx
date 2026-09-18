@@ -79,15 +79,15 @@ export const FlowCanvas: React.FC = () => {
 
       {/* Main interactive pipeline container */}
       <div
+        className="contrast-stage"
         style={{
           position: 'relative',
           zIndex: 1,
-          padding: '2rem 1.5rem',
-          borderRadius: '16px',
-          border: '1px solid rgba(255, 255, 255, 0.08)',
-          background: 'linear-gradient(180deg, rgba(17, 20, 26, 0.85) 0%, rgba(10, 12, 16, 0.95) 100%)',
-          backdropFilter: 'blur(16px)',
-          boxShadow: '0 20px 50px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.06)',
+          padding: '2.5rem 2rem',
+          borderRadius: 'var(--radius-large)',
+          border: '1px solid var(--border-contrast)',
+          backgroundColor: 'var(--surface-contrast)',
+          boxShadow: 'var(--shadow-contrast)',
         }}
       >
         {/* Top Header Label */}

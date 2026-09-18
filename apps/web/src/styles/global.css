@@ -213,10 +213,91 @@ code {
 }
 
 .glass-panel {
-  background-color: rgba(22, 27, 34, 0.72);
+  background-color: rgba(255, 255, 255, 0.88);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.65);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-md);
 }
+
+/* Editorial Surface & Stage Primitives */
+.paper-card {
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-md);
+  transition: transform var(--transition-smooth), box-shadow var(--transition-smooth), border-color var(--transition-smooth);
+}
+
+.contrast-stage {
+  background-color: var(--surface-contrast);
+  color: var(--text-contrast);
+  border: 1px solid var(--border-contrast);
+  border-radius: var(--radius-large);
+  box-shadow: var(--shadow-contrast);
+  position: relative;
+  overflow: hidden;
+}
+
+.editorial-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  background-color: var(--surface-subtle);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--cobalt);
+}
+
+.editorial-eyebrow .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--cyan);
+  box-shadow: 0 0 8px var(--cyan);
+}
+
+.status-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.status-chip-mint {
+  background-color: var(--mint-subtle);
+  color: #15803D;
+  border: 1px solid var(--mint-border);
+}
+
+.status-chip-amber {
+  background-color: var(--amber-subtle);
+  color: #B45309;
+  border: 1px solid var(--amber-border);
+}
+
+.status-chip-cyan {
+  background-color: var(--cyan-subtle);
+  color: #0369A1;
+  border: 1px solid var(--cyan-border);
+}
+
+.status-chip-cobalt {
+  background-color: var(--cobalt-subtle);
+  color: var(--cobalt);
+  border: 1px solid var(--cobalt-border);
+}
+
 

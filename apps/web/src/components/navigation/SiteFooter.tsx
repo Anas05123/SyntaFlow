@@ -11,10 +11,70 @@ export const SiteFooter: React.FC = () => {
         borderTop: '1px solid var(--border)',
         backgroundColor: 'var(--canvas)',
         color: 'var(--text-muted)',
-        padding: 'var(--space-48) 0 var(--space-32) 0',
+        padding: 'var(--space-64) 0 var(--space-32) 0',
       }}
     >
       <div className="container" style={{ maxWidth: '1120px' }}>
+        {/* Editorial Brand Statement Header */}
+        <div
+          style={{
+            borderBottom: '1px solid var(--border)',
+            paddingBottom: 'var(--space-48)',
+            marginBottom: 'var(--space-48)',
+            display: 'flex',
+            flexWrap: 'wrap',
+            alignItems: 'flex-end',
+            justifyContent: 'space-between',
+            gap: 'var(--space-24)',
+          }}
+        >
+          <div style={{ maxWidth: '640px' }}>
+            <div style={{ marginBottom: 'var(--space-16)' }}>
+              <Link href="/" style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center' }} aria-label="Syntaflow Home">
+                <BrandMark variant="full" size="md" />
+              </Link>
+            </div>
+            <h3
+              style={{
+                fontFamily: 'var(--font-display)',
+                fontSize: 'clamp(22px, 3vw, 30px)',
+                fontWeight: 650,
+                letterSpacing: '-0.025em',
+                color: 'var(--text)',
+                lineHeight: 1.25,
+                margin: '0 0 var(--space-12) 0',
+              }}
+            >
+              Work should not lose its context.
+            </h3>
+            <p style={{ fontSize: '15px', color: 'var(--text-muted)', lineHeight: 1.6, margin: 0 }}>
+              The desktop-first operating environment keeping one continuous, verified record of every client engagement — from first contact to final handover.
+            </p>
+          </div>
+
+          <div
+            style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: '11.5px',
+              letterSpacing: '0.06em',
+              color: 'var(--text-tertiary)',
+              textTransform: 'uppercase',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '6px',
+              padding: '12px 18px',
+              backgroundColor: 'var(--surface)',
+              border: '1px solid var(--border)',
+              borderRadius: 'var(--radius-md)',
+              boxShadow: 'var(--shadow-sm)',
+            }}
+          >
+            <span style={{ color: 'var(--cobalt)', fontWeight: 600 }}>● Windows 10/11 (64-bit)</span>
+            <span>Local SQLite Persistence</span>
+            <span>Zero Cloud Telemetry</span>
+          </div>
+        </div>
+
         {/* Columns Grid */}
         <div
           style={{
@@ -24,17 +84,6 @@ export const SiteFooter: React.FC = () => {
             marginBottom: 'var(--space-48)',
           }}
         >
-          {/* Brand Info */}
-          <div style={{ gridColumn: 'span 1' }}>
-            <div style={{ marginBottom: 'var(--space-12)' }}>
-              <Link href="/" style={{ textDecoration: 'none' }} aria-label="Syntaflow Home">
-                <BrandMark variant="full" size="sm" />
-              </Link>
-            </div>
-            <p style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: 1.5, margin: 0 }}>
-              Connected operating environment for client work. From context to action.
-            </p>
-          </div>
 
           {/* Product */}
           <div>

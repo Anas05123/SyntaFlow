@@ -5,6 +5,7 @@ interface BrandMarkProps {
   size?: 'sm' | 'md' | 'lg';
   src?: string;
   className?: string;
+  textColor?: string;
 }
 
 export const BrandMark: React.FC<BrandMarkProps> = ({
@@ -12,6 +13,7 @@ export const BrandMark: React.FC<BrandMarkProps> = ({
   size = 'md',
   src = '/brand/LogoIcon_WBG.png',
   className = '',
+  textColor,
 }) => {
   const heights = {
     sm: variant === 'full' ? 24 : 24,
@@ -53,7 +55,7 @@ export const BrandMark: React.FC<BrandMarkProps> = ({
           fontWeight: 700,
           fontSize: size === 'lg' ? '22px' : size === 'md' ? '18px' : '15px',
           letterSpacing: '-0.025em',
-          color: 'var(--text)',
+          color: textColor || 'var(--text)',
         }}
       >
         Syntaflow

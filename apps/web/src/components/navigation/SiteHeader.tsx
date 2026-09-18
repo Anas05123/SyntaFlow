@@ -76,10 +76,10 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ currentPath }) => {
         top: 0,
         zIndex: 100,
         height: 'var(--header-height)',
-        backgroundColor: 'rgba(8, 9, 11, 0.85)',
+        backgroundColor: 'rgba(247, 249, 253, 0.88)',
         backdropFilter: 'blur(20px)',
         WebkitBackdropFilter: 'blur(20px)',
-        borderBottom: '1px solid rgba(255, 255, 255, 0.07)',
+        borderBottom: '1px solid var(--border)',
       }}
     >
       <div
@@ -103,7 +103,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ currentPath }) => {
             style={{
               display: 'none',
               alignItems: 'center',
-              gap: '28px',
+              gap: '32px',
             }}
             className="desktop-nav"
           >
@@ -112,11 +112,11 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ currentPath }) => {
                 key={item.label}
                 href={item.href}
                 style={{
-                  fontSize: '14px',
-                  fontWeight: 500,
-                  color: item.active ? '#00f2fe' : 'var(--text-secondary)',
+                  fontSize: '14.5px',
+                  fontWeight: item.active ? 600 : 500,
+                  color: item.active ? 'var(--cobalt)' : 'var(--text-secondary)',
                   textDecoration: 'none',
-                  transition: 'color 0.15s ease',
+                  transition: 'color var(--transition-fast)',
                 }}
               >
                 {item.label}
@@ -138,14 +138,15 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ currentPath }) => {
                     alignItems: 'center',
                     gap: '10px',
                     padding: '6px 14px 6px 8px',
-                    borderRadius: '24px',
-                    backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    borderRadius: 'var(--radius-button)',
+                    backgroundColor: 'var(--surface)',
+                    border: '1px solid var(--border)',
+                    boxShadow: 'var(--shadow-sm)',
                     cursor: 'pointer',
                     color: 'var(--text-primary)',
                     fontSize: '13.5px',
                     fontWeight: 500,
-                    transition: 'all 0.15s ease',
+                    transition: 'all var(--transition-fast)',
                   }}
                   aria-expanded={dropdownOpen}
                   aria-haspopup="true"
@@ -155,9 +156,9 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ currentPath }) => {
                       width: '24px',
                       height: '24px',
                       borderRadius: '50%',
-                      backgroundColor: 'rgba(0, 242, 254, 0.15)',
-                      border: '1px solid rgba(0, 242, 254, 0.4)',
-                      color: '#00f2fe',
+                      backgroundColor: 'var(--cobalt-subtle)',
+                      border: '1px solid var(--cobalt-border)',
+                      color: 'var(--cobalt)',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -179,16 +180,16 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ currentPath }) => {
                       top: 'calc(100% + 8px)',
                       right: 0,
                       width: '230px',
-                      backgroundColor: 'var(--surface-raised)',
-                      border: '1px solid rgba(255, 255, 255, 0.1)',
-                      borderRadius: '12px',
-                      boxShadow: '0 20px 40px rgba(0, 0, 0, 0.7)',
+                      backgroundColor: 'var(--surface)',
+                      border: '1px solid var(--border)',
+                      borderRadius: 'var(--radius-md)',
+                      boxShadow: 'var(--shadow-lg)',
                       padding: '8px 0',
                       zIndex: 110,
                       animation: 'fadeIn 0.15s ease',
                     }}
                   >
-                    <div style={{ padding: '8px 16px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', marginBottom: '4px' }}>
+                    <div style={{ padding: '8px 16px', borderBottom: '1px solid var(--border)', marginBottom: '4px' }}>
                       <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                         {user?.name || 'Syntaflow Operator'}
                       </div>
@@ -231,7 +232,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ currentPath }) => {
                       <span>Downloads & Desktop</span>
                     </Link>
 
-                    <div style={{ height: '1px', backgroundColor: 'rgba(255, 255, 255, 0.08)', margin: '6px 0' }} />
+                    <div style={{ height: '1px', backgroundColor: 'var(--divider)', margin: '6px 0' }} />
 
                     <button
                       type="button"
@@ -243,7 +244,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ currentPath }) => {
                         border: 'none',
                         padding: '10px 16px',
                         fontSize: '13.5px',
-                        color: '#f87171',
+                        color: 'var(--risk)',
                         cursor: 'pointer',
                       }}
                       className="nav-dropdown-item"
@@ -261,23 +262,23 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ currentPath }) => {
                   display: 'inline-flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  padding: '7px 18px',
-                  borderRadius: '20px',
-                  backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                  border: '1px solid rgba(255, 255, 255, 0.15)',
-                  fontSize: '13.5px',
-                  fontWeight: 500,
-                  color: 'var(--text-primary)',
+                  padding: '8px 20px',
+                  borderRadius: 'var(--radius-button)',
+                  backgroundColor: 'var(--cobalt)',
+                  color: '#FFFFFF',
+                  fontSize: '14px',
+                  fontWeight: 600,
                   textDecoration: 'none',
-                  transition: 'all 0.15s ease',
+                  boxShadow: '0 2px 8px rgba(47, 107, 250, 0.25)',
+                  transition: 'all var(--transition-fast)',
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.14)';
-                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+                  e.currentTarget.style.backgroundColor = 'var(--cobalt-hover)';
+                  e.currentTarget.style.transform = 'translateY(-1px)';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.08)';
-                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.15)';
+                  e.currentTarget.style.backgroundColor = 'var(--cobalt)';
+                  e.currentTarget.style.transform = 'none';
                 }}
               >
                 Sign in
@@ -333,13 +334,14 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ currentPath }) => {
             left: 0,
             right: 0,
             bottom: 0,
-            backgroundColor: 'rgba(8, 9, 11, 0.98)',
+            backgroundColor: 'rgba(247, 249, 253, 0.98)',
             backdropFilter: 'blur(20px)',
             display: 'flex',
             flexDirection: 'column',
             padding: '24px',
             zIndex: 99,
             animation: 'fadeIn 0.2s ease',
+            borderTop: '1px solid var(--border)',
           }}
         >
           <nav style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '32px' }}>
@@ -350,8 +352,8 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ currentPath }) => {
                 onClick={() => setMobileOpen(false)}
                 style={{
                   fontSize: '18px',
-                  fontWeight: 500,
-                  color: item.active ? '#00f2fe' : 'var(--text-primary)',
+                  fontWeight: 600,
+                  color: item.active ? 'var(--cobalt)' : 'var(--text-primary)',
                   textDecoration: 'none',
                   padding: '8px 0',
                 }}
@@ -372,11 +374,12 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ currentPath }) => {
                     alignItems: 'center',
                     justifyContent: 'center',
                     padding: '12px',
-                    borderRadius: '8px',
+                    borderRadius: 'var(--radius-button)',
                     backgroundColor: 'var(--cobalt)',
                     color: '#fff',
                     textDecoration: 'none',
                     fontWeight: 600,
+                    boxShadow: '0 2px 8px rgba(47, 107, 250, 0.25)',
                   }}
                 >
                   Open Account Portal
@@ -386,10 +389,10 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ currentPath }) => {
                   onClick={handleSignOut}
                   style={{
                     padding: '12px',
-                    borderRadius: '8px',
-                    backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
-                    color: '#f87171',
+                    borderRadius: 'var(--radius-button)',
+                    backgroundColor: 'var(--surface)',
+                    border: '1px solid var(--border)',
+                    color: 'var(--risk)',
                     fontWeight: 500,
                     cursor: 'pointer',
                   }}
@@ -406,11 +409,12 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ currentPath }) => {
                   alignItems: 'center',
                   justifyContent: 'center',
                   padding: '12px',
-                  borderRadius: '8px',
+                  borderRadius: 'var(--radius-button)',
                   backgroundColor: 'var(--cobalt)',
                   color: '#fff',
                   textDecoration: 'none',
                   fontWeight: 600,
+                  boxShadow: '0 2px 8px rgba(47, 107, 250, 0.25)',
                 }}
               >
                 Sign in

@@ -35,11 +35,12 @@ export const Card: React.FC<CardProps> = ({
       className={`card ${interactive ? 'card-interactive' : ''} ${className}`}
       style={{
         backgroundColor: getBg(),
-        border: '1px solid var(--edge)',
-        borderRadius: 'var(--radius-md)',
+        border: '1px solid var(--border)',
+        borderRadius: 'var(--radius-card)',
         padding: 'var(--space-24)',
         position: 'relative',
-        transition: interactive ? 'border-color var(--transition-fast), transform var(--transition-fast)' : undefined,
+        boxShadow: variant === 'raised' ? 'var(--shadow-lg)' : 'var(--shadow-sm)',
+        transition: interactive ? 'border-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast)' : undefined,
         cursor: interactive ? 'pointer' : 'default',
         ...style,
       }}

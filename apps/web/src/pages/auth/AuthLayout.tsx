@@ -14,8 +14,8 @@ export const AuthLayout: React.FC<AuthLayoutProps> = ({ title, subtitle, childre
       style={{
         minHeight: '100vh',
         display: 'flex',
-        backgroundColor: '#08090b',
-        color: 'var(--text-primary)',
+        backgroundColor: 'var(--canvas)',
+        color: 'var(--text)',
         position: 'relative',
         overflow: 'hidden',
       }}
@@ -28,32 +28,18 @@ export const AuthLayout: React.FC<AuthLayoutProps> = ({ title, subtitle, childre
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
-          padding: '3rem',
+          padding: 'clamp(2.5rem, 5vw, 4rem)',
           position: 'relative',
-          borderRight: '1px solid rgba(255, 255, 255, 0.08)',
-          background: 'linear-gradient(135deg, #090b10 0%, #0d1117 100%)',
+          backgroundColor: 'var(--surface-contrast)',
+          color: 'var(--text-contrast)',
+          borderRight: '1px solid var(--border-contrast)',
           overflow: 'hidden',
         }}
       >
-        {/* Ambient atmospheric glow in brand panel */}
-        <div
-          style={{
-            position: 'absolute',
-            top: '30%',
-            left: '30%',
-            width: '450px',
-            height: '450px',
-            background: 'radial-gradient(circle, rgba(0, 242, 254, 0.12) 0%, rgba(37, 99, 235, 0.08) 50%, transparent 75%)',
-            filter: 'blur(70px)',
-            pointerEvents: 'none',
-          }}
-          aria-hidden="true"
-        />
-
         {/* Top Logo */}
         <div style={{ position: 'relative', zIndex: 2 }}>
           <Link href="/" style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center' }}>
-            <BrandMark variant="full" size="md" />
+            <BrandMark variant="full" size="md" textColor="#FFFFFF" />
           </Link>
         </div>
 
@@ -64,28 +50,30 @@ export const AuthLayout: React.FC<AuthLayoutProps> = ({ title, subtitle, childre
               display: 'inline-flex',
               alignItems: 'center',
               gap: '8px',
-              padding: '4px 12px',
-              borderRadius: '20px',
-              backgroundColor: 'rgba(0, 242, 254, 0.08)',
-              border: '1px solid rgba(0, 242, 254, 0.25)',
+              padding: '5px 14px',
+              borderRadius: 'var(--radius-full)',
+              backgroundColor: 'rgba(41, 196, 232, 0.12)',
+              border: '1px solid rgba(41, 196, 232, 0.3)',
               fontSize: '11px',
               fontWeight: 600,
-              color: '#00f2fe',
+              color: 'var(--cyan)',
               textTransform: 'uppercase',
               letterSpacing: '0.08em',
               marginBottom: '1.5rem',
+              fontFamily: 'var(--font-mono)',
             }}
           >
-            Connected Workspace OS
+            Connected Client Operating Environment
           </div>
 
           <h2
             style={{
+              fontFamily: 'var(--font-display)',
               fontSize: 'clamp(2rem, 3.5vw, 2.75rem)',
               fontWeight: 700,
               lineHeight: 1.15,
               letterSpacing: '-0.03em',
-              color: '#ffffff',
+              color: '#FFFFFF',
               marginBottom: '1.25rem',
             }}
           >
@@ -94,48 +82,49 @@ export const AuthLayout: React.FC<AuthLayoutProps> = ({ title, subtitle, childre
 
           <p
             style={{
-              fontSize: '1rem',
-              lineHeight: 1.6,
-              color: 'var(--text-secondary)',
-              marginBottom: '2rem',
+              fontSize: '1.05rem',
+              lineHeight: 1.62,
+              color: 'var(--text-contrast-muted)',
+              marginBottom: '2.5rem',
             }}
           >
-            Syntaflow unifies commercial terms, scoping blueprints, document reviews, and gate handovers into one local-first operating record.
+            Syntaflow keeps the context, history, and decisions behind every client engagement in one continuous desktop record — from first contact to final delivery.
           </p>
 
-          {/* Minimal live pulse indicator */}
+          {/* Connected record highlights */}
           <div
             style={{
               display: 'flex',
-              alignItems: 'center',
+              flexDirection: 'column',
               gap: '12px',
-              padding: '12px 16px',
-              borderRadius: '12px',
-              backgroundColor: 'rgba(0, 0, 0, 0.4)',
+              padding: '18px 20px',
+              borderRadius: 'var(--radius-md)',
+              backgroundColor: 'rgba(255, 255, 255, 0.04)',
               border: '1px solid rgba(255, 255, 255, 0.08)',
+              fontSize: '13px',
+              color: 'var(--text-contrast)',
             }}
           >
-            <span
-              style={{
-                width: '8px',
-                height: '8px',
-                borderRadius: '50%',
-                backgroundColor: '#00f2fe',
-                boxShadow: '0 0 10px #00f2fe',
-                animation: 'pulse 2s infinite',
-              }}
-            />
-            <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
-              Local-first SQLite · Zero data scraping · Native DPAPI Vault
-            </span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <span style={{ color: 'var(--mint)', fontWeight: 700 }}>✓</span>
+              <span>100% Local-First SQLite Persistence</span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <span style={{ color: 'var(--cyan)', fontWeight: 700 }}>✓</span>
+              <span>Immutable DocVersion Cryptographic Snapshots</span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <span style={{ color: 'var(--cobalt)', fontWeight: 700 }}>✓</span>
+              <span>Prerequisite Delivery Gate Enforcement</span>
+            </div>
           </div>
         </div>
 
         {/* Bottom Legal / Version */}
-        <div style={{ position: 'relative', zIndex: 2, display: 'flex', gap: '20px', fontSize: '12px', color: 'var(--text-tertiary)' }}>
+        <div style={{ position: 'relative', zIndex: 2, display: 'flex', gap: '20px', fontSize: '12px', color: 'var(--text-contrast-metadata)' }}>
           <span>© {new Date().getFullYear()} Syntaflow Systems</span>
-          <Link href="/privacy" style={{ color: 'var(--text-tertiary)', textDecoration: 'none' }}>Privacy</Link>
-          <Link href="/terms" style={{ color: 'var(--text-tertiary)', textDecoration: 'none' }}>Terms</Link>
+          <Link href="/privacy" style={{ color: 'var(--text-contrast-metadata)', textDecoration: 'none' }}>Privacy</Link>
+          <Link href="/terms" style={{ color: 'var(--text-contrast-metadata)', textDecoration: 'none' }}>Terms</Link>
         </div>
       </div>
 
@@ -150,6 +139,7 @@ export const AuthLayout: React.FC<AuthLayoutProps> = ({ title, subtitle, childre
           padding: '2rem 1.5rem',
           position: 'relative',
           zIndex: 1,
+          backgroundColor: 'var(--canvas)',
         }}
       >
         {/* Mobile Header (Shown on small screens) */}
@@ -161,23 +151,23 @@ export const AuthLayout: React.FC<AuthLayoutProps> = ({ title, subtitle, childre
 
         {/* Centered Auth Card */}
         <div
+          className="paper-card"
           style={{
             width: '100%',
             maxWidth: '440px',
-            backgroundColor: 'rgba(17, 20, 26, 0.85)',
-            border: '1px solid rgba(255, 255, 255, 0.08)',
-            borderRadius: '16px',
+            backgroundColor: 'var(--surface)',
+            border: '1px solid var(--border)',
+            borderRadius: 'var(--radius-card)',
             padding: '2.5rem 2rem',
-            backdropFilter: 'blur(20px)',
-            boxShadow: '0 25px 50px rgba(0, 0, 0, 0.5)',
+            boxShadow: 'var(--shadow-lg)',
           }}
         >
           <div style={{ marginBottom: '2rem', textAlign: 'left' }}>
-            <h1 style={{ fontSize: '1.625rem', fontWeight: 700, color: '#ffffff', letterSpacing: '-0.02em', marginBottom: '0.5rem' }}>
+            <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '1.625rem', fontWeight: 700, color: 'var(--text)', letterSpacing: '-0.02em', marginBottom: '0.5rem' }}>
               {title}
             </h1>
             {subtitle && (
-              <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', lineHeight: 1.5, margin: 0 }}>
+              <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', lineHeight: 1.5, margin: 0 }}>
                 {subtitle}
               </p>
             )}
@@ -192,12 +182,12 @@ export const AuthLayout: React.FC<AuthLayoutProps> = ({ title, subtitle, childre
             href="/"
             style={{
               fontSize: '13px',
-              color: 'var(--text-tertiary)',
+              color: 'var(--text-muted)',
               textDecoration: 'none',
-              transition: 'color 0.15s ease',
+              transition: 'color var(--transition-fast)',
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = '#00f2fe')}
-            onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-tertiary)')}
+            onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--cobalt)')}
+            onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-muted)')}
           >
             ← Back to syntaflow.tech
           </Link>

@@ -1,8 +1,8 @@
 # Syntaflow Official Website (`apps/web`)
 
-> **Status**: MASTER BUILD COMPLETE (v3 Verified)  
+> **Status**: MASTER BUILD COMPLETE (v3 Editorial Redesign Verified)  
 > **Domain**: `syntaflow.tech` (strictly locked, never `.com`)  
-> **Aesthetic Mandate**: Anti-hype restraint. Grounded executive graphite (`#0B0D0F`), Sora display typography, Inter reading scale, and zero generic AI clichés.  
+> **Aesthetic Mandate**: Premium, friendly, alive, and editorial modular. Off-white canvas (`#F7F9FD`), crisp white paper-cards (`#FFFFFF`), deep navy contrast stages (`#0C1220`), Sora display typography, tactile 14px controls, and zero generic SaaS clichés.  
 > **Build Target**: React 19, TypeScript 6, Vite 8, Oxlint  
 
 ---
