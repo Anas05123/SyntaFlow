@@ -16,8 +16,8 @@ interface PayPalSubscriptionModalProps {
 
 type CheckoutPhase = 'loading' | 'ready' | 'approving' | 'confirming' | 'active' | 'pending' | 'failed' | 'error';
 
-const DEFAULT_PAYPAL_CLIENT_ID = 'AW8Bsle6VtVazDwDAp8MVddKhBcl2oJ_Rjcwslsdv7ItZD1EUH_C7tH6S_Zfod6CjPPg-jBII4o-C4Sk';
-const DEFAULT_PAYPAL_PRO_MONTHLY_PLAN_ID = 'P-2S313087AE0939606NKWJOBY';
+const DEFAULT_PAYPAL_CLIENT_ID = 'BAAdqlMCv4NifJpZIMSmXwU8_1Z3Ej7c5q008XKyiZUsHcDNfhpX_Pcs2iOazOdUFYV_L5l2Y8I4-RpMm4';
+const DEFAULT_PAYPAL_PRO_MONTHLY_PLAN_ID = 'P-7HS94694VP511840CNKWJ7TY';
 
 export const PayPalSubscriptionModal: React.FC<PayPalSubscriptionModalProps> = ({ isOpen, onClose, onSuccess }) => {
   const { user } = useAuth();
@@ -213,6 +213,8 @@ export const PayPalSubscriptionModal: React.FC<PayPalSubscriptionModalProps> = (
 
   if (!isOpen) return null;
 
+  const isSandbox = config?.clientId ? config.clientId.startsWith('AW8') : false;
+
   return (
     <div
       style={{
@@ -248,10 +250,10 @@ export const PayPalSubscriptionModal: React.FC<PayPalSubscriptionModalProps> = (
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.25rem' }}>
           <div>
             <span
-              className="status-chip status-chip-cobalt"
+              className={`status-chip ${isSandbox ? 'status-chip-cobalt' : 'status-chip-mint'}`}
               style={{ marginBottom: '0.5rem', display: 'inline-flex' }}
             >
-              PAYPAL SANDBOX TEST
+              {isSandbox ? 'PAYPAL SANDBOX TEST' : 'OFFICIAL PAYPAL CHECKOUT'}
             </span>
             <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.5rem', fontWeight: 700, margin: '0 0 0.25rem 0', color: 'var(--ink)' }}>
               Syntaflow Pro
@@ -280,7 +282,9 @@ export const PayPalSubscriptionModal: React.FC<PayPalSubscriptionModalProps> = (
         </div>
 
         <p style={{ fontSize: '0.9rem', color: 'var(--muted)', lineHeight: 1.5, marginBottom: '1.75rem' }}>
-          Recurring monthly test subscription. No real charges are made in Sandbox mode.
+          {isSandbox
+            ? 'Recurring monthly test subscription. No real charges are made in Sandbox mode.'
+            : 'Recurring monthly subscription for Syntaflow Pro. Cancel anytime with 1 click in your account portal.'}
         </p>
 
         {/* Phase States */}
@@ -341,7 +345,9 @@ export const PayPalSubscriptionModal: React.FC<PayPalSubscriptionModalProps> = (
               You're now on Syntaflow Pro.
             </div>
             <p style={{ fontSize: '0.875rem', color: 'var(--muted)', marginBottom: '1.5rem' }}>
-              Your Pro monthly subscription is active in the PayPal Sandbox environment.
+              {isSandbox
+                ? 'Your Pro monthly subscription is active in the PayPal Sandbox environment.'
+                : 'Your Pro monthly recurring subscription is now active.'}
             </p>
             <Button variant="primary" size="md" onClick={() => (window.location.href = '/account/plan')} style={{ width: '100%' }}>
               View in Account Dashboard
@@ -363,7 +369,7 @@ export const PayPalSubscriptionModal: React.FC<PayPalSubscriptionModalProps> = (
           </div>
         )}
 
-        {/* Sandbox Guidance Card */}
+        {/* Guidance / Trust Card */}
         {phase === 'ready' && (
           <div
             style={{
@@ -377,30 +383,46 @@ export const PayPalSubscriptionModal: React.FC<PayPalSubscriptionModalProps> = (
               lineHeight: 1.5,
             }}
           >
-            <div style={{ fontWeight: 600, color: '#0F172A', marginBottom: '0.25rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-              <span>ℹ️</span>
-              <span>PayPal Sandbox Testing Mode</span>
-            </div>
-            <div>
-              Live PayPal accounts do not exist in Sandbox. To test subscription approval smoothly:
-              <ul style={{ margin: '0.35rem 0 0 1.25rem', padding: 0 }}>
-                <li>
-                  Use a <strong>Sandbox Personal (Buyer) account</strong> from your{' '}
-                  <a
-                    href="https://developer.paypal.com/dashboard/accounts"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{ color: 'var(--cobalt)', textDecoration: 'underline' }}
-                  >
-                    PayPal Developer Accounts
-                  </a>{' '}
-                  for 1-click test approval.
-                </li>
-                <li>
-                  Or click <strong>Debit or Credit Card</strong> below to test guest card entry.
-                </li>
-              </ul>
-            </div>
+            {isSandbox ? (
+              <>
+                <div style={{ fontWeight: 600, color: '#0F172A', marginBottom: '0.25rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                  <span>ℹ️</span>
+                  <span>PayPal Sandbox Testing Mode</span>
+                </div>
+                <div>
+                  Live PayPal accounts do not exist in Sandbox. To test subscription approval smoothly:
+                  <ul style={{ margin: '0.35rem 0 0 1.25rem', padding: 0 }}>
+                    <li>
+                      Use a <strong>Sandbox Personal (Buyer) account</strong> from your{' '}
+                      <a
+                        href="https://developer.paypal.com/dashboard/accounts"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ color: 'var(--cobalt)', textDecoration: 'underline' }}
+                      >
+                        PayPal Developer Accounts
+                      </a>{' '}
+                      for 1-click test approval.
+                    </li>
+                    <li>
+                      Or click <strong>Debit or Credit Card</strong> below to test guest card entry.
+                    </li>
+                  </ul>
+                </div>
+              </>
+            ) : (
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.6rem' }}>
+                <span style={{ fontSize: '1.1rem', lineHeight: 1 }}>🛡️</span>
+                <div>
+                  <div style={{ fontWeight: 600, color: '#0F172A', marginBottom: '0.15rem' }}>
+                    Syntaflow Pro Monthly Subscription — $19.00 USD / month
+                  </div>
+                  <div style={{ color: 'var(--muted)', fontSize: '0.8rem' }}>
+                    Seamless recurring subscription. Log in with your PayPal account or pay directly with any debit/credit card. Cancel anytime with 1 click.
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         )}
 
@@ -415,7 +437,9 @@ export const PayPalSubscriptionModal: React.FC<PayPalSubscriptionModalProps> = (
 
         <div style={{ marginTop: '1.5rem', borderTop: '1px solid var(--border)', paddingTop: '1rem', textAlign: 'center' }}>
           <span style={{ fontSize: '0.75rem', color: 'var(--text-metadata)' }}>
-            🔒 PayPal Sandbox Encrypted Test Gateway · No Real Money
+            {isSandbox
+              ? '🔒 PayPal Sandbox Encrypted Test Gateway · No Real Money'
+              : '🔒 Official PayPal Secure Checkout · 256-Bit TLS Encryption'}
           </span>
         </div>
       </div>

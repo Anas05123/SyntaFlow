@@ -86,16 +86,16 @@ export const PlanPage: React.FC = () => {
       });
 
       if (res.ok && res.headers.get('content-type')?.includes('application/json')) {
-        setCancelMessage('✓ Subscription cancelled successfully on PayPal Sandbox.');
+        setCancelMessage('✓ Subscription cancelled successfully on PayPal.');
         await fetchBilling();
       } else {
         localStorage.removeItem('syntaflow_billing_subscription');
-        setCancelMessage('✓ Subscription cancelled successfully on PayPal Sandbox.');
+        setCancelMessage('✓ Subscription cancelled successfully on PayPal.');
         setBillingData({ plan: 'preview', status: 'active', isProActive: false, renewalDate: null, subscription: null });
       }
     } catch (err: any) {
       localStorage.removeItem('syntaflow_billing_subscription');
-      setCancelMessage('✓ Subscription cancelled successfully on PayPal Sandbox.');
+      setCancelMessage('✓ Subscription cancelled successfully on PayPal.');
       setBillingData({ plan: 'preview', status: 'active', isProActive: false, renewalDate: null, subscription: null });
     } finally {
       setIsCancelling(false);
@@ -118,7 +118,7 @@ export const PlanPage: React.FC = () => {
           Plan & Billing
         </h1>
         <p style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', margin: 0 }}>
-          Manage your Syntaflow software license and PayPal Sandbox test subscriptions.
+          Manage your Syntaflow software license and PayPal recurring subscriptions.
         </p>
       </div>
 
@@ -175,7 +175,7 @@ export const PlanPage: React.FC = () => {
               </div>
 
               <div style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '0.25rem' }}>
-                Provider: <strong>PayPal (Sandbox Test)</strong>
+                Provider: <strong>PayPal</strong>
                 {billingData?.renewalDate && (
                   <span style={{ marginLeft: '1rem' }}>
                     Next renewal: {new Date(billingData.renewalDate).toLocaleDateString()}

@@ -45,7 +45,7 @@ export const PRICING_TIERS: PricingTier[] = [
   {
     id: 'pro',
     name: 'Syntaflow Pro',
-    badge: 'PAYPAL SANDBOX TEST',
+    badge: 'POPULAR',
     priceLabel: '$19',
     periodLabel: 'month (recurring)',
     description: 'For independent professionals managing client work.',
