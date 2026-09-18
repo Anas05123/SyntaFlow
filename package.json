@@ -11,7 +11,9 @@
     "build": "pnpm --filter coredesk-app build",
     "lint": "pnpm --filter coredesk-app lint",
     "test": "vitest run",
-    "test:security": "vitest run tests/security"
+    "test:security": "vitest run tests/security",
+    "billing:paypal:setup": "node ./scripts/billing-paypal-setup.mjs",
+    "server": "node ./apps/web/server/server.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.54.2",

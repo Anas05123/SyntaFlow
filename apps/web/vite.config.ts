@@ -1,9 +1,33 @@
 import react from '@vitejs/plugin-react';
-import { defineConfig } from 'vite';
+import { defineConfig, type Plugin } from 'vite';
+
+function billingApiPlugin(): Plugin {
+  return {
+    name: 'billing-api-middleware',
+    configureServer(server) {
+      server.middlewares.use(async (req, res, next) => {
+        if (req.url && req.url.startsWith('/api/')) {
+          try {
+            const { handleApiRequest } = await import('./server/apiRouter.ts');
+            const handled = await handleApiRequest(req, res);
+            if (!handled) next();
+          } catch (err) {
+            console.error('[Vite API Middleware Error]', err);
+            res.statusCode = 500;
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify({ error: 'Internal API error' }));
+          }
+        } else {
+          next();
+        }
+      });
+    },
+  };
+}
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), billingApiPlugin()],
   base: '/',
   server: {
     port: 5174,

@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { SEOHead } from '../components/ui/SEOHead';
 import { Link } from '../components/ui/Link';
 import { PRICING_TIERS, PRICING_FAQ } from '../content/pricingConfig';
+import { PayPalSubscriptionModal } from '../components/billing/PayPalSubscriptionModal';
 
 export const PricingPage: React.FC = () => {
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
 
   const toggleFaq = (idx: number) => {
     setOpenFaqIndex(openFaqIndex === idx ? null : idx);
@@ -134,6 +136,28 @@ export const PricingPage: React.FC = () => {
                       >
                         Get Free Preview →
                       </Link>
+                    ) : tier.id === 'pro' ? (
+                      <button
+                        type="button"
+                        onClick={() => setIsCheckoutOpen(true)}
+                        style={{
+                          width: '100%',
+                          display: 'block',
+                          textAlign: 'center',
+                          padding: '12px',
+                          borderRadius: 'var(--radius-button)',
+                          backgroundColor: 'var(--cobalt)',
+                          color: '#ffffff',
+                          fontSize: '14px',
+                          fontWeight: 600,
+                          border: 'none',
+                          cursor: 'pointer',
+                          boxShadow: '0 2px 8px rgba(47, 107, 250, 0.25)',
+                          transition: 'all 0.15s ease',
+                        }}
+                      >
+                        Upgrade with PayPal
+                      </button>
                     ) : (
                       <div
                         style={{
@@ -221,6 +245,11 @@ export const PricingPage: React.FC = () => {
           </div>
         </div>
       </section>
+
+      <PayPalSubscriptionModal
+        isOpen={isCheckoutOpen}
+        onClose={() => setIsCheckoutOpen(false)}
+      />
     </div>
   );
 };
