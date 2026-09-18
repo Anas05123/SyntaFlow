@@ -157,7 +157,22 @@ Users can cancel their active subscription at any time from `/account/plan`:
 
 ---
 
-## 7. Troubleshooting
+## 7. Sandbox Testing & Buyer Credentials
+
+PayPal Sandbox operates on an entirely separate authentication infrastructure (`sandbox.paypal.com`) from production PayPal (`paypal.com`):
+- **Isolation Invariant:** Real consumer PayPal credentials will not be recognized by PayPal Sandbox. Entering a live account email causes the PayPal Sandbox login dialog to treat the user as a new registration.
+- **Default Personal Buyer Account:**
+  - **Email:** `sb-oli43w52673155@personal.example.com`
+  - **Account Name:** John Doe (`ZXTM28CEMTNEG`)
+  - **Password:** `cH1(SKu^`
+- **Verified Test Subscription:**
+  - **Subscription ID:** `I-BMUV0T82D74R`
+  - **Status:** `ACTIVE`
+  - **Plan:** `P-2S313087AE0939606NKWJOBY` ($19.00 USD / month)
+
+---
+
+## 8. Troubleshooting
 
 | Symptom | Cause | Solution |
 |---|---|---|
@@ -165,10 +180,11 @@ Users can cancel their active subscription at any time from `/account/plan`:
 | `Missing PAYPAL_CLIENT_ID or PAYPAL_CLIENT_SECRET` | Environment variables unpopulated. | Populate credentials from PayPal Sandbox Dashboard into `.env`. |
 | `Plan ID mismatch` | User approved a plan other than the configured Pro Monthly plan. | Verify `PAYPAL_PRO_MONTHLY_PLAN_ID` in `.env`. |
 | Pro access not granted after checkout | Authoritative activation pending. | Check user account status at `/account/plan` or click **Refresh Status**. |
+| PayPal prompt treats real email as new | Sandbox and Live PayPal accounts are isolated. | Use the Sandbox personal buyer account (`sb-oli43w52673155@personal.example.com`) or switch to Live PayPal. |
 
 ---
 
-## 8. Switching to Live PayPal Later (Future Phase)
+## 9. Switching to Live PayPal Later (Future Phase)
 
 When transitioning to production live payments:
 1. Update `PAYPAL_ENV=live`.
