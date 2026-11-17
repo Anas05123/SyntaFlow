@@ -11,7 +11,7 @@ interface BrandMarkProps {
 export const BrandMark: React.FC<BrandMarkProps> = ({
   variant = 'full',
   size = 'md',
-  src = '/brand/LogoIcon_WBG.png',
+  src = '/brand/syntaflow-mark.webp',
   className = '',
   textColor,
 }) => {

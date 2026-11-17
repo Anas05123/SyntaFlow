@@ -1,6 +1,8 @@
 @import './tokens.css';
 @import './reset.css';
 @import './animations.css';
+@import './site-system.css';
+@import './web-controls.css';
 
 /* Focus System (WCAG 2.4.7 Compliant) */
 :focus-visible {
@@ -80,13 +82,13 @@
 }
 
 .body-regular {
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.65;
   color: var(--text-muted);
 }
 
 .body-small {
-  font-size: 13.5px;
+  font-size: 14px;
   line-height: 1.55;
   color: var(--text-metadata);
 }
@@ -103,7 +105,7 @@ code {
 }
 
 .metadata {
-  font-size: 12.5px;
+  font-size: 14px;
   line-height: 1.4;
   color: var(--text-metadata);
   font-family: var(--font-mono);
@@ -113,11 +115,11 @@ code {
   display: inline-flex;
   align-items: center;
   gap: var(--space-8);
-  font-family: var(--font-mono);
-  font-size: 11.5px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  text-transform: none;
+  letter-spacing: 0;
   color: var(--cyan);
   margin-bottom: var(--space-12);
 }
@@ -248,7 +250,7 @@ code {
   border: 1px solid var(--border);
   border-radius: var(--radius-full);
   font-family: var(--font-mono);
-  font-size: 11.5px;
+  font-size: 12.5px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -270,7 +272,7 @@ code {
   padding: 3px 10px;
   border-radius: var(--radius-full);
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -299,5 +301,3 @@ code {
   color: var(--cobalt);
   border: 1px solid var(--cobalt-border);
 }
-
-

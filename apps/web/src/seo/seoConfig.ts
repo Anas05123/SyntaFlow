@@ -17,9 +17,9 @@ export const SITE_CONFIG = {
   siteName: 'Syntaflow',
   canonicalHost: 'https://syntaflow.tech',
   defaultOgImage: 'https://syntaflow.tech/brand/og-image.png',
-  defaultTitle: 'Syntaflow — Connected Workspace for Client Work',
+  defaultTitle: 'Your people. Your work, together. | Syntaflow',
   defaultDescription:
-    'Manage clients, projects, documents, reviews, approvals and connected tools in one workspace. Syntaflow keeps your client work and AI context connected.',
+    'Keep client relationships, project context and versioned reviews together in the Syntaflow desktop preview. Explore a sample project in your browser.',
   titleTemplate: (title: string): string => {
     if (title.includes('Syntaflow')) return title;
     return `${title} | Syntaflow`;
@@ -45,12 +45,23 @@ export const SITE_CONFIG = {
 
 export const ROUTES_METADATA: Record<string, RouteMetadata> = {
   '/': {
-    title: 'Syntaflow — Connected Workspace for Client Work',
+    title: 'Your people. Your work, together. | Syntaflow',
     description:
-      'Manage clients, projects, documents, reviews, approvals and connected tools in one workspace. Syntaflow keeps your client work and AI context connected.',
+      'Keep client relationships, project context and versioned reviews together in the Syntaflow desktop preview. Explore a sample project in your browser.',
     canonicalPath: '/',
     indexable: true,
     breadcrumbs: [{ name: 'Home', item: 'https://syntaflow.tech/' }],
+  },
+
+  '/preview': {
+    title: 'Try a Sample Client Project | Syntaflow',
+    description: 'Explore an interactive sample of a Syntaflow client project, with real desktop captures beside the browser prototype.',
+    canonicalPath: '/preview',
+    indexable: true,
+    breadcrumbs: [
+      { name: 'Home', item: 'https://syntaflow.tech/' },
+      { name: 'Interactive sample', item: 'https://syntaflow.tech/preview' },
+    ],
   },
 
   /* Core Product Suites */

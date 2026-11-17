@@ -26,12 +26,12 @@ export const Link: React.FC<LinkProps> = ({ href, onClick, children, ...rest }) 
     }
 
     // Handle internal routes
-    if (href.startsWith('/') && !href.startsWith('//')) {
+    if (href.startsWith('/') && !href.startsWith('//') && !href.includes('#')) {
       e.preventDefault();
       if (window.location.pathname !== href) {
         window.history.pushState(null, '', href);
         window.dispatchEvent(new PopStateEvent('popstate'));
-        window.scrollTo(0, 0);
+        window.scrollTo({ top: 0, behavior: 'instant' });
       }
     } else if (href.startsWith('#/')) {
       // Cleanly normalize legacy hash links to clean pathname
@@ -39,7 +39,7 @@ export const Link: React.FC<LinkProps> = ({ href, onClick, children, ...rest }) 
       const cleanPath = href.replace(/^#/, '');
       window.history.pushState(null, '', cleanPath);
       window.dispatchEvent(new PopStateEvent('popstate'));
-      window.scrollTo(0, 0);
+      window.scrollTo({ top: 0, behavior: 'instant' });
     }
   };
 

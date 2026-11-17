@@ -1,12 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { App } from './App';
+import { PageTransitions } from './components/marketing/PageTransitions';
 
 const rootEl = document.getElementById('root');
 if (rootEl) {
   ReactDOM.createRoot(rootEl).render(
     <React.StrictMode>
-      <App />
+      <PageTransitions><App /></PageTransitions>
     </React.StrictMode>
   );
 }

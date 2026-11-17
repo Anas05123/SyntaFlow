@@ -1,151 +1,16 @@
 import React from 'react';
 import { SEOHead } from '../../components/ui/SEOHead';
-import { PageHero } from '../../components/marketing/PageHero';
-import { Card } from '../../components/ui/Card';
-import { StatusBadge } from '../../components/brand/StatusBadge';
-import { CTASection } from '../../components/marketing/CTASection';
-import { getRouteMetadata } from '../../seo/seoConfig';
+import { Link } from '../../components/ui/Link';
+import '../../styles/trust-redesign.css';
 
-interface RoadmapItem {
-  title: string;
-  category: string;
-  status: 'IN DEVELOPMENT' | 'PLANNED';
-  timeline: string;
-  description: string;
-  plannedArchitecture: string[];
-}
-
-const ROADMAP_ITEMS: RoadmapItem[] = [
-  {
-    title: 'Local-First AI Engine Subsystem (TaskRouter & Ollama)',
-    category: 'INTELLIGENCE & AI',
-    status: 'IN DEVELOPMENT',
-    timeline: 'Q4 2026',
-    description: 'We have built the foundational TaskRouter package and typed contracts in the monorepo. Current work focuses on wiring local LLM inference (via Ollama at localhost:11434) to automate repetitive administrative scoping and document synthesis without cloud data leakage.',
-    plannedArchitecture: [
-      'TaskRouter validates and routes requests using typed Zod schemas.',
-      'Local Ollama inference ensures client text never leaves the workstation.',
-      'Strict operator confirmation: AI can suggest draft sections, never auto-commit state.',
-    ],
-  },
-  {
-    title: 'Cloud Guest Review Portal & Web Client Gateway',
-    category: 'CLOUD EXTENSIONS',
-    status: 'PLANNED',
-    timeline: '2027 Direction',
-    description: 'While the desktop app remains the canonical operating environment, a cloud-hosted guest portal will allow clients to review immutable DocVersion snapshots with zero software installation, complete with transactional email notifications.',
-    plannedArchitecture: [
-      'Cryptographic deep-link verification protocol (syntaflow://auth/callback).',
-      'End-to-end encrypted review payloads signed by the desktop application.',
-      'Granular client access permissions table with revocable review tokens.',
-    ],
-  },
-  {
-    title: 'Public Developer Platform & Custom Blueprint SDK',
-    category: 'DEVELOPER ECOSYSTEM',
-    status: 'PLANNED',
-    timeline: '2027 Direction',
-    description: 'A planned developer platform enabling studios to build custom blueprint scoping generators, export integrations for accounting software, and lifecycle webhook listeners.',
-    plannedArchitecture: [
-      'Typed TypeScript SDK for custom blueprint definitions.',
-      'Local SQLite migration hooks for extended metadata schemas.',
-      'Zero remote telemetry: extension code executes strictly in localized worker sandbox.',
-    ],
-  },
-  {
-    title: 'macOS and Linux Desktop Builds',
-    category: 'PLATFORM RUNTIME',
-    status: 'PLANNED',
-    timeline: '2027 Direction',
-    description: 'Syntaflow is currently optimized for Windows workstations. We plan to compile signed Universal macOS (Apple Silicon & Intel) and AppImage/deb Linux binaries once the Windows desktop preview reaches general availability.',
-    plannedArchitecture: [
-      'Native macOS Keychain integration via safeStorage.',
-      'Unified multi-platform window geometry memory.',
-      'Code-signed releases for macOS Gatekeeper and Windows SmartScreen.',
-    ],
-  },
-];
-
-export const RoadmapPage: React.FC = () => {
-  const meta = getRouteMetadata('/roadmap');
-
-  return (
-    <div>
-      <SEOHead path="/roadmap" />
-
-      <PageHero
-        breadcrumbs={meta.breadcrumbs}
-        eyebrow="Company // What’s Next"
-        title="Engineering roadmap & planned direction."
-        description="We refuse to market unreleased features as current reality. Below is our honest engineering roadmap, clearly distinguishing in-progress systems from future architectural directions."
-      />
-
-      <section className="section">
-        <div className="container">
-          {/* Truth Disclaimer */}
-          <Card variant="raised" style={{ padding: 'var(--space-28)', marginBottom: 'var(--space-48)', borderLeft: '4px solid var(--cyan)' }}>
-            <div style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--cyan)', textTransform: 'uppercase', marginBottom: '6px' }}>
-              ROADMAP DISCIPLINE NOTICE
-            </div>
-            <h3 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--text)', marginBottom: '8px' }}>
-              Planned Direction vs. Shipped Product
-            </h3>
-            <p style={{ fontSize: '14px', color: 'var(--text-muted)', lineHeight: 1.6 }}>
-              Per our operating contract, all capabilities below are tagged as `IN DEVELOPMENT` or `PLANNED DIRECTION`. You will not find fake terminal commands, fabricated API documentation, or imaginary SDK code on this website. When a feature ships, it graduates to the verified Product section.
-            </p>
-          </Card>
-
-          {/* Roadmap Grid */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-32)' }}>
-            {ROADMAP_ITEMS.map((item) => (
-              <Card key={item.title} variant="default" style={{ padding: 'var(--space-32)' }}>
-                <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '12px', marginBottom: 'var(--space-12)' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                    <span style={{ fontSize: '12px', fontFamily: 'var(--font-mono)', color: 'var(--cyan)', fontWeight: 600 }}>
-                      {item.category}
-                    </span>
-                    <span style={{ fontSize: '12px', fontFamily: 'var(--font-mono)', color: 'var(--text-metadata)' }}>
-                      TARGET: {item.timeline}
-                    </span>
-                  </div>
-                  <StatusBadge status={item.status} size="sm" />
-                </div>
-
-                <h3 style={{ fontSize: '20px', fontWeight: 600, color: 'var(--text)', marginBottom: 'var(--space-12)' }}>
-                  {item.title}
-                </h3>
-
-                <p style={{ fontSize: '14.5px', color: 'var(--text-muted)', lineHeight: 1.6, marginBottom: 'var(--space-20)' }}>
-                  {item.description}
-                </p>
-
-                <div style={{ padding: '16px', backgroundColor: 'var(--surface-subtle)', borderRadius: 'var(--radius-sm)', border: '1px solid var(--edge)' }}>
-                  <div style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--text-metadata)', textTransform: 'uppercase', marginBottom: '8px' }}>
-                    PLANNED ARCHITECTURE SPECIFICATION
-                  </div>
-                  <ul style={{ display: 'flex', flexDirection: 'column', gap: '6px', paddingLeft: '4px' }}>
-                    {item.plannedArchitecture.map((spec) => (
-                      <li key={spec} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', fontSize: '13px', color: 'var(--text-muted)' }}>
-                        <span style={{ color: 'var(--cobalt)', marginTop: '2px' }}>›</span>
-                        <span>{spec}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <CTASection
-        title="Shape the future of client operations."
-        description="Share your feedback, feature requests, and workflow pain points directly with our team."
-        primaryLabel="Send Feedback"
-        primaryHref="/contact"
-        secondaryLabel="Read Product Overview"
-        secondaryHref="/product"
-      />
-    </div>
-  );
-};
+export const RoadmapPage: React.FC = () => <div className="trust-new">
+  <SEOHead path="/roadmap" />
+  <section className="trust-new__hero"><div className="container"><span className="outcome-eyebrow">Direction</span><h1>What we are working to make clearer.</h1><p>The Windows preview is the current product. These are areas of exploration, not shipping dates or promises of availability.</p></div></section>
+  <section className="trust-new__facts"><div className="container">
+    <article><span>01</span><div><h2>Review without guesswork</h2><p>Make version, feedback, and decision state easier to understand for every engagement.</p></div></article>
+    <article><span>02</span><div><h2>Connected context</h2><p>Improve how optional provider references appear beside the project, with clear permission boundaries.</p></div></article>
+    <article><span>03</span><div><h2>Reliable handoff</h2><p>Make the approval gate and external delivery record easier to inspect and explain.</p></div></article>
+    <article><span>04</span><div><h2>Platform reach</h2><p>Other desktop platforms remain under consideration. The current preview targets Windows 10/11.</p></div></article>
+  </div></section>
+  <section className="trust-new__close"><div className="container"><h2>See what exists today.</h2><div><Link href="/preview">Try the sample project</Link><Link href="/download">Check Windows preview</Link></div></div></section>
+</div>;

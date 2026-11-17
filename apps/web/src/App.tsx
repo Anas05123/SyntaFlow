@@ -1,10 +1,15 @@
 import React, { useEffect, Suspense, lazy } from 'react';
+import { LazyMotion } from 'motion/react';
 import './styles/global.css';
+import './styles/marketing-chrome.css';
 import { usePath } from './utils/router';
 import { SiteHeader } from './components/navigation/SiteHeader';
 import { SiteFooter } from './components/navigation/SiteFooter';
 import { AuthProvider } from './services/auth/AuthContext';
 import { HomePage } from './pages/HomePage';
+import { RoutePending } from './components/marketing/PageTransitions';
+
+const loadMarketingMotion = () => import('./components/marketing/motion-features').then((module) => module.default);
 
 /* Route-Level Code Splitting for Public Routes */
 const ProductOverviewPage = lazy(() => import('./pages/product/ProductOverviewPage').then((m) => ({ default: m.ProductOverviewPage })));
@@ -38,6 +43,7 @@ const GitHubIntegrationPage = lazy(() => import('./pages/integrations/GitHubInte
 const NotionIntegrationPage = lazy(() => import('./pages/integrations/NotionIntegrationPage').then((m) => ({ default: m.NotionIntegrationPage })));
 const LinearIntegrationPage = lazy(() => import('./pages/integrations/LinearIntegrationPage').then((m) => ({ default: m.LinearIntegrationPage })));
 const DocsPage = lazy(() => import('./pages/DocsPage').then((m) => ({ default: m.DocsPage })));
+const PreviewPage = lazy(() => import('./pages/PreviewPage').then((m) => ({ default: m.PreviewPage })));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage').then((m) => ({ default: m.NotFoundPage })));
 
 /* Dedicated Auth Pages */
@@ -62,37 +68,14 @@ const TutorialsPage = lazy(() => import('./pages/account/TutorialsPage').then((m
 /**
  * Route Loading Fallback (Zero CLS, lightweight indicator)
  */
-const RouteLoadingFallback: React.FC = () => (
-  <div
-    style={{
-      minHeight: '65vh',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundColor: '#08090b',
-    }}
-    role="status"
-    aria-label="Loading page content"
-  >
-    <div
-      style={{
-        width: '24px',
-        height: '24px',
-        borderRadius: '50%',
-        border: '2px solid rgba(255, 255, 255, 0.1)',
-        borderTopColor: '#00f2fe',
-        animation: 'spin 0.6s linear infinite',
-      }}
-    />
-  </div>
-);
+const RouteLoadingFallback = RoutePending;
 
 export const App: React.FC = () => {
   const [currentPath] = usePath();
 
   // Scroll to top on route change & handle legacy path alias permanent redirects
   useEffect(() => {
-    window.scrollTo(0, 0);
+    if (!window.location.hash || window.location.hash.startsWith('#/')) window.scrollTo({ top: 0, behavior: 'instant' });
     const path = currentPath.replace(/\/+$/, '') || '/';
     if (path === '/privacy-policy' || path === '/cookies') {
       window.history.replaceState(null, '', '/privacy');
@@ -196,9 +179,9 @@ export const App: React.FC = () => {
   if (isDocsHost) {
     return (
       <AuthProvider>
-        <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: 'var(--canvas)' }}>
-          <SiteHeader currentPath="/docs" />
-          <main style={{ flex: 1 }}>
+        <div className="sf-public-shell">
+          <LazyMotion features={loadMarketingMotion}><SiteHeader currentPath="/docs" /></LazyMotion>
+          <main id="site-main" tabIndex={-1}>
             <Suspense fallback={<RouteLoadingFallback />}>
               <DocsPage />
             </Suspense>
@@ -259,6 +242,8 @@ export const App: React.FC = () => {
     switch (path) {
       case '/':
         return <HomePage />;
+      case '/preview':
+        return <PreviewPage />;
 
       /* Product */
       case '/product':
@@ -346,15 +331,17 @@ export const App: React.FC = () => {
 
   return (
     <AuthProvider>
-      <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: 'var(--canvas)' }}>
-        <SiteHeader currentPath={currentPath} />
-        <main style={{ flex: 1 }}>
-          <Suspense fallback={<RouteLoadingFallback />}>
-            {renderPublicRoute()}
-          </Suspense>
-        </main>
-        <SiteFooter />
-      </div>
+      <LazyMotion features={loadMarketingMotion}>
+        <div className="sf-public-shell">
+          <SiteHeader currentPath={currentPath} />
+          <main id="site-main" tabIndex={-1}>
+            <Suspense fallback={<RouteLoadingFallback />}>
+              {renderPublicRoute()}
+            </Suspense>
+          </main>
+          <SiteFooter />
+        </div>
+      </LazyMotion>
     </AuthProvider>
   );
 };

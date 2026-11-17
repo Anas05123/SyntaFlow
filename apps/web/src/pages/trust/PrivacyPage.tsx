@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { SEOHead } from '../../components/ui/SEOHead';
 import { Card } from '../../components/ui/Card';
+import '../../styles/legal-readability.css';
 
 const TOC_ITEMS = [
   { id: 'sec-1', label: '1. About & Scope' },
@@ -48,7 +49,7 @@ export const PrivacyPage: React.FC = () => {
   }, [tocSearch]);
 
   return (
-    <div style={{ paddingBottom: 'var(--space-80)', fontFamily: 'var(--font-body)', position: 'relative', overflow: 'hidden' }}>
+    <div className="legal-readable legal-readable--privacy" style={{ paddingBottom: 'var(--space-80)', fontFamily: 'var(--font-body)', position: 'relative', overflow: 'hidden' }}>
       <SEOHead path="/privacy" />
 
       {/* Ambient Top Glow Backdrop */}

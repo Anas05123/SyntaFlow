@@ -1,0 +1,10 @@
+.catalog-provider{grid-template-columns:52px 1fr;align-items:center;gap:19px;padding:30px;transition:background-color .2s ease,border-color .2s ease}
+.catalog-provider:hover{transform:none;background:#eef5fa}
+.catalog-provider__body small{font-size:14px;letter-spacing:0;text-transform:none;color:#2e648b}
+.download-new__screen{padding:10px;border:1px solid #2b4160;border-radius:12px;transform:none;box-shadow:0 18px 42px rgba(14,38,54,.15)}
+.download-new__screen img{border-radius:5px}
+.download-new__screen figcaption{font-size:14px}
+.download-new__grid{grid-template-columns:minmax(0,.7fr) minmax(0,1.3fr)}
+@media(max-width:850px){.download-new__grid{grid-template-columns:1fr}}
+@media(max-width:500px){.catalog-provider{grid-template-columns:42px 1fr;gap:12px;padding:20px}}
+@media(prefers-reduced-motion:reduce){.catalog-provider{transition:none!important}}

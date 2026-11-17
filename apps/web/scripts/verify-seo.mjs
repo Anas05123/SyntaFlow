@@ -59,7 +59,7 @@ assert(sitemapContent.startsWith('<?xml version="1.0" encoding="UTF-8"?>'), 'Val
 assert(sitemapContent.includes('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'), 'Standard sitemap schema namespace');
 
 const locMatches = [...sitemapContent.matchAll(/<loc>(.*?)<\/loc>/g)].map(m => m[1]);
-assert(locMatches.length === 31, `sitemap contains exactly 31 canonical routes (found ${locMatches.length})`);
+assert(locMatches.length === 32, `sitemap contains exactly 32 canonical routes (found ${locMatches.length})`);
 assert(locMatches.every(url => url.startsWith('https://syntaflow.tech')), 'All sitemap URLs use canonical host https://syntaflow.tech');
 assert(!locMatches.some(url => url.includes('localhost') || url.includes('www.')), 'No localhost or www entries in sitemap');
 assert(!locMatches.some(url => url.includes('/login') || url.includes('/account') || url.includes('/auth/')), 'Non-indexable routes excluded from sitemap');
@@ -67,10 +67,10 @@ assert(!locMatches.some(url => url.includes('/login') || url.includes('/account'
 // 3. Centralized Route Metadata Configuration Audit
 console.log('\n[3/5] Validating Centralized Route Metadata (seoConfig.ts)...');
 const routeEntries = Object.entries(ROUTES_METADATA);
-assert(routeEntries.length === 39, `ROUTES_METADATA contains 39 defined routes including aliases (found ${routeEntries.length})`);
+assert(routeEntries.length === 40, `ROUTES_METADATA contains 40 defined routes including aliases (found ${routeEntries.length})`);
 
 const indexableEntries = routeEntries.filter(([, meta]) => meta.indexable);
-assert(indexableEntries.length === 31, `Exactly 31 indexable canonical routes defined (found ${indexableEntries.length})`);
+assert(indexableEntries.length === 32, `Exactly 32 indexable canonical routes defined (found ${indexableEntries.length})`);
 
 const titles = new Set();
 const descriptions = new Set();
@@ -94,11 +94,11 @@ assert(!duplicatesFound, 'All indexable canonical routes have unique, descriptiv
 // Check exact requested homepage metadata
 const homeMeta = ROUTES_METADATA['/'];
 assert(
-  homeMeta.title === 'Syntaflow — Connected Workspace for Client Work',
+  homeMeta.title === 'Your people. Your work, together. | Syntaflow',
   `Homepage title matches exact spec: "${homeMeta.title}"`
 );
 assert(
-  homeMeta.description === 'Manage clients, projects, documents, reviews, approvals and connected tools in one workspace. Syntaflow keeps your client work and AI context connected.',
+  homeMeta.description === 'Keep client relationships, project context and versioned reviews together in the Syntaflow desktop preview. Explore a sample project in your browser.',
   'Homepage description matches exact spec'
 );
 
@@ -143,6 +143,7 @@ try {
 
   const testRoutes = [
     { path: '/', expectTitle: ROUTES_METADATA['/'].title, expectRobots: 'index, follow', expectSchema: true },
+    { path: '/preview', expectTitle: ROUTES_METADATA['/preview'].title, expectRobots: 'index, follow', expectSchema: true },
     { path: '/product', expectTitle: ROUTES_METADATA['/product'].title, expectRobots: 'index, follow', expectSchema: true },
     { path: '/product/client-management', expectTitle: ROUTES_METADATA['/product/client-management'].title, expectRobots: 'index, follow', expectSchema: true },
     { path: '/product/projects', expectTitle: ROUTES_METADATA['/product/projects'].title, expectRobots: 'index, follow', expectSchema: true },
@@ -171,7 +172,7 @@ try {
 
   for (const item of testRoutes) {
     console.log(`  Inspecting route: ${item.path}`);
-    await page.goto(`http://localhost:5198#${item.path}`, { waitUntil: 'domcontentloaded' });
+    await page.goto(`http://localhost:5198${item.path}`, { waitUntil: 'domcontentloaded' });
     await page.waitForFunction(
       (expectedTitle) => document.title.includes(expectedTitle),
       item.expectTitle,

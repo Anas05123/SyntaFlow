@@ -10,11 +10,15 @@
     "preview": "vite preview",
     "verify": "node verify-web.mjs",
     "verify:seo": "node --experimental-strip-types ./scripts/verify-seo.mjs",
+    "verify:preview": "node ./scripts/validate-preview.mjs",
     "verify:live": "node ./scripts/verify-production-live.mjs",
     "capture:screenshots": "node ./scripts/capture_screenshots.mjs"
   },
   "dependencies": {
+    "@gsap/react": "^2.1.2",
     "appwrite": "^27.0.0",
+    "gsap": "^3.15.0",
+    "motion": "^13.4.6",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "sql.js": "^1.14.2"

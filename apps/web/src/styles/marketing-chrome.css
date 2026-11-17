@@ -1,0 +1,132 @@
+/* Shared marketing chrome. Dark entry sections frame lighter reading surfaces. */
+.sf-public-shell {
+  --site-night: #080f1d;
+  --site-navigation: #0c1525;
+  --site-panel: #111e32;
+  --site-panel-hover: #1b2a42;
+  --site-line: #293950;
+  --site-muted: #b0bfd3;
+  --site-link: #8fb4ff;
+  --site-cta: #2759d5;
+  --site-cta-hover: #1948ba;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--canvas);
+}
+.sf-public-shell > main { flex: 1; scroll-margin-top: 72px; }
+.sf-skip-link { position: absolute; left: 18px; top: 12px; z-index: 2; padding: 10px 14px; color: var(--text-contrast); background: var(--site-cta); transform: translateY(-140%); }
+.sf-skip-link:focus { transform: none; }
+.sf-public-shell .sf-site-header { background: var(--site-night); border-color: transparent; box-shadow: none; transition: background-color 180ms ease, border-color 180ms ease; }
+.sf-public-shell .sf-site-header--scrolled { background: var(--site-navigation); border-color: var(--site-line); }
+.sf-public-shell .sf-site-header__nav a, .sf-public-shell .sf-site-header__signin, .sf-public-shell .sf-site-header__account > button { color: var(--site-muted); }
+.sf-public-shell .sf-site-header__nav a:is(:hover, [aria-current]), .sf-public-shell .sf-site-header__signin:hover { color: var(--text-contrast); }
+.sf-public-shell .sf-site-header__nav a[aria-current] { text-decoration: underline; text-decoration-color: var(--site-link); text-underline-offset: 8px; }
+.sf-public-shell .sf-site-header__cta { border-color: transparent; background: var(--site-cta); box-shadow: none; }
+.sf-public-shell .sf-site-header__cta:hover { background: var(--site-cta-hover); color: var(--text-contrast); box-shadow: none; }
+.sf-public-shell .sf-site-header__account-menu { background: var(--site-panel); border-color: var(--site-line); animation: none; }
+.sf-public-shell .sf-site-header__account-menu :is(a, button) { color: var(--text-contrast); }
+.sf-public-shell .sf-site-header__account-menu :is(a, button):hover { background: var(--site-panel-hover); }
+.sf-public-shell .sf-site-header__toggle { background: var(--site-panel); border-color: var(--site-line); color: var(--text-contrast); }
+.sf-public-shell .sf-site-header :focus-visible { outline-color: var(--site-link); }
+.sf-public-shell .site-footer { background: var(--site-night); border-color: var(--site-line); color: var(--site-muted); }
+.sf-public-shell .site-footer :is(h2, h3) { color: var(--text-contrast); }
+.sf-public-shell .site-footer__lead, .sf-public-shell .site-footer__bottom { border-color: var(--site-line); }
+.sf-public-shell .site-footer__statement p, .sf-public-shell .site-footer__group a, .sf-public-shell .site-footer__bottom { color: var(--site-muted); }
+.sf-public-shell .site-footer__group a:hover, .sf-public-shell .site-footer__bottom a { color: var(--site-link); }
+.sf-public-shell .site-footer__preview { background: var(--site-panel); border: 1px solid var(--site-line); }
+.sf-public-shell :is(.outcome-hero, .download-new__hero, .catalog-hero, .trust-new__hero, .contact-new__hero, .docs-new__hero, .page-hero, .pricing-hero) {
+  background: var(--site-navigation);
+  color: var(--text-contrast);
+  border-color: var(--site-line);
+}
+.sf-public-shell :is(.outcome-hero, .download-new__hero, .catalog-hero, .trust-new__hero, .contact-new__hero, .docs-new__hero, .page-hero, .pricing-hero) h1 { color: var(--text-contrast); }
+.sf-public-shell :is(.outcome-hero, .download-new__hero, .catalog-hero, .trust-new__hero, .contact-new__hero, .docs-new__hero, .page-hero, .pricing-hero) p { color: var(--site-muted); }
+.sf-public-shell :is(.outcome-hero, .download-new__hero, .catalog-hero, .trust-new__hero, .contact-new__hero, .docs-new__hero, .page-hero, .pricing-hero) :is(.outcome-eyebrow, .page-hero__meta, .pricing-eyebrow, .page-hero__breadcrumbs a) { color: var(--site-link); }
+.sf-public-shell .pricing-hero .pricing-kicker { color: var(--site-link); }
+.sf-public-shell :is(.outcome-hero, .download-new__hero) .outcome-action-secondary { color: var(--text-contrast); background: var(--site-panel); border-color: var(--site-line); }
+.sf-public-shell :is(.outcome-hero, .download-new__hero) .outcome-action-secondary:hover { background: var(--site-panel-hover); border-color: var(--site-link); }
+
+.sf-route-loading {
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 16px;
+  min-height: 65vh;
+  background: var(--surface-contrast);
+  color: var(--text-contrast);
+}
+.sf-route-loading__bar { width: 74px; height: 3px; border-radius: 4px; background: var(--cyan); transform-origin: left; animation: sf-route-pulse 1.2s ease-in-out infinite alternate; }
+@keyframes sf-route-pulse { from { transform: scaleX(.3); opacity: .45; } to { transform: scaleX(1); opacity: 1; } }
+@media (max-width: 920px) {
+  .sf-public-shell .sf-mobile-menu { background: var(--site-navigation); }
+  .sf-public-shell .sf-mobile-menu > a, .sf-public-shell .sf-mobile-menu__actions a { color: var(--text-contrast); border-color: var(--site-line); }
+  .sf-public-shell .sf-mobile-menu > a:is(:hover, [aria-current]) { color: var(--site-link); }
+  .sf-public-shell .sf-mobile-menu__actions a:last-child { background: var(--site-cta); color: var(--text-contrast); }
+}
+@media (prefers-reduced-motion: no-preference) { html:has(.story-home) { scroll-behavior: smooth; } }
+@media (prefers-reduced-motion: reduce) { .sf-route-loading__bar { animation: none; } .sf-public-shell .sf-site-header { transition: none; } }
+
+:root {
+  --editorial-ink: #08111f;
+  --editorial-raised: #0d1a2e;
+  --editorial-paper: #f3f6fc;
+  --editorial-sky: #bddbff;
+  --editorial-lilac: #d1dfff;
+  --editorial-blue: #c7ddff;
+}
+.sf-public-shell {
+  --site-night: var(--editorial-ink);
+  --site-navigation: var(--editorial-raised);
+  --site-panel: #142943;
+  --site-panel-hover: #19334e;
+  --site-line: #29425e;
+  --site-muted: #b7cce3;
+  --site-link: var(--editorial-sky);
+  --site-cta: #2f6bfa;
+  --site-cta-hover: #1d54d8;
+  background: var(--editorial-paper);
+}
+.sf-public-shell .sf-site-header__inner { max-width: 1296px; }
+.sf-public-shell .sf-site-header__cta { background: transparent; border-color: #477cbd; border-radius: 15px 3px; }
+.sf-public-shell .sf-site-header__cta:hover { background: var(--editorial-sky); color: var(--editorial-ink); transform: none; }
+.sf-public-shell .sf-site-header__nav { justify-content: flex-end; }
+.sf-public-shell .site-footer { padding-top: clamp(55px, 8vw, 100px); }
+.sf-public-shell .site-footer__container { max-width: 1296px; }
+.sf-public-shell .site-footer__statement h2 { font-size: clamp(38px, 5.2vw, 72px); letter-spacing: -.06em; line-height: 1; max-width: 12ch; }
+.sf-public-shell .site-footer__preview { background: transparent; border: 0; border-top: 1px solid var(--site-line); border-radius: 0; padding-inline: 0; }
+.sf-public-shell .site-footer__preview-label { color: var(--editorial-sky); }
+.sf-public-shell .site-footer__cta { background: var(--editorial-sky); color: var(--editorial-ink); border-radius: 16px 3px; }
+.sf-public-shell :is(.outcome-hero, .download-new__hero, .catalog-hero, .trust-new__hero, .contact-new__hero, .docs-new__hero, .page-hero, .pricing-hero) { background: var(--editorial-ink); }
+.sf-public-shell :is(.outcome-hero, .download-new__hero, .catalog-hero, .trust-new__hero, .contact-new__hero, .docs-new__hero, .page-hero, .pricing-hero) h1 { letter-spacing: -.064em; }
+.sf-public-shell :is(.outcome-hero, .download-new__hero, .catalog-hero, .trust-new__hero, .contact-new__hero, .docs-new__hero, .page-hero, .pricing-hero) .outcome-action-primary { background: var(--editorial-sky); color: var(--editorial-ink); border-color: transparent; border-radius: 16px 3px; }
+.sf-public-shell :is(.outcome-hero, .download-new__hero) .outcome-action-secondary { border-radius: 16px 3px; }
+.sf-public-shell :is(.outcome-image, .download-new__screen) { box-shadow: none; border-radius: 24px 4px; }
+.sf-public-shell :is(.outcome-result, .catalog-list, .download-new__steps, .pricing-current, .trust-new__facts, .contact-new__body, .docs-new) { background: var(--editorial-paper); }
+.sf-public-shell :is(.outcome-next, .catalog-close, .trust-new__close) { background: var(--editorial-raised); }
+.sf-public-shell .preview-intro { background: var(--editorial-sky); }
+.sf-public-shell .preview-intro h1 { color: var(--editorial-ink); letter-spacing: -.065em; }
+.sf-public-shell .preview-intro__note { border-color: #557fa7; }
+.sf-public-shell .preview-intro p { color: #1c3b5d; }
+.sf-public-shell .preview-experience { background: var(--editorial-paper); }
+.sf-public-shell .preview-primary { background: var(--editorial-ink); color: var(--text-contrast); border-radius: 16px 3px; }
+.sf-public-shell .preview-intro :is(.preview-label, .preview-text-link) { color: #1c4b7b; }
+.sf-public-shell .pricing-hero { background: var(--editorial-lilac); }
+.sf-public-shell .docs-new__hero { background: var(--editorial-blue); }
+.sf-public-shell :is(.pricing-hero, .docs-new__hero) :is(h1, .pricing-kicker, .outcome-eyebrow) { color: var(--editorial-ink); }
+.sf-public-shell :is(.pricing-hero, .docs-new__hero) p:not(.pricing-kicker) { color: #303a43; }
+.sf-public-shell .legal-readable { background: var(--editorial-paper); }
+.sf-public-shell .legal-readable > section:first-of-type { background: var(--editorial-blue); }
+.sf-route-loading { background: var(--editorial-ink); }
+.sf-route-loading__bar { background: var(--editorial-sky); }
+.auth-shell .auth-brand { background: var(--editorial-ink); }
+.auth-shell .auth-form-pane { background: var(--editorial-paper); }
+.auth-shell .auth-brand__title { color: var(--editorial-sky); letter-spacing: -.06em; }
+.auth-shell .auth-brand__fact { border-radius: 3px; font-family: var(--font-body); }
+.auth-shell .auth-card { border-radius: 24px 5px; box-shadow: none; }
+.account-editorial .account-sidebar { border-right: 1px solid var(--site-line, #29425e); }
+.account-editorial .account-main-content :is(h1, h2) { letter-spacing: -.04em; }
+.account-editorial .account-sidebar-download { border-radius: 13px 3px !important; }
+.onboarding-editorial h1 { color: var(--editorial-sky); letter-spacing: -.045em; }
+
+.sf-public-shell .site-footer__bottom a { text-decoration: underline; text-underline-offset: 3px; }

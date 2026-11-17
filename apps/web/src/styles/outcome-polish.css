@@ -1,0 +1,19 @@
+.outcome-eyebrow{color:#2460bb;font-size:15px;font-weight:700;letter-spacing:0;text-transform:none}
+.outcome-image{padding:10px;border:1px solid #283d58;border-radius:13px;transform:none;box-shadow:0 20px 48px rgba(12,27,48,.14)}
+.outcome-image:hover{transform:none}
+.outcome-image img{max-height:none;object-fit:contain;border-radius:6px}
+.outcome-image figcaption{padding:12px 7px 4px;font-size:14px;line-height:1.5}
+.outcome-action-primary{gap:0;border-radius:8px;box-shadow:none;transition:background-color .2s ease,transform .2s ease,box-shadow .2s ease}
+.outcome-action-primary:hover{background:#174fc7;box-shadow:0 10px 25px rgba(20,68,160,.2);transform:translateY(-2px)}
+.outcome-points article{padding:25px 0}
+.outcome-points h3{font-size:22px}
+.outcome-page--reverse .outcome-hero__copy{order:2}
+.outcome-page--reverse .outcome-image{order:1}
+.outcome-page--deep .outcome-hero{background:#142239;color:#fff}
+.outcome-page--deep .outcome-hero h1{color:#fff}
+.outcome-page--deep .outcome-hero__copy>p{color:#d1dce9}
+.outcome-page--deep .outcome-eyebrow{color:#9bc9f8}
+.outcome-page--deep .outcome-action-secondary{color:#e5f1ff}
+.outcome-page--deep .outcome-result .outcome-eyebrow{color:#2460bb}
+@media(max-width:900px){.outcome-page--reverse .outcome-hero__copy,.outcome-page--reverse .outcome-image{order:initial}}
+@media(prefers-reduced-motion:reduce){.outcome-image,.outcome-action-primary{transition:none!important;transform:none!important}}

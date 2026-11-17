@@ -1,0 +1,16 @@
+.site-route-content { min-height: 100vh; }
+.page-curtain { position: fixed; inset: 0; z-index: 10000; display: grid; place-content: center; background: var(--intro-bg, #07090f); color: var(--intro-text, #f5f6fc); pointer-events: none; }
+.page-curtain__identity { display: flex; align-items: center; gap: 25px; font: 600 clamp(42px, 7vw, 90px)/.95 'Barlow Condensed', Impact, sans-serif; letter-spacing: -.015em; }
+.page-curtain__identity img { width: clamp(48px, 7vw, 90px); height: auto; }
+.page-curtain__skip { position: fixed; z-index: 10001; bottom: 12%; left: 50%; transform: translateX(-50%); min-height: 44px; padding: 8px 18px; border: 1px solid currentColor; border-radius: 30px; background: transparent; color: inherit; font: 600 14px var(--font-body); cursor: pointer; pointer-events: auto; }
+.page-curtain__skip:hover { background: var(--intro-text, #f5f6fc); color: var(--intro-bg, #07090f); }
+.route-skeleton { min-height: 55vh; width: min(90%, 900px); margin: 80px auto; display: grid; align-content: center; gap: 20px; }
+.route-skeleton span { height: 18px; background: var(--surface-sunken); border-radius: 9px; }
+.route-skeleton span:first-child { width: 60%; height: 40px; }
+@media (prefers-reduced-motion: reduce) { .page-curtain, .page-curtain__skip { display: none; } }
+@media (prefers-reduced-motion: no-preference) {
+  .page-curtain { animation: intro-lift 900ms cubic-bezier(.76,0,.24,1) both; }
+  .page-curtain__identity { animation: intro-identity 250ms cubic-bezier(.22,1,.36,1) both; }
+}
+@keyframes intro-lift { 0%, 28% { transform: translateY(0); } 100% { transform: translateY(-101%); } }
+@keyframes intro-identity { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }

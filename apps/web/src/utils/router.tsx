@@ -4,7 +4,7 @@ export { Link } from '../components/ui/Link';
 export function getCleanPath(): string {
   if (typeof window === 'undefined') return '/';
   const hash = window.location.hash.replace(/^#/, '');
-  if (hash && hash !== '/') {
+  if (hash.startsWith('/')) {
     // If a hash route is detected, normalize it
     return hash.replace(/\/+$/, '') || '/';
   }
@@ -31,7 +31,6 @@ export function usePath(): [string, (path: string) => void] {
   useEffect(() => {
     const handleNavigation = () => {
       setPath(getCleanPath());
-      window.scrollTo(0, 0);
     };
 
     window.addEventListener('hashchange', handleNavigation);

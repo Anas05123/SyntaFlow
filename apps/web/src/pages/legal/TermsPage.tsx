@@ -2,6 +2,7 @@ import React from 'react';
 import { SEOHead } from '../../components/ui/SEOHead';
 import { Link } from '../../components/ui/Link';
 import { Card } from '../../components/ui/Card';
+import '../../styles/legal-readability.css';
 
 const LAST_UPDATED = 'September 16, 2026';
 const EFFECTIVE_DATE = 'September 16, 2026';
@@ -127,7 +128,7 @@ const SECTIONS: Section[] = [
 
 export const TermsPage: React.FC = () => {
   return (
-    <div style={{ paddingBottom: 'var(--space-64)' }}>
+    <div className="legal-readable legal-readable--terms" style={{ paddingBottom: 'var(--space-64)' }}>
       <SEOHead path="/terms" />
 
       {/* Header */}

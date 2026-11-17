@@ -21,36 +21,32 @@ export const PageHero: React.FC<PageHeroProps> = ({
   children,
 }) => {
   return (
-    <section
-      style={{
-        paddingTop: 'var(--space-48)',
-        paddingBottom: 'var(--space-48)',
-        borderBottom: '1px solid var(--edge)',
-        backgroundColor: 'var(--canvas)',
-      }}
-    >
+    <section className="page-hero">
       <div className="container">
-        <div style={{ maxWidth: '820px' }}>
-          {breadcrumbs && <Breadcrumbs items={breadcrumbs} style={{ padding: '0 0 var(--space-12) 0' }} />}
+        <div className="page-hero__inner">
+          {breadcrumbs && (
+            <Breadcrumbs
+              items={breadcrumbs}
+              className="page-hero__breadcrumbs"
+              style={{ padding: 0 }}
+            />
+          )}
 
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 'var(--space-12)',
-              marginBottom: 'var(--space-12)',
-            }}
-          >
-            {eyebrow && <span className="eyebrow">{eyebrow}</span>}
-            {status && <StatusBadge status={status} size="sm" />}
+          <div className="page-hero__meta">
+            {eyebrow && <span className="page-hero__eyebrow">{eyebrow}</span>}
+            {status && (
+              <span className="page-hero__status">
+                <StatusBadge status={status} size="sm" />
+              </span>
+            )}
           </div>
-          <h1 className="heading-1 hero-kinetic" style={{ marginBottom: 'var(--space-20)' }}>
+          <h1 className="hero-kinetic page-hero__title">
             {title}
           </h1>
-          <p className="body-large" style={{ color: 'var(--text-muted)', marginBottom: children ? 'var(--space-32)' : 0 }}>
+          <p className="page-hero__description">
             {description}
           </p>
-          {children && <div>{children}</div>}
+          {children && <div className="page-hero__actions">{children}</div>}
         </div>
       </div>
     </section>

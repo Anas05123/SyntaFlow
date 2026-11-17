@@ -8,6 +8,7 @@ const __dirname = path.dirname(__filename);
 
 const ROUTES = [
   '/',
+  '/preview',
   '/product',
   '/product/client-management',
   '/product/projects',
@@ -86,11 +87,11 @@ async function run() {
 
       for (const route of ROUTES) {
         totalChecks++;
-        const url = `http://localhost:5199/#${route}`;
+        const url = `http://localhost:5199${route}`;
         const errors = [];
         page.on('pageerror', (err) => errors.push(err.message));
 
-        await page.goto(url, { waitUntil: 'domcontentloaded' });
+        await page.goto(url, { waitUntil: 'domcontentloaded' }).catch(() => {});
         await page.waitForFunction(() => document.title.includes('Syntaflow'), { timeout: 4000 }).catch(() => {});
 
         let title = '';
@@ -124,34 +125,26 @@ async function run() {
     // Interactive element verification on homepage
     console.log('\nTesting Interactive Instruments on Homepage...');
     await page.setViewportSize({ width: 1280, height: 800 });
-    await page.goto('http://localhost:5199/#/', { waitUntil: 'domcontentloaded' });
+    await page.goto('http://localhost:5199/', { waitUntil: 'domcontentloaded' });
 
-    // Test Desktop Simulator Tab Switching
-    console.log('  Testing Desktop Simulator tabs...');
-    await page.click('button:has-text("Paper Canvas")');
-    const paperCanvasActive = await page.isVisible('text=Typographic Paper Canvas');
-    console.log(`  Simulator Paper Canvas Tab: ${paperCanvasActive ? 'PASSED' : 'FAILED'}`);
+    // Test the real-capture stage switcher on the renovated homepage.
+    console.log('  Testing product story stages...');
+    const storyTabs = page.locator('.sf-play__switch button');
+    const storyTabCount = await storyTabs.count();
+    await storyTabs.filter({ hasText: 'Review' }).click();
+    const reviewStageActive = await page.isVisible('text=Keep the discussion with the submitted version.');
+    console.log(`  Product Story Review Stage: ${reviewStageActive ? 'PASSED' : 'FAILED'}`);
 
-    await page.click('button:has-text("Dual-Density Tasks")');
-    const tasksActive = await page.isVisible('text=Dual-Density Task Boards');
-    console.log(`  Simulator Tasks Tab: ${tasksActive ? 'PASSED' : 'FAILED'}`);
-
-    // Test FlowCanvas pipeline node switching
-    console.log('  Testing FlowCanvas pipeline node switching...');
-    await page.click('button:has-text("Client Account")');
-    const stage01Active = await page.isVisible('text=Commercial Terms');
-    console.log(`  FlowCanvas Client Account Switch: ${stage01Active ? 'PASSED' : 'FAILED'}`);
-
-    await page.click('button:has-text("Handover Package")');
-    const stage06Active = await page.isVisible('text=Verified Delivery');
-    console.log(`  FlowCanvas Handover Package Switch: ${stage06Active ? 'PASSED' : 'FAILED'}`);
+    await storyTabs.filter({ hasText: 'Delivery' }).click();
+    const deliveryStageActive = await page.isVisible('text=See the files still blocking handoff.');
+    console.log(`  Product Story Delivery Stage: ${deliveryStageActive ? 'PASSED' : 'FAILED'}`);
 
     console.log(`\n--- Verification Summary ---`);
     console.log(`Total Checks: ${totalChecks}`);
     console.log(`Failed Checks: ${failedChecks}`);
 
-    if (failedChecks === 0 && paperCanvasActive && tasksActive && stage01Active && stage06Active) {
-      console.log('✓ ALL 39 ROUTES AND 7 VIEWPORTS VERIFIED CLEANLY WITH ZERO ERRORS.\n');
+    if (failedChecks === 0 && storyTabCount === 3 && reviewStageActive && deliveryStageActive) {
+      console.log(`✓ ALL ${ROUTES.length} ROUTES AND ${VIEWPORTS.length} VIEWPORTS VERIFIED CLEANLY WITH ZERO ERRORS.\n`);
     } else {
       process.exit(1);
     }

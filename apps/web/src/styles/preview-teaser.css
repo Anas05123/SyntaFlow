@@ -1,0 +1,20 @@
+.sf-play{padding:clamp(88px,9vw,138px) 0;background:#111b2c;color:#f8fbff}
+.sf-play__layout{display:grid;grid-template-columns:minmax(0,.75fr) minmax(0,1.25fr);gap:clamp(40px,6vw,90px);align-items:center}
+.sf-play__copy{max-width:520px}
+.sf-play .sf-section-label{color:#8bd5eb}
+.sf-play h2{margin:20px 0 19px;font:720 clamp(39px,4.4vw,62px)/1.06 var(--font-body);letter-spacing:-.048em;text-wrap:balance}
+.sf-play p{margin:0;color:#c5d3e5;font-size:18px;line-height:1.65}
+.sf-play__switch{display:flex;flex-wrap:wrap;gap:7px;margin:28px 0}
+.sf-play__switch button{min-height:42px;padding:0 17px;border:1px solid #536985;border-radius:7px;background:transparent;color:#dbe8f4;font:700 15px var(--font-body);cursor:pointer;transition:background-color .18s ease,border-color .18s ease,color .18s ease}
+.sf-play__switch button:hover{border-color:#9ecaf1;background:#253b56}
+.sf-play__switch button[aria-pressed=true]{border-color:#94dcec;background:#dff4fa;color:#10243d}
+.sf-play__action{display:inline-flex;align-items:center;justify-content:center;min-height:49px;padding:0 21px;border-radius:8px;background:#fff;color:#112f69;font-size:16px;font-weight:760;text-decoration:none;transition:background-color .2s ease,transform .2s ease}
+.sf-play__action:hover{background:#dcecff;transform:translateY(-2px)}
+.sf-play__action:active{transform:translateY(0)}
+.sf-play__note{display:block;margin-top:16px;color:#acc1d8;font-size:14px;line-height:1.5}
+.sf-play__screen{min-width:0;margin:0;padding:12px;border:1px solid #455774;border-radius:13px;background:#0b1018;box-shadow:0 28px 60px rgba(0,0,0,.22)}
+.sf-play__screen img{display:block;width:100%;height:auto;border-radius:5px}
+.sf-play__screen figcaption{padding:13px 7px 4px;color:#c8d8e8;font-size:14px}
+@media(max-width:1000px){.sf-play__layout{grid-template-columns:1fr}.sf-play__copy{max-width:760px}}
+@media(max-width:650px){.sf-play{padding:75px 0}.sf-play h2{font-size:clamp(36px,10vw,49px)}.sf-play p{font-size:16px}.sf-play__screen{padding:7px}.sf-play__screen img{min-height:265px;object-fit:cover;object-position:top left}.sf-play__action{width:100%}}
+@media(prefers-reduced-motion:reduce){.sf-play *, .sf-play *::before,.sf-play *::after{transition:none!important;animation:none!important}}
