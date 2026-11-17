@@ -30,9 +30,9 @@ function getChangeFreq(route) {
 export function generateSitemap() {
   const indexableRoutes = Object.entries(ROUTES_METADATA)
     .filter(([, meta]) => meta.indexable)
-    .map(([path]) => ({
+    .map(([path, meta]) => ({
       path,
-      canonicalUrl: `${SITE_CONFIG.canonicalHost}${path === '/' ? '/' : path}`,
+      canonicalUrl: `${SITE_CONFIG.canonicalHost}${meta.canonicalPath}`,
       priority: getPriority(path),
       changefreq: getChangeFreq(path),
     }));

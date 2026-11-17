@@ -40,8 +40,8 @@ export const SiteFooter: React.FC = () => {
         ['Roadmap', '/roadmap'],
         ['Contact', '/contact'],
         ['Security', '/security'],
-        ['Privacy', '/privacy'],
-        ['Terms', '/terms'],
+        ['Privacy', '/privacy/'],
+        ['Terms', '/terms/'],
       ],
     },
   ];

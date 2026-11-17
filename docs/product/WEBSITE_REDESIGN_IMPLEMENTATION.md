@@ -1,5 +1,13 @@
 # Syntaflow website redesign — implementation record
 
+## Google Search and OAuth branding, 17 November 2026
+
+The live website serves `https://syntaflow.tech/robots.txt` with the sitemap directive for `https://syntaflow.tech/sitemap.xml`. The sitemap contains 32 public URLs. The site uses a shared HTML fallback, so the homepage canonical was previously present in responses for most public routes. The shared HTML now leaves the canonical to `SEOHead`, which sets each route's own URL. The static Privacy and Terms pages and sitemap use the final URLs ending in a slash. The homepage declares Syntaflow as its preferred Google site name with one `WebSite` schema. The production build and all 244 local SEO checks passed.
+
+In [Google Search Console](https://search.google.com/search-console), select the `syntaflow.tech` domain property and submit `https://syntaflow.tech/sitemap.xml` under **Sitemaps**. A Google verification TXT record is already present in DNS. The signed-in account still needs access to the verified property. Use **URL inspection** for the homepage to check Google's selected canonical and request a recrawl.
+
+For the existing Syntaflow OAuth project, use [Google Auth Platform Branding](https://console.cloud.google.com/auth/branding). The site values are **Syntaflow**, authorized domain `syntaflow.tech`, homepage `https://syntaflow.tech/`, privacy `https://syntaflow.tech/privacy/`, and terms `https://syntaflow.tech/terms/`. The approved square mark is `apps/web/public/brand/syntaflow-mark.png`. Keep the existing monitored support contact or select the official Syntaflow support address if it is already available in the project. Search Console submission and OAuth branding saves require access to the signed-in Google dashboards.
+
 ## Marketing website publication scope
 
 The `master` update includes the public marketing pages, the browser sample, source assets, and browser checks. The Terms and Privacy updates cover presentation and metadata. The policy text is preserved. The workspace lockfile includes the website dependencies.

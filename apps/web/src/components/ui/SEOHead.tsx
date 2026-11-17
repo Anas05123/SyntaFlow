@@ -133,6 +133,13 @@ export const SEOHead: React.FC<SEOHeadProps> = ({
     setOrUpdateMeta('name', 'twitter:image', ogImage);
 
     // 9. Structured Data Injection
+    injectJsonLd('sf-schema-website', canonicalUrl === `${SITE_CONFIG.canonicalHost}/` ? {
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      name: SITE_CONFIG.siteName,
+      url: canonicalUrl,
+    } : null);
+
     // Global Organization + SoftwareApplication schema on Homepage
     if (canonicalPath === '/' || canonicalPath === '') {
       injectJsonLd('sf-schema-org', getOrganizationSchema());

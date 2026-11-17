@@ -424,22 +424,22 @@ export const ROUTES_METADATA: Record<string, RouteMetadata> = {
     title: 'Privacy Policy | Syntaflow',
     description:
       'Official privacy policy for Syntaflow. Learn how client data is handled locally, Google OAuth verification, and limited use compliance.',
-    canonicalPath: '/privacy',
+    canonicalPath: '/privacy/',
     indexable: true,
     breadcrumbs: [
       { name: 'Home', item: 'https://syntaflow.tech/' },
-      { name: 'Privacy Policy', item: 'https://syntaflow.tech/privacy' },
+      { name: 'Privacy Policy', item: 'https://syntaflow.tech/privacy/' },
     ],
   },
   '/terms': {
     title: 'Terms of Service | Syntaflow',
     description:
       'Terms of service and software licensing conditions governing the use of Syntaflow desktop and web environments.',
-    canonicalPath: '/terms',
+    canonicalPath: '/terms/',
     indexable: true,
     breadcrumbs: [
       { name: 'Home', item: 'https://syntaflow.tech/' },
-      { name: 'Terms of Service', item: 'https://syntaflow.tech/terms' },
+      { name: 'Terms of Service', item: 'https://syntaflow.tech/terms/' },
     ],
   },
 

@@ -11,7 +11,7 @@
       content="Keep client relationships, project context and versioned reviews together in the Syntaflow desktop preview. Explore a sample project in your browser."
     />
     <meta name="robots" content="index, follow" />
-    <link rel="canonical" href="https://syntaflow.tech/" />
+    <!-- SEOHead adds the canonical URL for the current route. This HTML is a shared fallback. -->
 
     <!-- Open Graph / Facebook -->
     <meta property="og:site_name" content="Syntaflow" />
@@ -37,6 +37,14 @@
     <link rel="preload" href="/brand/inter-latin.woff2" as="font" type="font/woff2" crossorigin />
 
     <!-- Structured Data (Schema.org) for Pre-hydration Crawlers -->
+    <script type="application/ld+json" id="sf-schema-website">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Syntaflow",
+        "url": "https://syntaflow.tech/"
+      }
+    </script>
     <script type="application/ld+json" id="sf-schema-org">
       {
         "@context": "https://schema.org",

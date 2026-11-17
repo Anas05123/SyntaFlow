@@ -151,12 +151,12 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://syntaflow.tech/privacy</loc>
+    <loc>https://syntaflow.tech/privacy/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://syntaflow.tech/terms</loc>
+    <loc>https://syntaflow.tech/terms/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>

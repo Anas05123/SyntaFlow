@@ -9,7 +9,7 @@ const __dirname = path.dirname(__filename);
 const webRoot = path.resolve(__dirname, '..');
 
 // Dynamically import SEO config using Node 24 type stripping
-const { ROUTES_METADATA } = await import('../src/seo/seoConfig.ts');
+const { ROUTES_METADATA, SITE_CONFIG } = await import('../src/seo/seoConfig.ts');
 const {
   getOrganizationSchema,
   getSoftwareApplicationSchema,
@@ -71,6 +71,11 @@ assert(routeEntries.length === 40, `ROUTES_METADATA contains 40 defined routes i
 
 const indexableEntries = routeEntries.filter(([, meta]) => meta.indexable);
 assert(indexableEntries.length === 32, `Exactly 32 indexable canonical routes defined (found ${indexableEntries.length})`);
+const expectedSitemap = indexableEntries.map(([, meta]) => SITE_CONFIG.canonicalHost + meta.canonicalPath);
+assert(
+  new Set(locMatches).size === expectedSitemap.length && expectedSitemap.every((url) => locMatches.includes(url)),
+  'Sitemap contains every indexable canonical URL exactly once'
+);
 
 const titles = new Set();
 const descriptions = new Set();
@@ -140,6 +145,8 @@ try {
   browser = await chromium.launch({ channel: 'msedge', headless: true });
   const context = await browser.newContext();
   const page = await context.newPage();
+  const rawProduct = await context.request.get('http://localhost:5198/product');
+  assert(!/<link\b[^>]*rel=["']canonical["']/i.test(await rawProduct.text()), 'Shared HTML leaves canonical URLs to each rendered route');
 
   const testRoutes = [
     { path: '/', expectTitle: ROUTES_METADATA['/'].title, expectRobots: 'index, follow', expectSchema: true },
@@ -183,9 +190,11 @@ try {
     assert(title.includes(item.expectTitle), `Page title "${title}" contains "${item.expectTitle}"`);
 
     const canonical = await page.getAttribute('link[rel="canonical"]', 'href');
+    const config = ROUTES_METADATA[item.path] ?? ROUTES_METADATA['/404'];
+    const expectedCanonical = SITE_CONFIG.canonicalHost + config.canonicalPath;
     assert(
-      canonical && canonical.startsWith('https://syntaflow.tech'),
-      `Canonical URL is canonical host: ${canonical}`
+      canonical === expectedCanonical,
+      `Canonical URL is ${expectedCanonical} (got ${canonical})`
     );
 
     const robots = await page.getAttribute('meta[name="robots"]', 'content');
@@ -210,6 +219,13 @@ try {
         }
       })
     );
+    if (item.path === '/') {
+      const webSiteSchema = jsonLdScripts.filter((schema) => schema?.['@type'] === 'WebSite');
+      assert(
+        webSiteSchema.length === 1 && webSiteSchema[0].name === SITE_CONFIG.siteName && webSiteSchema[0].url === expectedCanonical,
+        'Homepage declares the Syntaflow site name at the canonical home URL'
+      );
+    }
     if (item.expectSchema) {
       assert(jsonLdScripts.length > 0 && jsonLdScripts.every(Boolean), `Valid JSON-LD schema injected (${jsonLdScripts.length} schemas)`);
     } else {
